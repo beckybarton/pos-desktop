@@ -17,3 +17,7 @@
         </div>
     </div>
 </nav>
+@include('items.create')
+@include('locations.create')
+@include('customers.create')
+@include('users.create')

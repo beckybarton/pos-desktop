@@ -21,16 +21,14 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Amount</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($items as $item)
+                    @foreach($locations as $location)
                         <tr>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->name }}</td>
-                            <td>{{ number_format($item->selling_price,2) }}</td>
+                            <td>{{ $location->id }}</td>
+                            <td>{{ $location->name }}</td>
                             <td>Action</td>
                         </tr>
                     @endforeach

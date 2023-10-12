@@ -29,4 +29,11 @@ class ItemController extends Controller
 
         
     }
+
+    public function index() {
+        $items = Item::orderBy('name', 'asc')
+          ->paginate(10);
+        
+        return view('dashboard.index', compact('items'));
+      }
 }
