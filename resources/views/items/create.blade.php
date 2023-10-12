@@ -18,6 +18,10 @@
             <input type="text" class="form-control" name="name" required>
           </div>
           <div class="form-group">
+            <label for="uom">UOM:</label>
+            <input type="text" class="form-control" name="uom" required>
+          </div>
+          <div class="form-group">
             <label for="amount">Selling Price:</label>
             <input type="number" class="form-control" name="selling_price" required>
           </div>

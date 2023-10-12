@@ -16,7 +16,8 @@ class ItemController extends Controller
         else {
             $data = $request->validate([
                 'name' => 'required|string|max:255|unique:items,name',
-                'selling_price' => 'required|numeric|min:0'
+                'selling_price' => 'required|numeric|min:0',
+                'uom' => 'required|string|max:255'
             ]);
 
             if(Item::create($data)){
@@ -43,7 +44,8 @@ class ItemController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'selling_price' => 'required|numeric|min:0'
+            'selling_price' => 'required|numeric|min:0',
+            'uom' => 'required|string|max:255'
         ]);
 
         if ($item->update($data)) {

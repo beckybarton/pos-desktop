@@ -20,6 +20,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
+                        <th>UOM</th>
                         <th>Amount</th>
                         <th>Actions</th>
                     </tr>
@@ -29,6 +30,7 @@
                         <tr>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->name }}</td>
+                            <td>{{ $item->uom }}</td>
                             <td>{{ number_format($item->selling_price,2) }}</td>
                             <td>
                                 <button class="btn btn-sm btn-warning edit-item" id="edit-item" data-target="#editItemModal" data-item="{{ $item }}">Edit</button>

@@ -20,6 +20,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="edit-name">UOM:</label>
+                        <input type="text" class="form-control edit-uom" id="edit-uom" name="uom" required>
+                    </div>
+
+
+                    <div class="form-group">
                         <label for="edit-amount">Amount:</label>
                         <input type="number" class="form-control edit-selling-price" id="edit-selling-price" name="selling_price" required>
                     </div>

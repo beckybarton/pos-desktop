@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PosController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,3 +38,7 @@ Route::post('/customers/store', [CustomerController::class, 'store'])->name('cus
 // USERS
 Route::post('/users/store', [UserController::class, 'store'])->name('user.store');
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
+
+// POS
+Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+Route::get('/search-items', [PosController::class, 'searchItems'])->name('pos.searchItems');
