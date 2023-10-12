@@ -13,7 +13,6 @@
             {{ session('error') }}
             </div>
         @endif
-
         <div class="table-responsive">
             <input type="text" class="form-control" id="searchinputitem" placeholder="Search by Name">
             <table class="table table-striped table-bordered table-hover" id="itemstable">
@@ -31,7 +30,9 @@
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->name }}</td>
                             <td>{{ number_format($item->selling_price,2) }}</td>
-                            <td>Action</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning edit-item" id="edit-item" data-target="#editItemModal" data-item="{{ $item }}">Edit</button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -48,3 +49,4 @@
 </div>
 
 @include('layouts.footer')
+@include('items.edit')

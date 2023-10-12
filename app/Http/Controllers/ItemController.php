@@ -34,6 +34,25 @@ class ItemController extends Controller
         $items = Item::orderBy('name', 'asc')
           ->paginate(10);
         
-        return view('dashboard.index', compact('items'));
-      }
+        return view('items.index', compact('items'));
+    }
+
+    public function update(Request $request, Item $item)
+    {
+        $item = Item::findOrFail($request->id);
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'selling_price' => 'required|numeric|min:0'
+        ]);
+
+        if ($item->update($data)) {
+            return back()->with('status', 'Item Updated Successfully!');
+        } 
+        else {
+            return back()->with('error', 'Failed to update item. Please try again.');
+        }
+
+        
+    }
 }

@@ -24,6 +24,8 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 // Route::post('/items/store', [ItemController::class, 'store'])->name('item.store')->middleware('auth');
 Route::post('/items/store', [ItemController::class, 'store'])->name('item.store');
 Route::get('/items', [ItemController::class, 'index'])->name('item.index');
+// Route::put('/vehicle-types/{id}', [VehicleTypeController::class, 'update'])->name('vehicle-types.update')->middleware('auth');
+Route::put('/item/{id}', [ItemController::class, 'update'])->name('item.update');
 
 // LOCATIONS
 Route::post('/locations/store', [LocationController::class, 'store'])->name('location.store');
