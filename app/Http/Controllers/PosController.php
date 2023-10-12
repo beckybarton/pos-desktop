@@ -18,7 +18,11 @@ class PosController extends Controller
         // Implement your item search logic here based on the $searchQuery
         // For example, you might use Eloquent queries to search items in your database
         $items = Item::where('name', 'like', "%$searchQuery%")->get();
-        return response()->json($items);
+        $itemsWithoutQuotes = $items->map(function($item) {
+            $item['name'] = str_replace("'", "", $item['name']);
+            return $item;
+        });
+        return response()->json($itemsWithoutQuotes);
     }
 
 }

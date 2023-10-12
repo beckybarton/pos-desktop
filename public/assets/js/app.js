@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
   $(document).on('keydown', function(event) {
     if (event.key === "F2") {
       $('#itemSearchModal').modal('show');
+      $('#searchItemName').val('');
     }
   });
 
@@ -57,13 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Populate search results in the modal
         data.forEach(function(item) {
           var formattedPrice = parseFloat(item.selling_price).toFixed(2);
-          // var newRow = '<tr>' +
-          //                 '<td>' + item.name + '</td>' +
-          //                 '<td>$' + formattedPrice + '</td>' +
-          //                 '<td><input type="number" class="form-control" id="quantity_' + item.id + '" placeholder="Quantity"></td>' +
-          //                 '<td><button class="btn btn-primary btn-sm" onclick="addItemToTable(' + item.id + ', \'' + item.name + '\', \'' + item.uom + '\', ' + item.selling + ')">Add</button></td>' +
-          //               '</tr>';
-          // $('#searchResultsTableBody').append(newRow);
           var resultHtml = '<div class="mb-3">' +
                             '<strong>' + item.name + '</strong><br>' +
                             'Price: ' + item.selling_price +
@@ -75,7 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  
+  $('#selectedItemsTable tbody').on('input', 'input[type="number"]', function() {
+    updateDueAmount();
+  });
 
 });
 
@@ -93,8 +89,9 @@ function addItemToTable(id, name, uom, selling_price) {
     '<td class="text-end" id="total_' + id + '">' + formattedTotal + '</td>' +
     '</tr>';
   $('#selectedItemsTable tbody').append(newRow);
+  updateDueAmount();
   $('#itemSearchModal').modal('hide');
-  updateTotal($('#quantity_' + id)[0], price);
+  updateTotal($('#quantity_' + id)[0], selling_price);
 }
 
 function updateTotal(input, price) {
@@ -106,4 +103,16 @@ function updateTotal(input, price) {
   var row = input.closest('tr');
   var totalColumn = row.querySelector('#total_' + row.cells[0].textContent); // Assuming the first cell contains the item ID
   totalColumn.textContent = formattedTotal;
+}
+
+function updateDueAmount() {
+  var totalDue = 0;
+  $('#selectedItemsTable tbody tr').each(function() {
+      var quantity = parseFloat($(this).find('input[type="number"]').val()) || 0;
+      var price = parseFloat($(this).find('.text-end').text().replace(/[^\d.]/g, '')) || 0; // Extract price from the text
+
+      totalDue += quantity * price;
+  });
+
+  $('#dueAmount').text(totalDue.toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2}));
 }
