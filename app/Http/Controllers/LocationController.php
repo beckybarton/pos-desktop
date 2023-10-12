@@ -34,5 +34,5 @@ class LocationController extends Controller
           ->paginate(10);
         
         return view('locations.index', compact('locations'));
-      }
+    }
 }

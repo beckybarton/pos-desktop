@@ -34,3 +34,4 @@ Route::post('/customers/store', [CustomerController::class, 'store'])->name('cus
 
 // USERS
 Route::post('/users/store', [UserController::class, 'store'])->name('user.store');
+Route::get('/users', [UserController::class, 'index'])->name('user.index');

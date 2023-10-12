@@ -17,6 +17,7 @@
         </div>
     </div>
 </nav>
+<p></p>
 @include('items.create')
 @include('locations.create')
 @include('customers.create')

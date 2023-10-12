@@ -21,23 +21,21 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Amount</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($items as $item)
+                    @foreach($customers as $customer)
                         <tr>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->name }}</td>
-                            <td>{{ number_format($item->selling_price,2) }}</td>
+                            <td>{{ $customer->id }}</td>
+                            <td>{{ $customer->name }}</td>
                             <td>Action</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
             <div class="mt-4">
-                {{ $items->links('pagination::bootstrap-4') }}
+                {{ $customers->links('pagination::bootstrap-4') }}
             </div>
             </div>
         </div>
