@@ -22,4 +22,4 @@
         }
     </style>
 </head>
-<body>
+<body style="padding: 2%;">
