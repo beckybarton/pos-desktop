@@ -10,4 +10,14 @@ class Location extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function getLocationNameById($locationId){
+        $location = self::find($locationId);
+
+        if ($location) {
+            return $location->name;
+        }
+
+        return null;
+    }
 }

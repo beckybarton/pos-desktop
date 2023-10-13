@@ -29,7 +29,7 @@
             <label for="name">Role:</label>
             <select id="role" name="role" autocomplete="role" class="form-control">  
                 <option value="admin">Admin</option>
-                <option value="maker">Cashier</option>
+                <option value="cashier">Cashier</option>
             </select>
           </div>
           <div class="modal-footer">
