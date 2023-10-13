@@ -39,6 +39,10 @@
                 <label for="method" class="form-label">Payment Method:</label>
                 <input type="text" class="form-control" id="method" name="method">
             </div>
+            <div class="mb-3">
+                <label for="location" class="form-label text-danger"><strong>Location:</strong></label>
+                <span id="location" class="text-danger"><strong></strong></span>
+            </div>
         </div>
 
     </div>

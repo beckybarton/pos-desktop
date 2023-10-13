@@ -73,9 +73,20 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDueAmount();
   });
 
-  $('#openPOSBtn').click(function() {
-    $('#locationModal').modal('show');
-  });
+  $('#loginform').submit(function(event) {
+    // Get the selected location from the form
+    var selectedLocation = $('#location').val();
+
+    // Check if the selected value is 0 (Select Location option)
+    if (selectedLocation === '0') {
+        // Prevent the form submission
+        event.preventDefault();
+
+        // Display an error message (you can customize this part)
+        alert('Please select a valid location.');
+    }
+});
+
 
 });
 

@@ -19,8 +19,8 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-// Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
+Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
 
 // ITEMS
 // Route::post('/items/store', [ItemController::class, 'store'])->name('item.store')->middleware('auth');

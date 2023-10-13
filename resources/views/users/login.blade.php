@@ -6,7 +6,7 @@
     </div>
 
     <div class="mt-4 mx-auto" style="width: 24rem;">
-        <form action="#" method="POST">
+        <form action="#" method="POST" id="loginform">
             @csrf
             <div class="form-group">
                 <label for="username">Username</label>
@@ -16,6 +16,16 @@
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <select class="form-control" id="location" name="location" required>
+                    <option value="0">Select Location</option>
+                    @foreach($locations as $location)
+                        <option value="{{$location->name}}">{{ $location->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group mt-3">
