@@ -32,7 +32,8 @@ class LocationController extends Controller
     public function index() {
         $locations = Location::orderBy('name', 'desc')
           ->paginate(10);
+        $alllocations = Location::all();
         
-        return view('locations.index', compact('locations'));
+        return view('locations.index', compact('locations', 'alllocations'));
     }
 }

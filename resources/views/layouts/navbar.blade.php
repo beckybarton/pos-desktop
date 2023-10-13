@@ -1,7 +1,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-        <span class="navbar-brand">Logged in as </span>
+        <span class="navbar-brand">Logged in as {{ ucwords(auth()->user()->first_name) }} {{ ucwords(auth()->user()->last_name) }} ({{ auth()->user()->role }}) </span>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -22,3 +22,4 @@
 @include('locations.create')
 @include('customers.create')
 @include('users.create')
+@include('pos.start')

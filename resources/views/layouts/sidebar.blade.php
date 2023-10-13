@@ -1,6 +1,7 @@
 <div class="col-md-3">
     <ul class="list-group">
-        <a href="{{ route('pos.index') }}" class="btn btn-success"> Use POS</a>
+        <!-- <a href="{{ route('pos.index') }}" class="btn btn-success"> Use POS</a> -->
+        <a href="#" class="btn btn-success" id="openPOSBtn">Use POS</a>
         <a href="{{ route('item.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-barcode"></i> Items</a>
         <a href="{{ route('location.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-building"></i> Locations</a>
         <a href="{{ route('user.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-user"></i> Users</a>

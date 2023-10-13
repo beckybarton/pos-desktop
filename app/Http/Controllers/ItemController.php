@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\Location;
 
 class ItemController extends Controller
 {
@@ -34,8 +35,9 @@ class ItemController extends Controller
     public function index() {
         $items = Item::orderBy('name', 'asc')
           ->paginate(10);
+        $locations = Location::all();
         
-        return view('items.index', compact('items'));
+        return view('items.index', compact('items', 'locations'));
     }
 
     public function update(Request $request, Item $item)

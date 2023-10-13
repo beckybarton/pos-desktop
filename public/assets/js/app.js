@@ -73,6 +73,10 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDueAmount();
   });
 
+  $('#openPOSBtn').click(function() {
+    $('#locationModal').modal('show');
+  });
+
 });
 
 function addItemToTable(id, name, uom, selling_price) {
@@ -84,7 +88,7 @@ function addItemToTable(id, name, uom, selling_price) {
     '<td>' + id + '</td>' +
     '<td>' + name + '</td>' +
     '<td>' + uom + '</td>' + 
-    '<td class="text-end" style="width: 150px;">' + formattedSellingPrice + '</td>' +
+    '<td class="text-end selling_price" input type="number" style="width: 150px;">' + formattedSellingPrice + '</td>' +
     '<td style="padding-top:10px;"><input type="number" class="form-control col-md-2 no-border" value="1" id="quantity_' + id + '" oninput="updateTotal(this, ' + formattedSellingPrice + ')"></td>' +
     '<td class="text-end" id="total_' + id + '">' + formattedTotal + '</td>' +
     '</tr>';
@@ -92,6 +96,7 @@ function addItemToTable(id, name, uom, selling_price) {
   updateDueAmount();
   $('#itemSearchModal').modal('hide');
   updateTotal($('#quantity_' + id)[0], selling_price);
+  
 }
 
 function updateTotal(input, price) {
@@ -109,10 +114,12 @@ function updateDueAmount() {
   var totalDue = 0;
   $('#selectedItemsTable tbody tr').each(function() {
       var quantity = parseFloat($(this).find('input[type="number"]').val()) || 0;
-      var price = parseFloat($(this).find('.text-end').text().replace(/[^\d.]/g, '')) || 0; // Extract price from the text
+      var priceText = $(this).find('.selling_price').text().match(/\d+(\.\d+)?/);
+      var price = priceText ? Number(priceText[0]) : 0;
 
       totalDue += quantity * price;
   });
+  
 
-  $('#dueAmount').text(totalDue.toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2}));
+  $('#dueAmount').text(totalDue.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
 }

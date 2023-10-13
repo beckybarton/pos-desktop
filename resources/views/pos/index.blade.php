@@ -21,10 +21,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-1">
-            
-        </div> 
-        <div class="col-md-3 bg-light d-flex flex-column align-items-center p-3">
+        <div class="col-md-4 bg-light d-flex flex-column align-items-center p-3">
             <p class="text-center font-weight-bold mb-4"><strong>SUMMARY</strong></p>
             <div class="mb-3">
                 <label for="due" class="form-label text-danger"><strong>Amount Due:</strong></label>

@@ -5,18 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\Item;
+use App\Models\Location;
 
 class PosController extends Controller
 {
     public function index() {
         $setting = Setting::first();
-        return view('pos.index', compact('setting'));
+        $locations = Location::all();
+        return view('pos.index', compact('setting','locations'));
     }
 
     public function searchItems(Request $request){
         $searchQuery = $request->input('search_query');
-        // Implement your item search logic here based on the $searchQuery
-        // For example, you might use Eloquent queries to search items in your database
         $items = Item::where('name', 'like', "%$searchQuery%")->get();
         $itemsWithoutQuotes = $items->map(function($item) {
             $item['name'] = str_replace("'", "", $item['name']);
