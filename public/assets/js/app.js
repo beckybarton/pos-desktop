@@ -1,3 +1,4 @@
+let totalDue = 0;
 document.addEventListener('DOMContentLoaded', function() {  
   $(document).ready(function() {
     $('#searchinputitem').on('keyup change', function() {
@@ -36,14 +37,50 @@ document.addEventListener('DOMContentLoaded', function() {
       $('#itemSearchModal').modal('show');
       $('#searchItemName').val('');
     }
+    // else if (event.key === "F6") {
+    //   $('#customerSearchModal').modal('show');
+    //   $('#searchCustomerName').val('');
+    // }
+    // else{
+
+    // }
   });
 
   $('#itemSearchModal').on('shown.bs.modal', function () {
     $('#searchItemName').focus();
   });
+
+  // $('#customerSearchModal').on('shown.bs.modal', function () {
+  //   $('#searchCustomerName').focus();
+  // });
+
+  // $('#searchCustomerName').on('input', function() {
+  //   event.preventDefault();
+  //   var searchQuery = $('#searchCustomerName').val();
+
+  //   $.ajax({
+  //     url: '/search-customers',
+  //     type: 'GET',
+  //     data: { search_query: searchQuery },
+  //     success: function(data) {
+  //       // Clear previous search results
+  //       $('#searchResults').empty();
+
+  //       // Populate search results in the modal
+  //       data.forEach(function(customer) {
+  //         var resultHtml = '<div class="mb-3">' +
+  //                           '<strong>' + customer.name + '</strong><br>' +
+  //                           'Price: ' + item.selling_price +
+  //                           '<button class="btn btn-primary btn-sm float-end" id="addItemButton" onclick="addItemToTable(\'' + item.id + '\', \'' + item.name + '\', \'' + item.uom + '\', \'' + item.selling_price + '\')">Add</button>' +
+  //                           '</div>';
+  //         $('#searchResults').append(resultHtml);
+  //       });
+  //     }
+  //   });
+  // });
     
   // $('#itemSearchForm').on('submit', function(event) {
-    $('#searchItemName').on('input', function() {
+  $('#searchItemName').on('input', function() {
     event.preventDefault();
     var searchQuery = $('#searchItemName').val();
 
@@ -53,17 +90,29 @@ document.addEventListener('DOMContentLoaded', function() {
       data: { search_query: searchQuery },
       success: function(data) {
         // Clear previous search results
-        $('#searchResults').empty();
+        // $('#searchResults').empty();
 
-        // Populate search results in the modal
+        // // Populate search results in the modal
+        // data.forEach(function(item) {
+        //   var formattedPrice = parseFloat(item.selling_price).toFixed(2);
+        //   var resultHtml = '<div class="mb-3">' +
+        //                     '<strong>' + item.name + '</strong><br>' +
+        //                     'Price: ' + formattedPrice +
+        //                     '<button class="btn btn-primary btn-sm float-end" id="addItemButton" onclick="addItemToTable(\'' + item.id + '\', \'' + item.name + '\', \'' + item.uom + '\', \'' + item.selling_price + '\')">Add</button>' +
+        //                     '</div>';
+        //   $('#searchResults').append(resultHtml);
+        // });
+        $('#searchResultsTableBody').empty();
+
         data.forEach(function(item) {
-          var formattedPrice = parseFloat(item.selling_price).toFixed(2);
-          var resultHtml = '<div class="mb-3">' +
-                            '<strong>' + item.name + '</strong><br>' +
-                            'Price: ' + item.selling_price +
-                            '<button class="btn btn-primary btn-sm float-end" id="addItemButton" onclick="addItemToTable(\'' + item.id + '\', \'' + item.name + '\', \'' + item.uom + '\', \'' + item.selling_price + '\')">Add</button>' +
-                            '</div>';
-          $('#searchResults').append(resultHtml);
+            var formattedPrice = parseFloat(item.selling_price).toFixed(2);
+            var resultHtml = '<tr>' +
+                '<td>' + item.name + '</td>' +
+                '<td>' + formattedPrice + '</td>' +
+                '<td>' + item.uom + '</td>' +
+                '<td><button class="btn btn-primary btn-sm float-end" onclick="addItemToTable(\'' + item.id + '\', \'' + item.name + '\', \'' + item.uom + '\', \'' + item.selling_price + '\')">Add</button></td>' +
+                '</tr>';
+            $('#searchResultsTableBody').append(resultHtml);
         });
       }
     });
@@ -74,18 +123,20 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   $('#loginform').submit(function(event) {
-    // Get the selected location from the form
     var selectedLocation = $('#location').val();
 
-    // Check if the selected value is 0 (Select Location option)
     if (selectedLocation === '0') {
-        // Prevent the form submission
         event.preventDefault();
 
-        // Display an error message (you can customize this part)
         alert('Please select a valid location.');
     }
-});
+  });
+
+  $('#received').on('input', function() {
+    // console.log(parseFloat($('#received').val()) || 1);
+    var change = (parseFloat($('#received').val()) || 1) - totalDue;
+    $('#change').val(change.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
+  });
 
 
 });
@@ -122,7 +173,7 @@ function updateTotal(input, price) {
 }
 
 function updateDueAmount() {
-  var totalDue = 0;
+  // var totalDue = 0;
   $('#selectedItemsTable tbody tr').each(function() {
       var quantity = parseFloat($(this).find('input[type="number"]').val()) || 0;
       var priceText = $(this).find('.selling_price').text().match(/\d+(\.\d+)?/);
@@ -132,5 +183,5 @@ function updateDueAmount() {
   });
   
 
-  $('#dueAmount').text(totalDue.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
+  $('#dueAmount').val(totalDue.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
 }

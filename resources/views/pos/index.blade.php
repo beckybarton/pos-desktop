@@ -21,30 +21,63 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-4 bg-light d-flex flex-column align-items-center p-3">
-            <p class="text-center font-weight-bold mb-4"><strong>SUMMARY</strong></p>
-            <div class="mb-3">
-                <label for="due" class="form-label text-danger"><strong>Amount Due:</strong></label>
-                <span id="dueAmount" class="text-danger"><strong>0.00</strong></span>
+        <div class="col-md-4 bg-light p-3">
+            <div class="row mb-3">
+                <label for="due" class="col-sm-5 col-form-label text-danger"><strong>Amount Due:</strong></label>
+                <div class="col-sm-7">
+                    <!-- <span id="dueAmount" class="text-danger"><strong>0.00</strong></span> -->
+                    <input type="text" readonly class="form-control-plaintext text-danger" id="dueAmount" name="dueAmount">
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="received" class="form-label">Amount Received:</label>
-                <input type="number" class="form-control" id="received" name="received">
+
+            <div class="row mb-3">
+                <label for="change" class="col-sm-5 col-form-label text-success"><strong>Change:</strong></label>
+                <div class="col-sm-7">
+                    <!-- <span id="change" class="text-success"><strong>0.00</strong></span> -->
+                    <input type="text" readonly class="form-control-plaintext text-success" id="change" name="change">
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="cashier" class="form-label">Cashier:</label>
-                <input type="text" class="form-control" id="cashier" name="cashier">
+
+            <div class="row mb-3">
+                <label for="received" class="col-sm-5 col-form-label font-weight-bold">Amount Received:</label>
+                <div class="col-sm-7">
+                    <input type="number" class="form-control" id="received" name="received">
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="method" class="form-label">Payment Method:</label>
-                <input type="text" class="form-control" id="method" name="method">
+
+            <div class="row mb-3">
+                <label for="customer" class="col-sm-5 col-form-label font-weight-bold">Customer:</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="customer" name="customer">
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="location" class="form-label text-danger"><strong>Location:</strong></label>
-                <span id="location" class="text-danger"><strong></strong></span>
+
+            <div class="row mb-3">
+                <label for="method" class="col-sm-5 col-form-label font-weight-bold">Payment Method:</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="method" name="method">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="cashiertext" class="col-sm-5 col-form-label font-weight-bold">Cashier:</label>
+                <div class="col-sm-7">
+                    <input type="text" readonly value="{{ ucwords(auth()->user()->first_name) }}" class="form-control-plaintext" id="cashiertext" name="cashiertext">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                @inject('locationModel', 'App\Models\Location')
+                <label for="locationtext" class="col-sm-5 col-form-label font-weight-bold">Location:</label>
+                <div class="col-sm-7">
+                    <input type="text" readonly value="{{ $locationModel->getLocationNameById(session('selected_location')) }}" class="form-control-plaintext" id="locationtext" name="locationtext">
+                </div>
             </div>
         </div>
+
+
 
     </div>
 @include('layouts.footer')
 @include('pos.search')
+@include('pos.customer')
