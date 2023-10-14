@@ -48,14 +48,20 @@
             <div class="row mb-3">
                 <label for="method" class="col-sm-5 col-form-label font-weight-bold">Payment Method:</label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="method" name="method">
+                    <!-- <input type="text" class="form-control" id="method" name="method"> -->
+                    <select class="form-control" id="method" name="method" required>
+                        <option value="0">Mark Unpaid</option>
+                        <option value="1">Cash</option>
+                        <option value="2">Gcash</option>
+                        <option value="3">Card</option>
+                    </select>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label for="customer" class="col-sm-5 col-form-label font-weight-bold">Customer:</label>
                 <div class="col-sm-7">
-                    <input type="text" readonly class="form-control-plaintext" id="customer" name="customer">
+                    <input type="text" hidden readonly class="form-control-plaintext" id="customer" name="customer">
                     <input type="text" readonly class="form-control-plaintext" id="customername" name="customername">
                 </div>
             </div>

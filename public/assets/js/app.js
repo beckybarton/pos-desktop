@@ -39,15 +39,17 @@ document.addEventListener('DOMContentLoaded', function() {
       $('#searchItemName').val('');
       // console.log('item');
     }
-    else if (event.key === "F5") {
-      event.preventDefault();
-    }
-    else if (event.key === "F6") {
+    
+    else if (event.key === "F3") {
       event.preventDefault();
       $('#customerSearchModal').modal('show');
-      // $('#searchCustomerName').val('');
-      // console.log('searchcustomer');
     }
+
+    else if (event.key === "F5") {
+      event.preventDefault();
+      // save order
+    }
+
     else{
 
     }
@@ -114,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   $('#selectedItemsTable tbody').on('input', 'input[type="number"]', function() {
     updateDueAmount();
+    updateChange();
   });
 
   $('#loginform').submit(function(event) {
@@ -128,12 +131,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
   $('#received').on('input', function() {
     // console.log(parseFloat($('#received').val()) || 1);
-    var change = (parseFloat($('#received').val()) || 1) - totalDue;
-    $('#change').val(change.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
+    updateChange();
   });
 
 
 });
+
+function updateChange(){
+  var totalDue = (parseFloat($('#dueAmount').val()) || 1);
+  var received = (parseFloat($('#received').val()) || 0); // - totalDue;
+  
+  var change = received - totalDue;
+  $('#change').val(change.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
+  
+  
+}
 
 function addToCustomerField(id,name){
   $('#customer').val(id);
@@ -147,18 +159,18 @@ function addItemToTable(id, name, uom, selling_price) {
   var total = quantity * selling_price;
   var formattedTotal = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   var newRow = '<tr>' + 
-    '<td>' + id + '</td>' +
+    '<td class="text-end item_id" input type="text" readonly class="form-control-plaintext" style="width: 30px;">' + id + '</td>' +
     '<td>' + name + '</td>' +
     '<td>' + uom + '</td>' + 
-    '<td class="text-end selling_price" input type="number" style="width: 150px;">' + formattedSellingPrice + '</td>' +
-    '<td style="padding-top:10px;"><input type="number" class="form-control col-md-2 no-border" value="1" id="quantity_' + id + '" oninput="updateTotal(this, ' + formattedSellingPrice + ')"></td>' +
-    '<td class="text-end" id="total_' + id + '">' + formattedTotal + '</td>' +
+    '<td class="text-end selling_price" readonly input type="number" style="width: 150px;">' + formattedSellingPrice + '</td>' +
+    '<td style="padding-top:10px;"><input type="number" class="form-control col-md-2 no-border quantiy" value="1" id="quantity_' + id + '" oninput="updateTotal(this, ' + formattedSellingPrice + ')"></td>' +
+    '<td class="text-end total" id="total_' + id + '">' + formattedTotal + '</td>' +
     '</tr>';
   $('#selectedItemsTable tbody').append(newRow);
   updateDueAmount();
-  $('#itemSearchModal').modal('hide');
   updateTotal($('#quantity_' + id)[0], selling_price);
-  
+  updateChange();
+  $('#itemSearchModal').modal('hide');
 }
 
 function updateTotal(input, price) {
@@ -173,15 +185,17 @@ function updateTotal(input, price) {
 }
 
 function updateDueAmount() {
-  // var totalDue = 0;
+  var totalDues = 0;
   $('#selectedItemsTable tbody tr').each(function() {
-      var quantity = parseFloat($(this).find('input[type="number"]').val()) || 0;
-      var priceText = $(this).find('.selling_price').text().match(/\d+(\.\d+)?/);
-      var price = priceText ? Number(priceText[0]) : 0;
+      // var quantity = parseFloat($(this).find('input[type="number"]').val()) || 0;
+      // var priceText = $(this).find('.selling_price').text().match(/\d+(\.\d+)?/);
+      // var price = priceText ? Number(priceText[0]) : 0;
 
-      totalDue += quantity * price;
+      var priceText = $(this).find('.total').text().match(/\d+(\.\d+)?/);
+      var price = priceText ? Number(priceText[0]) : 0;
+      totalDues += price;
   });
   
 
-  $('#dueAmount').val(totalDue.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
+  $('#dueAmount').val(totalDues.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
 }
