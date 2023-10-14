@@ -23,3 +23,4 @@
 @include('locations.create')
 @include('customers.create')
 @include('users.create')
+@include('items.create_category')

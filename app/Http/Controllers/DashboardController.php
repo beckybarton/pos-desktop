@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Location;
+use App\Models\Category;
 
 class DashboardController extends Controller
 {
@@ -12,7 +13,8 @@ class DashboardController extends Controller
       $items = Item::orderBy('name', 'desc')
         ->paginate(10);
       $locations = Location::all();
+      $categories = Category::all();
       
-      return view('dashboard.index', compact('items', 'locations'));
+      return view('dashboard.index', compact('items', 'locations', 'categories'));
     }
 }

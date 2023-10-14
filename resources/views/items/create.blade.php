@@ -14,6 +14,15 @@
         <form action="{{route('item.store')}}" method="post">
           @csrf
           <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-select" id="category" name="category_id" required>
+                <option value="0">Select Category</option>
+                @foreach($categories as $category)
+                    <option value="{{$category->id}}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+          </div>
+          <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" class="form-control" name="name" required>
           </div>

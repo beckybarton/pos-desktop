@@ -13,6 +13,7 @@ class Item extends Model
         'name',
         'selling_price',
         'uom',
+        'category_id'
     ];
 
     public function order_item(){

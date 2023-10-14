@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Location;
+use App\Models\Category;
 
 class UserController extends Controller
 {
@@ -48,7 +49,8 @@ class UserController extends Controller
         $users = User::orderBy('username', 'desc')
           ->paginate(10);
         $locations = Location::all();
+        $categories = Category::all();
         
-        return view('users.index', compact('users', 'locations'));
+        return view('users.index', compact('users', 'locations', 'categories'));
     }
 }

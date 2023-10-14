@@ -9,13 +9,15 @@ use App\Models\Location;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Category;
 
 class PosController extends Controller
 {
     public function index() {
         $setting = Setting::first();
         $locations = Location::all();
-        return view('pos.index', compact('setting','locations'));
+        $categories = Category::all();
+        return view('pos.index', compact('setting','locations', 'categories'));
     }
 
     public function searchItems(Request $request){
