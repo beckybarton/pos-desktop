@@ -7,6 +7,8 @@ use App\Models\Setting;
 use App\Models\Item;
 use App\Models\Location;
 use App\Models\Customer;
+use App\Models\Order;
+use App\Models\OrderItem;
 
 class PosController extends Controller
 {
@@ -34,6 +36,58 @@ class PosController extends Controller
             return $customers;
         });
         return response()->json($customers);
+    }
+
+    public function saveOrder(Request $request){
+        $status = "";
+        if($request->input('method') === "0"){
+            $status = 'unpaid';
+        }
+        else{
+            $status = 'paid';
+        }
+        $order = new Order();
+        $order->customer_id = $request->input('customer');
+        $order->user_id = $request->input('cashier');
+        $order->location_id = $request->input('location');
+        $order->payment_status = $request->input('method');
+        $order->status = $status;
+
+
+        if($order->save()){
+            $item_ids = $request->input('item_id');
+            $quantities = $request->input('quantity');
+
+        foreach ($item_ids as $index => $item_id) {
+            $selling_price = Item::find($item_ids[$index])->selling_price;
+            $order_item = new OrderItem();
+            $order_item->order_id = $order->id;
+            $order_item->item_id = $item_ids[$index];
+            $order_item->price = $selling_price;
+            $order_item->quantity = $quantities[$index];
+            $order_item->save();
+            
+            // if($order_item->save()){
+            //     return response()->json(['message' => "Thank you!"]);
+            // }
+            // else{
+            //     return response()->json(['message' => "Sorry."]);
+            // }
+
+            
+            // $jobDescription = JobDescription::find($descriptionIds[$index]);
+            // if ($jobDescription && isset($descriptionAmounts[$index])) {
+            //     $jobDescription->amount = $descriptionAmounts[$index];
+            //     $jobDescription->save();
+            // }
+            
+        }
+        
+            // return response()->json(['message' => "Thank you!"]);
+        }
+        else{
+            return response()->json(['message' => "Sorry."]);
+        }
     }
 
 }

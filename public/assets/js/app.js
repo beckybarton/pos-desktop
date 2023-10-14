@@ -47,7 +47,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     else if (event.key === "F5") {
       event.preventDefault();
-      // save order
+      var customerValue = $('#customer').val();
+      if (customerValue.trim() !== ''){
+        saveOrder();
+      }
+      else{
+        alert('Add Customer');
+      }
+      
+    }
+
+    else if (event.key === "F6") {
+      event.preventDefault();
+      $('#addCustomerModal').modal('show');
     }
 
     else{
@@ -140,9 +152,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function updateChange(){
   var totalDue = (parseFloat($('#dueAmount').val()) || 1);
   var received = (parseFloat($('#received').val()) || 0); // - totalDue;
-  
-  var change = received - totalDue;
-  $('#change').val(change.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
+  if(received !==0){
+    var change = received - totalDue;
+    $('#change').val(change.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
+  }
   
   
 }
@@ -159,11 +172,12 @@ function addItemToTable(id, name, uom, selling_price) {
   var total = quantity * selling_price;
   var formattedTotal = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   var newRow = '<tr>' + 
-    '<td class="text-end item_id" input type="text" readonly class="form-control-plaintext" style="width: 30px;">' + id + '</td>' +
+    '<td class="text-end item_id" name="item_id" input type="text" readonly class="form-control-plaintext" style="width: 30px;">' + id + '</td>' +
+    '<td style="display:none" class="text-end"><input name="item_id[]" value="' + id +'" type="text" readonly class="form-control-plaintext" style="width: 30px;">' + '</td>' +
     '<td>' + name + '</td>' +
     '<td>' + uom + '</td>' + 
-    '<td class="text-end selling_price" readonly input type="number" style="width: 150px;">' + formattedSellingPrice + '</td>' +
-    '<td style="padding-top:10px;"><input type="number" class="form-control col-md-2 no-border quantiy" value="1" id="quantity_' + id + '" oninput="updateTotal(this, ' + formattedSellingPrice + ')"></td>' +
+    '<td class="text-end selling_price" name="selling_price" style="width: 150px;">' + formattedSellingPrice + '</td>' +
+    '<td style="padding-top:10px;"><input type="number" name="quantity[]" class="form-control col-md-2 no-border quantity" value="1" id="quantity_' + id + '" oninput="updateTotal(this, ' + formattedSellingPrice + ')"></td>' +
     '<td class="text-end total" id="total_' + id + '">' + formattedTotal + '</td>' +
     '</tr>';
   $('#selectedItemsTable tbody').append(newRow);
@@ -175,6 +189,10 @@ function addItemToTable(id, name, uom, selling_price) {
 
 function updateTotal(input, price) {
   var quantity = parseFloat(input.value) || 0; // Parse the quantity as an integer or default to 0
+  if(quantity<0){
+    input.value = "1";
+    quantity = 1;
+  }
   var total = quantity * price;
   var formattedTotal = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); // Format total
 
@@ -199,3 +217,44 @@ function updateDueAmount() {
 
   $('#dueAmount').val(totalDues.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
 }
+
+function saveOrder() {
+  var formData = $('form').serialize(); // Serialize the form data
+  console.log(formData);
+  $.ajax({
+    url: '/save-order',
+    type: 'POST',
+    data: formData,
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    success: function(response) {
+      alert("Thank you!");
+      $('form')[0].reset();
+      $('#selectedItemsTable tbody').empty();
+      // console.log('Form submitted successfully:', response);
+      // Handle the success response as needed
+      },
+      error: function(error) {
+          console.error('Error occurred while submitting the form:', error);
+          // Handle errors, if any
+      }
+  });
+}
+// function saveOrder() {
+//   var formData = $('form').serialize(); // Serialize the form data
+//   console.log(formData);
+//   $.ajax({
+//       url: '/save-order', // Replace with the actual endpoint URL
+//   //     type: 'POST',
+//   //     data: formData,
+//   //     success: function(response) {
+//   //         // Handle the success response
+//   //         console.log('Order saved successfully:', response);
+//   //     },
+//   //     error: function(error) {
+//   //         // Handle errors, if any
+//   //         console.error('Error occurred while saving the order:', error);
+//   //     }
+//   });
+// }

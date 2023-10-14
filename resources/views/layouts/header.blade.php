@@ -21,5 +21,6 @@
             text-align: right;
         }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body style="padding: 2%;">
