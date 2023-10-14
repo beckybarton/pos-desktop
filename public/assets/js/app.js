@@ -34,52 +34,59 @@ document.addEventListener('DOMContentLoaded', function() {
 
   $(document).on('keydown', function(event) {
     if (event.key === "F2") {
+      event.preventDefault();
       $('#itemSearchModal').modal('show');
       $('#searchItemName').val('');
+      // console.log('item');
     }
-    // else if (event.key === "F6") {
-    //   $('#customerSearchModal').modal('show');
-    //   $('#searchCustomerName').val('');
-    // }
-    // else{
+    else if (event.key === "F5") {
+      event.preventDefault();
+    }
+    else if (event.key === "F6") {
+      event.preventDefault();
+      $('#customerSearchModal').modal('show');
+      // $('#searchCustomerName').val('');
+      // console.log('searchcustomer');
+    }
+    else{
 
-    // }
+    }
   });
 
   $('#itemSearchModal').on('shown.bs.modal', function () {
     $('#searchItemName').focus();
   });
 
-  // $('#customerSearchModal').on('shown.bs.modal', function () {
-  //   $('#searchCustomerName').focus();
-  // });
+  $('#customerSearchModal').on('shown.bs.modal', function () {
+    $('#searchCustomerName').focus();
+  });
 
-  // $('#searchCustomerName').on('input', function() {
-  //   event.preventDefault();
-  //   var searchQuery = $('#searchCustomerName').val();
+  // SEARCH CUSTOMER
+  $('#searchCustomerName').on('input', function() {
+    event.preventDefault();
+    var searchQuery = $('#searchCustomerName').val();
+    // console.log(searchQuery);
 
-  //   $.ajax({
-  //     url: '/search-customers',
-  //     type: 'GET',
-  //     data: { search_query: searchQuery },
-  //     success: function(data) {
-  //       // Clear previous search results
-  //       $('#searchResults').empty();
+    $.ajax({
+      url: '/search-customers',
+      type: 'GET',
+      data: { search_query: searchQuery },
+      success: function(data) {
+        $('#searchResultsCustomerTableBody').empty();
 
-  //       // Populate search results in the modal
-  //       data.forEach(function(customer) {
-  //         var resultHtml = '<div class="mb-3">' +
-  //                           '<strong>' + customer.name + '</strong><br>' +
-  //                           'Price: ' + item.selling_price +
-  //                           '<button class="btn btn-primary btn-sm float-end" id="addItemButton" onclick="addItemToTable(\'' + item.id + '\', \'' + item.name + '\', \'' + item.uom + '\', \'' + item.selling_price + '\')">Add</button>' +
-  //                           '</div>';
-  //         $('#searchResults').append(resultHtml);
-  //       });
-  //     }
-  //   });
-  // });
+        data.forEach(function(customer) {
+            var resultHtml = '<tr>' +
+                '<td>' + customer.name + '</td>' +
+                '<td><button class="btn btn-primary btn-sm float-end" onclick="addToCustomerField(\'' + customer.id + '\', \'' + customer.name + '\')">Add</button></td>'+
+                '</tr>';
+            $('#searchResultsCustomerTableBody').append(resultHtml);
+            
+        });
+      }
+    });
+  });  
     
-  // $('#itemSearchForm').on('submit', function(event) {
+  // SEARCH ITEMS
   $('#searchItemName').on('input', function() {
     event.preventDefault();
     var searchQuery = $('#searchItemName').val();
@@ -89,19 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
       type: 'GET',
       data: { search_query: searchQuery },
       success: function(data) {
-        // Clear previous search results
-        // $('#searchResults').empty();
-
-        // // Populate search results in the modal
-        // data.forEach(function(item) {
-        //   var formattedPrice = parseFloat(item.selling_price).toFixed(2);
-        //   var resultHtml = '<div class="mb-3">' +
-        //                     '<strong>' + item.name + '</strong><br>' +
-        //                     'Price: ' + formattedPrice +
-        //                     '<button class="btn btn-primary btn-sm float-end" id="addItemButton" onclick="addItemToTable(\'' + item.id + '\', \'' + item.name + '\', \'' + item.uom + '\', \'' + item.selling_price + '\')">Add</button>' +
-        //                     '</div>';
-        //   $('#searchResults').append(resultHtml);
-        // });
         $('#searchResultsTableBody').empty();
 
         data.forEach(function(item) {
@@ -140,6 +134,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
+
+function addToCustomerField(id,name){
+  $('#customer').val(id);
+  $('#customername').val(name);
+  $('#customerSearchModal').modal('hide');
+}
 
 function addItemToTable(id, name, uom, selling_price) {
   var quantity = parseFloat($('#quantity_' + id).val()) || 1;

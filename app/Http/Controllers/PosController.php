@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\Item;
 use App\Models\Location;
+use App\Models\Customer;
 
 class PosController extends Controller
 {
@@ -23,6 +24,16 @@ class PosController extends Controller
             return $item;
         });
         return response()->json($itemsWithoutQuotes);
+    }
+
+    public function searchCustomers(Request $request){
+        $searchQuery = $request->input('search_query');
+        $customers = Customer::where('name', 'like', "%$searchQuery%")->get();
+        $customersWithoutQuotes = $customers->map(function($customer) {
+            $customers['name'] = str_replace("'", "", $customer['name']);
+            return $customers;
+        });
+        return response()->json($customers);
     }
 
 }

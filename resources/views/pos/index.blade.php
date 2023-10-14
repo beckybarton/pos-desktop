@@ -46,16 +46,17 @@
             </div>
 
             <div class="row mb-3">
-                <label for="customer" class="col-sm-5 col-form-label font-weight-bold">Customer:</label>
+                <label for="method" class="col-sm-5 col-form-label font-weight-bold">Payment Method:</label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="customer" name="customer">
+                    <input type="text" class="form-control" id="method" name="method">
                 </div>
             </div>
 
             <div class="row mb-3">
-                <label for="method" class="col-sm-5 col-form-label font-weight-bold">Payment Method:</label>
+                <label for="customer" class="col-sm-5 col-form-label font-weight-bold">Customer:</label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="method" name="method">
+                    <input type="text" readonly class="form-control-plaintext" id="customer" name="customer">
+                    <input type="text" readonly class="form-control-plaintext" id="customername" name="customername">
                 </div>
             </div>
 

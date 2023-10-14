@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body">
         <!-- Search Form -->
-        <form id="itemSearchForm">
+        <!-- <form id="itemSearchForm"> -->
           <div class="mb-3">
             <label for="searchCustomerName" class="form-label">Customer Name:</label>
             <input type="text" class="form-control" id="searchCustomerName" required>
@@ -27,9 +27,9 @@
             </tbody>
         </table>
           </div>
-        </form>
+        <!-- </form> -->
         
-        <div id="searchResults"></div>
+        <div id="searchResultsCustomer"></div>
       </div>
     </div>
   </div>
