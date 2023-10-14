@@ -67,19 +67,12 @@ class PosController extends Controller
             $order_item->quantity = $quantities[$index];
             $order_item->save();
             
-            // if($order_item->save()){
-            //     return response()->json(['message' => "Thank you!"]);
-            // }
-            // else{
-            //     return response()->json(['message' => "Sorry."]);
-            // }
-
-            
-            // $jobDescription = JobDescription::find($descriptionIds[$index]);
-            // if ($jobDescription && isset($descriptionAmounts[$index])) {
-            //     $jobDescription->amount = $descriptionAmounts[$index];
-            //     $jobDescription->save();
-            // }
+            if($order_item->save()){
+                return response()->json(['message' => "Thank you!"]);
+            }
+            else{
+                return response()->json(['message' => "Sorry."]);
+            }
             
         }
         

@@ -20,7 +20,13 @@ class CustomerController extends Controller
             ]);
 
             if(Customer::create($data)){
-                return back()->with('success', 'Customer Created Successfully!');
+                if($request->route()->getName() == "pos.index"){
+                    return view('pos.index');
+                }
+                else{
+                    return back()->with('success', 'Customer Created Successfully!');
+                }
+                
             }
             else{
                 return back()->with('error', 'Customer Creation Not Successful!');

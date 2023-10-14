@@ -15,7 +15,7 @@
           @csrf
           <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" class="form-control" name="name" required>
+            <input type="text" class="form-control" name="name" id="customername" required>
           </div>
           <div class="modal-footer">
             <div class="form-group">

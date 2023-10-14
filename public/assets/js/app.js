@@ -75,6 +75,10 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#searchCustomerName').focus();
   });
 
+  $('#addCustomerModal').on('shown.bs.modal', function () {
+    $('#customername').focus();
+  });
+
   // SEARCH CUSTOMER
   $('#searchCustomerName').on('input', function() {
     event.preventDefault();
@@ -164,6 +168,7 @@ function addToCustomerField(id,name){
   $('#customer').val(id);
   $('#customername').val(name);
   $('#customerSearchModal').modal('hide');
+  console.log($('#customer').val());
 }
 
 function addItemToTable(id, name, uom, selling_price) {
@@ -220,7 +225,7 @@ function updateDueAmount() {
 
 function saveOrder() {
   var formData = $('form').serialize(); // Serialize the form data
-  console.log(formData);
+  // console.log(formData);
   $.ajax({
     url: '/save-order',
     type: 'POST',
@@ -229,32 +234,12 @@ function saveOrder() {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
     success: function(response) {
-      alert("Thank you!");
-      $('form')[0].reset();
-      $('#selectedItemsTable tbody').empty();
-      // console.log('Form submitted successfully:', response);
-      // Handle the success response as needed
+        alert("Thank you!");
+        $('form')[0].reset();
+        $('#selectedItemsTable tbody').empty();
       },
       error: function(error) {
           console.error('Error occurred while submitting the form:', error);
-          // Handle errors, if any
       }
   });
 }
-// function saveOrder() {
-//   var formData = $('form').serialize(); // Serialize the form data
-//   console.log(formData);
-//   $.ajax({
-//       url: '/save-order', // Replace with the actual endpoint URL
-//   //     type: 'POST',
-//   //     data: formData,
-//   //     success: function(response) {
-//   //         // Handle the success response
-//   //         console.log('Order saved successfully:', response);
-//   //     },
-//   //     error: function(error) {
-//   //         // Handle errors, if any
-//   //         console.error('Error occurred while saving the order:', error);
-//   //     }
-//   });
-// }

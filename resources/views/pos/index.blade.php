@@ -88,10 +88,10 @@
         </div>
     </form>
     <div class="btn-group">
-        <button type="button" class="btn btn-primary">F2 Add Items</button>
-        <button type="button" class="btn btn-secondary">F3 Assign Customer</button>
-        <button type="button" class="btn btn-success">F5 Pay</button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">F6 Create Customer</button>
+        <button type="button" class="btn btn-primary" style="margin-left: 10px;">F2 Add Items</button>
+        <button type="button" class="btn btn-secondary" style="margin-left: 10px;">F3 Assign Customer</button>
+        <button type="button" class="btn btn-success" style="margin-left: 10px;">F5 Pay</button>
+        <button type="button" class="btn btn-primary"  style="margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCustomerModal">F6 Create Customer</button>
     </div>
 
 
