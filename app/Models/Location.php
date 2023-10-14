@@ -20,4 +20,8 @@ class Location extends Model
 
         return null;
     }
+
+    public function order(){
+        return $this->has(Order::class);
+    }
 }

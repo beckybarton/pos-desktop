@@ -60,29 +60,34 @@ class PosController extends Controller
             $item_ids = $request->input('item_id');
             $quantities = $request->input('quantity');
 
-        foreach ($item_ids as $index => $item_id) {
-            $selling_price = Item::find($item_ids[$index])->selling_price;
-            $order_item = new OrderItem();
-            $order_item->order_id = $order->id;
-            $order_item->item_id = $item_ids[$index];
-            $order_item->price = $selling_price;
-            $order_item->quantity = $quantities[$index];
-            $order_item->save();
-            
-            if($order_item->save()){
-                return response()->json(['message' => "Thank you!"]);
+            foreach ($item_ids as $index => $item_id) {
+                $selling_price = Item::find($item_ids[$index])->selling_price;
+                $order_item = new OrderItem();
+                $order_item->order_id = $order->id;
+                $order_item->item_id = $item_ids[$index];
+                $order_item->price = $selling_price;
+                $order_item->quantity = $quantities[$index];
+                $order_item->save();
+                
+                if($order_item->save()){
+                    return response()->json(['message' => "Thank you!"]);
+                }
+                else{
+                    return response()->json(['message' => "Sorry."]);
+                }
+                
             }
-            else{
-                return response()->json(['message' => "Sorry."]);
-            }
-            
-        }
         
-            // return response()->json(['message' => "Thank you!"]);
         }
+
         else{
             return response()->json(['message' => "Sorry."]);
         }
+    }
+
+    public function getUnpaids(){
+        $orders = Order::getUnpaidOrders();
+        return response()->json(['orders' => $orders]);
     }
 
 }

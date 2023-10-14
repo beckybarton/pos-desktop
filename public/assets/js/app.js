@@ -62,6 +62,13 @@ document.addEventListener('DOMContentLoaded', function() {
       $('#addCustomerModal').modal('show');
     }
 
+    else if (event.key === "F7") {
+      event.preventDefault();
+      viewreceivables();
+      // $('#receivablesModal').modal('show');
+      // console.log('view ar list');
+    }
+
     else{
 
     }
@@ -146,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   $('#received').on('input', function() {
-    // console.log(parseFloat($('#received').val()) || 1);
     updateChange();
   });
 
@@ -210,10 +216,6 @@ function updateTotal(input, price) {
 function updateDueAmount() {
   var totalDues = 0;
   $('#selectedItemsTable tbody tr').each(function() {
-      // var quantity = parseFloat($(this).find('input[type="number"]').val()) || 0;
-      // var priceText = $(this).find('.selling_price').text().match(/\d+(\.\d+)?/);
-      // var price = priceText ? Number(priceText[0]) : 0;
-
       var priceText = $(this).find('.total').text().match(/\d+(\.\d+)?/);
       var price = priceText ? Number(priceText[0]) : 0;
       totalDues += price;
@@ -234,12 +236,35 @@ function saveOrder() {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
     success: function(response) {
-        alert("Thank you!");
+        alert("Transaction saved!");
         $('form')[0].reset();
         $('#selectedItemsTable tbody').empty();
       },
       error: function(error) {
           console.error('Error occurred while submitting the form:', error);
       }
+  });
+}
+
+function viewreceivables(){
+  $.ajax({
+    url: '/view-receivables',
+    type: 'GET',
+    
+    success: function(response) {
+      var tableBody = $('#receivablestable tbody');
+      tableBody.empty();
+      console.log(response.orders);
+      $.each(response.orders, function(index, order) {
+        var row = $('<tr>');
+        row.append($('<td class="small">').text(String(order.customer_id)));
+        row.append($('<td class="small">').text(order.customer_name));
+        row.append($('<td class="small text-end">').text(order.total_price.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})));
+        row.append($('<td class="small">').text("action"));
+        tableBody.append(row);
+        console.log(order.customer_id);
+      });
+      $('#receivablesModal').modal('show');
+    }
   });
 }
