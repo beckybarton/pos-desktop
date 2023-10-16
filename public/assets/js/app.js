@@ -48,8 +48,15 @@ document.addEventListener('DOMContentLoaded', function() {
     else if (event.key === "F5") {
       event.preventDefault();
       var customerValue = $('#customer').val();
+      var method = $('#method').val();
       if (customerValue.trim() !== ''){
-        saveOrder();
+        if (method === '0'){
+          alert('Please select payment method!');
+        }
+        else{
+          saveOrder();
+        }
+        
       }
       else{
         alert('Add Customer');
@@ -175,6 +182,33 @@ document.addEventListener('DOMContentLoaded', function() {
             row.toggle(isMatch);
         });
     });
+  });
+
+  $('#receivePaymentBtn').click(function(){
+    var payment_received = $('#payment_received').val();
+    var customer_id = $('#customer_id').val();
+    
+    // Perform AJAX POST request
+    $.ajax({
+      url: '/receive-payment', // Your Laravel route to handle payment submission
+      type: 'POST',
+      data: {
+          payment_received: payment_received,
+          customer_id: customer_id,
+      },
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      success: function(response) {
+          // Handle success response
+          alert('Payment received successfully!');
+      },
+      error: function(error) {
+          // Handle error response
+          alert('Error occurred while processing the payment.');
+          console.log(error);
+      }
+    });
 });
 
 
@@ -272,50 +306,6 @@ function viewreceivables(){
  
   $.ajax({
     url: '/view-receivables',
-    type: 'GET',
-    
-    // success: function(response) {
-    //   var tableBody = $('#receivablestable tbody');
-    //   tableBody.empty();
-    //   $.each(response.orders.original.orders, function(index, order) {
-    //       var row = $('<tr>');
-    //       row.append($('<td class="small">').text(String(order.customer_id)));
-    //       row.append($('<td class="small">').text(order.customer_name));
-    //       row.append($('<td class="small text-end">').text(order.total_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })));  
-    //       row.append($('<td class="small">').append($('<button class="btn btn-primary btn-sm">VIEW</button>')
-    //           .click(function() {
-    //               $.ajax({
-    //                   url: '/customer-receivables',
-    //                   type: 'GET',
-    //                   data: { customerId: order.customer_id },
-    //                   success: function(response) {
-    //                       var receivablescustomertable = $('#receivablescustomertable tbody');
-    //                       receivablescustomertable.empty();
-    //                       $.each(response.customerorders.original.orders, function(index, customerorder) {
-    //                         var createdAt = new Date(customerorder.created_at);
-    //                         var formattedDate = createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-    //                         var row = $('<tr>');
-    //                         row.append($('<td class="small">').text(String(customerorder.id)));
-    //                         row.append($('<td class="small">').text(formattedDate));
-    //                         row.append($('<td class="small">').text(String(customerorder.item_name)));
-    //                         row.append($('<td class="small text-end">').text(String(customerorder.price)));
-    //                         row.append($('<td class="small text-end">').text(String(customerorder.quantity)));
-    //                         row.append($('<td class="small text-end">').text(String(customerorder.total_price)));
-    //                         receivablescustomertable.append(row);
-    //                       });
-  
-    //                       $('#receivablesCustomerModal').modal('show');
-    //                   },
-    //                   error: function(error) {
-    //                       console.log(error);
-    //                   }
-    //               });
-    //           })));
-    //       tableBody.append(row);
-    //   });
-  
-    //   $('#receivablesModal').modal('show');
-    // },
     success: function(response) {
       var tableBody = $('#receivablestable tbody');
       tableBody.empty();
@@ -356,7 +346,7 @@ function viewreceivables(){
                         var customerNameSpan = document.getElementById("customernamereceivables");
                         customerNameSpan.textContent = response.customerorders.original.customer_name;
                         // console.log(response.customerorders.original.customer_name);
-  
+                        $('#customer_id').val(order.customer_id);
                         $('#receivablesCustomerModal').modal('show');
                       },
                       error: function(error) {

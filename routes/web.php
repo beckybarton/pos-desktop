@@ -50,3 +50,4 @@ Route::get('/search-customers', [PosController::class, 'searchCustomers'])->name
 Route::post('/save-order', [PosController::class, 'saveOrder'])->name('pos.saveOrder');
 Route::get('/view-receivables', [PosController::class, 'getUnpaids'])->name('pos.getUnpaids');
 Route::get('/customer-receivables', [PosController::class, 'customerReceivables'])->name('pos.customerReceivables');
+Route::post('/receive-payment', [PosController::class, 'receivepayment'])->name('pos.receivepayment');

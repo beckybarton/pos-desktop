@@ -23,6 +23,23 @@
             </tbody>
           </table>
         </div>
+        <form name="receive_payment_form" action="{{route('pos.receivepayment')}}" method="post">
+          @csrf
+          <input type="text" hidden class="form-control" id="customer_id" name="customer_id">
+          <div class="row">
+            <div class="col-md-3">
+              <label for="payment_received" class="form-label">Payment Received:</label>
+            </div>
+            <div class="col-md-3">
+              <input type="number" class="form-control" id="payment_received" name="payment_received">
+            </div>
+            <div class="col-md-6">
+              <label>&nbsp;</label> 
+              <!-- <button type="submit" class="btn btn-success btn-block">Receive Payment</button> -->
+              <button type="button" class="btn btn-success btn-block" id="receivePaymentBtn">Receive Payment</button>
+            </div>
+        </div>
+        </form>
       </div>
     </div>
   </div>

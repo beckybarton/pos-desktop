@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Category;
+use App\Models\Payment;
 
 class PosController extends Controller
 {
@@ -53,6 +54,7 @@ class PosController extends Controller
         $order->user_id = $request->input('cashier');
         $order->location_id = $request->input('location');
         $order->payment_status = $request->input('method');
+        $order->amount = $request->input('dueAmount');
         $order->status = $status;
 
 
@@ -92,10 +94,31 @@ class PosController extends Controller
 
     public function customerReceivables(Request $request){
         $customerId = $request->input('customerId');
-        // return
         $customerorders = Order::getCustomerReceivables($customerId);
         return response()->json(['customerorders' => $customerorders]);
     }
-    
 
+    public function receivepayment(Request $request){
+        $payment = new Payment();
+        $payment->customer_id = $request->input('customer_id');
+        $payment->amount = $request->input('payment_received');
+        // $payment->save();
+        $totalOrders = Order::totalOrders($request->input('customer_id'));
+
+
+
+        if ($payment->save()) {
+            $unpaid_orders = Order::where('customer_id', $request->input('customer_id'))
+                ->where('status', 'unpaid')
+                ->orderBy('created_at', 'asc'); // Assuming you want to update the oldest orders first
+                // ->take($totalOrders) // Take the first $totalOrders rows
+                // ->update(['payment_status' => 1]);
+            foreach ($unpaid_orders as $unpaid_order){
+                
+            }
+            
+        }
+
+        return back()->with('success', 'Customer Created Successfully!');
+    }
 }
