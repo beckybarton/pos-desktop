@@ -334,7 +334,6 @@ function viewreceivables(){
                       type: 'GET',
                       data: { customerId: order.customer_id },
                       success: function(response) {
-                        console.log(response.customerorders.original.orders);
                         var receivablescustomertable = $('#receivablescustomertable tbody');
                         receivablescustomertable.empty();
                         $.each(response.customerorders.original.orders, function(index, customerorder) {
@@ -346,9 +345,17 @@ function viewreceivables(){
                             row.append($('<td class="small">').text(String(customerorder.item_name)));
                             row.append($('<td class="small text-end">').text(String(customerorder.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
                             row.append($('<td class="small text-end">').text(String(customerorder.quantity.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
-                            row.append($('<td class="small text-end">').text(String(customerorder.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
+                            row.append($('<td class="small text-end">').text(String((customerorder.total_price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
                             receivablescustomertable.append(row);
                         });
+                        var row = $('<tr>');
+                        row.append($('<td class="small text-danger font-weight-bold" colspan="5"><strong>').text("Total"));
+                        row.append($('<td class="small text-danger font-weight-bold text-end" colspan="1"><strong>').text(String(response.customerorders.original.totalPriceSum.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
+                        receivablescustomertable.append(row);
+
+                        var customerNameSpan = document.getElementById("customernamereceivables");
+                        customerNameSpan.textContent = response.customerorders.original.customer_name;
+                        // console.log(response.customerorders.original.customer_name);
   
                         $('#receivablesCustomerModal').modal('show');
                       },

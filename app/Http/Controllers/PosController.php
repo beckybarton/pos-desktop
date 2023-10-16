@@ -95,7 +95,6 @@ class PosController extends Controller
         // return
         $customerorders = Order::getCustomerReceivables($customerId);
         return response()->json(['customerorders' => $customerorders]);
-        // return response()->json(['customerorders' => $customerId]);
     }
     
 
