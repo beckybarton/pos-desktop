@@ -8,18 +8,21 @@
       </div>
       <div class="modal-body">
         <div id="receivables" class="table-responsive">
-            <table class="table table-striped table-bordered table-hover" id="receivablestable">
-                <thead class="thead-dark">
-                    <tr>
-                        <th class="small">ID</th>
-                        <th class="small">Customer</th>
-                        <th class="small text-end">Total Due</th>
-                        <th class="small">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+          <input type="text" class="form-control" id="searchInputUnpaidCustomer" placeholder="Search by Customer Name">
+          <table class="table table-striped table-bordered table-hover" id="receivablestable">
+            <thead class="thead-dark">
+              <tr>
+                <th class="small">ID</th>
+                <th class="small">Customer</th>
+                <th class="small text-end">Total Due</th>
+                <th class="small">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4" id="receivables_pagination">
         </div>
       </div>
     </div>

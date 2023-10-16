@@ -49,3 +49,4 @@ Route::get('/search-items', [PosController::class, 'searchItems'])->name('pos.se
 Route::get('/search-customers', [PosController::class, 'searchCustomers'])->name('pos.searchCustomers');
 Route::post('/save-order', [PosController::class, 'saveOrder'])->name('pos.saveOrder');
 Route::get('/view-receivables', [PosController::class, 'getUnpaids'])->name('pos.getUnpaids');
+Route::get('/customer-receivables', [PosController::class, 'customerReceivables'])->name('pos.customerReceivables');

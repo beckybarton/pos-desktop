@@ -90,4 +90,9 @@ class PosController extends Controller
         return response()->json(['orders' => $orders]);
     }
 
+    public function customerReceivables(){
+        $orders = Order::getCustomerReceivables();
+        return response()->json(['orders' => $orders]);
+    }
+
 }

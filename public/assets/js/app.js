@@ -156,6 +156,27 @@ document.addEventListener('DOMContentLoaded', function() {
     updateChange();
   });
 
+  $(document).ready(function() {
+    $('#searchInputUnpaidCustomer').on('keyup change', function() {
+        var searchText = $('#searchInputUnpaidCustomer').val().toLowerCase();
+
+        $('#receivablestable tbody tr').each(function() {
+            var row = $(this);
+            var isMatch = false;
+
+            row.find('td').each(function() {
+                var cellText = $(this).text().toLowerCase();
+                if (cellText.includes(searchText)) {
+                    isMatch = true;
+                    return false; 
+                }
+            });
+
+            row.toggle(isMatch);
+        });
+    });
+});
+
 
 });
 
@@ -247,6 +268,8 @@ function saveOrder() {
 }
 
 function viewreceivables(){
+  // var paginationLinksHTML = '{{ $customerNames->links("pagination::bootstrap-4") }}';
+ 
   $.ajax({
     url: '/view-receivables',
     type: 'GET',
@@ -254,17 +277,38 @@ function viewreceivables(){
     success: function(response) {
       var tableBody = $('#receivablestable tbody');
       tableBody.empty();
-      console.log(response.orders);
-      $.each(response.orders, function(index, order) {
-        var row = $('<tr>');
-        row.append($('<td class="small">').text(String(order.customer_id)));
-        row.append($('<td class="small">').text(order.customer_name));
-        row.append($('<td class="small text-end">').text(order.total_price.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})));
-        row.append($('<td class="small">').text("action"));
-        tableBody.append(row);
-        console.log(order.customer_id);
+      console.log(response.orders.original.orders[0].customer_name);
+      $.each(response.orders.original.orders, function(index, order) {
+          var row = $('<tr>');
+          row.append($('<td class="small">').text(String(order.customer_id)));
+          row.append($('<td class="small">').text(order.customer_name));
+          row.append($('<td class="small text-end">').text(order.total_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })));  
+          row.append($('<td class="small">').append($('<button class="btn btn-primary btn-sm">VIEW</button>')
+            .click(function() {
+              console.log('clicked');
+              $.ajax({
+                  url: '/customer-receivables', // Replace with your actual Laravel controller route
+                  type: 'GET',
+                  data: { customerId: order.customer_id }, // Pass any required data to the controller
+                  success: function(response) {
+                      // Handle the response data and populate your second modal
+                      // Open the second modal using JavaScript or jQuery
+                      $('#secondModal').modal('show');
+                  },
+                  error: function(error) {
+                      console.log(error);
+                  }
+                });
+            })));
+          tableBody.append(row);
       });
+  
       $('#receivablesModal').modal('show');
+    },
+    error: function(xhr, status, error) {
+        // Handle AJAX errors here
+        console.error(error);
     }
+  
   });
 }
