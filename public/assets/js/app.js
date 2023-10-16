@@ -305,16 +305,16 @@ function viewreceivables(){
   // var paginationLinksHTML = '{{ $customerNames->links("pagination::bootstrap-4") }}';
  
   $.ajax({
-    url: '/view-receivables',
+    url: '/all-receivables',
     success: function(response) {
       var tableBody = $('#receivablestable tbody');
       tableBody.empty();
-  
+      console.log(response.orders.original.orders);
       $.each(response.orders.original.orders, function(index, order) {
           var row = $('<tr>');
           row.append($('<td class="small">').text(String(order.customer_id)));
           row.append($('<td class="small">').text(order.customer_name));
-          row.append($('<td class="small text-end">').text(order.total_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })));  
+          row.append($('<td class="small text-end">').text(order.total_remaining_due.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })));  
           row.append($('<td class="small">').append($('<button class="btn btn-primary btn-sm">VIEW</button>')
               .click(function() {
                   $('#receivablesModal').modal('hide'); // Hide the main modal temporarily

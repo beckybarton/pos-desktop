@@ -121,8 +121,8 @@ class PosController extends Controller
         }
     }
 
-    public function getUnpaids(){
-        $orders = Order::getUnpaidOrders();
+    public function allReceivables(){
+        $orders = Order::getAllReceivables();
         return response()->json(['orders' => $orders]);
     }
 
