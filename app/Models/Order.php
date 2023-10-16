@@ -17,6 +17,8 @@ class Order extends Model
         'status',
         'payment_status',
         'amount',
+        'payment',
+        'remaining_due',
     ];
 
     public function customer(){

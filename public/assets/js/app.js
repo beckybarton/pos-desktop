@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var customerValue = $('#customer').val();
       var method = $('#method').val();
       if (customerValue.trim() !== ''){
-        if (method === '0'){
+        if (method === '0' && ($('#received').val() !== "") ){
           alert('Please select payment method!');
         }
         else{

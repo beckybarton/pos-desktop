@@ -43,18 +43,44 @@ class PosController extends Controller
 
     public function saveOrder(Request $request){
         $status = "";
+        $remaining_due = 0;
         if($request->input('method') === "0"){
             $status = 'unpaid';
+            $remaining_due =  $request->input('dueAmount');
         }
         else{
-            $status = 'paid';
+            if($request->input('received') < $request->input('dueAmount')){
+                $status = 'partially paid';
+                $remaining_due = $request->input('dueAmount') - $request->input('received');
+            }
+            else if($request->input('received') >= $request->input('dueAmount')){
+                $status = 'paid';
+                $remaining_due = 0;
+            }
+            else{
+                $status = 'paid';
+            }
+            
         }
+
+        $payment_amount = 0;
+        if($request->input('received') > $request->input('dueAmount')){
+            $payment_amount = $request->input('dueAmount');
+        }
+        else {
+            $payment_amount = $request->input('received');
+        }
+
+        // $remaining_due = $payment_amount - $request->input('dueAmount');
+
         $order = new Order();
         $order->customer_id = $request->input('customer');
         $order->user_id = $request->input('cashier');
         $order->location_id = $request->input('location');
         $order->payment_status = $request->input('method');
         $order->amount = $request->input('dueAmount');
+        $order->payment = $payment_amount;
+        $order->remaining_due = $remaining_due;
         $order->status = $status;
 
 
@@ -73,10 +99,18 @@ class PosController extends Controller
                 $order_item->save();
 
                 if (!$order_item->save()) {
-                    $success = false; // Set success flag to false if saving fails
-                    break; // Exit the loop early, as there is no need to continue
+                    $success = false; 
+                    break; 
                 }
                 
+            }
+
+            if($request->input('received')>0){
+                $payment = new Payment();
+                $payment->customer_id = $request->input('customer');
+                $payment->amount = $payment_amount;
+                $payment->method = $request->input('method');
+                $payment->save();
             }
             return response()->json(['message' => "Thank you!"]);
         
