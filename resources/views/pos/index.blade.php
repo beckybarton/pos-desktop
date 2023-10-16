@@ -102,3 +102,4 @@
 @include('pos.customer')
 @include('customers.create')
 @include('pos.receivables')
+@include('pos.receivablescustomer')

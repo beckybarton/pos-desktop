@@ -14,6 +14,7 @@
                 <th class="small">ID</th>
                 <th class="small">Date</th>
                 <th class="small">Item</th>
+                <th class="small text-end">Unit Price</th>
                 <th class="small text-end">Quantity</th>
                 <th class="small text-end">Total</th>
               </tr>

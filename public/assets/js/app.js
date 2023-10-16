@@ -274,37 +274,98 @@ function viewreceivables(){
     url: '/view-receivables',
     type: 'GET',
     
+    // success: function(response) {
+    //   var tableBody = $('#receivablestable tbody');
+    //   tableBody.empty();
+    //   $.each(response.orders.original.orders, function(index, order) {
+    //       var row = $('<tr>');
+    //       row.append($('<td class="small">').text(String(order.customer_id)));
+    //       row.append($('<td class="small">').text(order.customer_name));
+    //       row.append($('<td class="small text-end">').text(order.total_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })));  
+    //       row.append($('<td class="small">').append($('<button class="btn btn-primary btn-sm">VIEW</button>')
+    //           .click(function() {
+    //               $.ajax({
+    //                   url: '/customer-receivables',
+    //                   type: 'GET',
+    //                   data: { customerId: order.customer_id },
+    //                   success: function(response) {
+    //                       var receivablescustomertable = $('#receivablescustomertable tbody');
+    //                       receivablescustomertable.empty();
+    //                       $.each(response.customerorders.original.orders, function(index, customerorder) {
+    //                         var createdAt = new Date(customerorder.created_at);
+    //                         var formattedDate = createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    //                         var row = $('<tr>');
+    //                         row.append($('<td class="small">').text(String(customerorder.id)));
+    //                         row.append($('<td class="small">').text(formattedDate));
+    //                         row.append($('<td class="small">').text(String(customerorder.item_name)));
+    //                         row.append($('<td class="small text-end">').text(String(customerorder.price)));
+    //                         row.append($('<td class="small text-end">').text(String(customerorder.quantity)));
+    //                         row.append($('<td class="small text-end">').text(String(customerorder.total_price)));
+    //                         receivablescustomertable.append(row);
+    //                       });
+  
+    //                       $('#receivablesCustomerModal').modal('show');
+    //                   },
+    //                   error: function(error) {
+    //                       console.log(error);
+    //                   }
+    //               });
+    //           })));
+    //       tableBody.append(row);
+    //   });
+  
+    //   $('#receivablesModal').modal('show');
+    // },
     success: function(response) {
       var tableBody = $('#receivablestable tbody');
       tableBody.empty();
-      console.log(response.orders.original.orders[0].customer_name);
+  
       $.each(response.orders.original.orders, function(index, order) {
           var row = $('<tr>');
           row.append($('<td class="small">').text(String(order.customer_id)));
           row.append($('<td class="small">').text(order.customer_name));
           row.append($('<td class="small text-end">').text(order.total_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })));  
           row.append($('<td class="small">').append($('<button class="btn btn-primary btn-sm">VIEW</button>')
-            .click(function() {
-              console.log('clicked');
-              $.ajax({
-                  url: '/customer-receivables', // Replace with your actual Laravel controller route
-                  type: 'GET',
-                  data: { customerId: order.customer_id }, // Pass any required data to the controller
-                  success: function(response) {
-                      // Handle the response data and populate your second modal
-                      // Open the second modal using JavaScript or jQuery
-                      $('#secondModal').modal('show');
-                  },
-                  error: function(error) {
-                      console.log(error);
-                  }
-                });
-            })));
+              .click(function() {
+                  $('#receivablesModal').modal('hide'); // Hide the main modal temporarily
+  
+                  $.ajax({
+                      url: '/customer-receivables',
+                      type: 'GET',
+                      data: { customerId: order.customer_id },
+                      success: function(response) {
+                        console.log(response.customerorders.original.orders);
+                        var receivablescustomertable = $('#receivablescustomertable tbody');
+                        receivablescustomertable.empty();
+                        $.each(response.customerorders.original.orders, function(index, customerorder) {
+                            var createdAt = new Date(customerorder.created_at);
+                            var formattedDate = createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                            var row = $('<tr>');
+                            row.append($('<td class="small">').text(String(customerorder.id)));
+                            row.append($('<td class="small">').text(formattedDate));
+                            row.append($('<td class="small">').text(String(customerorder.item_name)));
+                            row.append($('<td class="small text-end">').text(String(customerorder.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
+                            row.append($('<td class="small text-end">').text(String(customerorder.quantity.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
+                            row.append($('<td class="small text-end">').text(String(customerorder.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
+                            receivablescustomertable.append(row);
+                        });
+  
+                        $('#receivablesCustomerModal').modal('show');
+                      },
+                      error: function(error) {
+                          console.log(error);
+                      }
+                  });
+              })));
           tableBody.append(row);
       });
   
-      $('#receivablesModal').modal('show');
+      $('#receivablesModal').modal('show'); // Show the main modal again when the loop finishes
+      $('#receivablesCustomerModal').on('hidden.bs.modal', function (e) {
+        $('#receivablesModal').modal('show'); // Show the main modal when the customer modal is closed
+    });
     },
+  
     error: function(xhr, status, error) {
         // Handle AJAX errors here
         console.error(error);

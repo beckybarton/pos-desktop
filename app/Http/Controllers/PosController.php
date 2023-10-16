@@ -57,6 +57,7 @@ class PosController extends Controller
 
 
         if($order->save()){
+            $success = true;
             $item_ids = $request->input('item_id');
             $quantities = $request->input('quantity');
 
@@ -68,15 +69,14 @@ class PosController extends Controller
                 $order_item->price = $selling_price;
                 $order_item->quantity = $quantities[$index];
                 $order_item->save();
-                
-                if($order_item->save()){
-                    return response()->json(['message' => "Thank you!"]);
-                }
-                else{
-                    return response()->json(['message' => "Sorry."]);
+
+                if (!$order_item->save()) {
+                    $success = false; // Set success flag to false if saving fails
+                    break; // Exit the loop early, as there is no need to continue
                 }
                 
             }
+            return response()->json(['message' => "Thank you!"]);
         
         }
 
@@ -90,9 +90,13 @@ class PosController extends Controller
         return response()->json(['orders' => $orders]);
     }
 
-    public function customerReceivables(){
-        $orders = Order::getCustomerReceivables();
-        return response()->json(['orders' => $orders]);
+    public function customerReceivables(Request $request){
+        $customerId = $request->input('customerId');
+        // return
+        $customerorders = Order::getCustomerReceivables($customerId);
+        return response()->json(['customerorders' => $customerorders]);
+        // return response()->json(['customerorders' => $customerId]);
     }
+    
 
 }
