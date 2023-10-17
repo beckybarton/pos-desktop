@@ -68,6 +68,7 @@ class Order extends Model
         //     ->get();
         $orders = Order::select(
                 'orders.id',
+                'orders.created_at',
                 'items.name as item_name',
                 'order_items.price',
                 'order_items.quantity',

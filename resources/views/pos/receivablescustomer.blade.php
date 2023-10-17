@@ -1,5 +1,5 @@
 <!-- Modal for item search -->
-<div class="modal fade" id="receivablesCustomerModal">
+<div class="modal" id="receivablesCustomerModal">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
