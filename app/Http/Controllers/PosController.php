@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Category;
 use App\Models\Payment;
+use App\Models\CustomerCredit;
 
 class PosController extends Controller
 {
@@ -146,7 +147,6 @@ class PosController extends Controller
                     ->whereNot('status', 'paid')
                     ->orderBy('created_at', 'asc')
                     ->get();
-            // $unpaid_orders_sum = $unpaid_orders->sum('remaining_due');
 
             $payment_received = $request->input('payment_received');
 
@@ -164,10 +164,28 @@ class PosController extends Controller
 
                 $unpaid_order->save();
 
-                // $payment_received -= $unpaid_order->remaining_due;
                 if ($payment_received <= 0) {
                     break;
                 }
+            }
+
+            $unpaid_orders_sum = $unpaid_orders->sum('remaining_due');
+            if ($payment_received > $unpaid_orders_sum){
+                $existingCredit = CustomerCredit::where('customer_id', $request->input('customer_id'))->first();
+                if ($existingCredit){
+                    $credit = $existingCredit;
+                    $credit->amount = $credit->amount + ($payment_received - $unpaid_orders_sum);
+                    $credit->remaining = $credit->remaining + ($payment_received - $unpaid_orders_sum);
+                }
+                else{
+                    $credit = new CustomerCredit();
+                    $credit->customer_id = $request->input('customer_id');
+                    $credit->amount = $payment_received - $unpaid_orders_sum;
+                    $credit->used = 0;
+                    $credit->remaining = $payment_received - $unpaid_orders_sum;
+                }
+                
+                $credit->save();
             }
             // return back()->with('success', 'Customer Created Successfully!');
             // return back()->with('success', $unpaid_orders);

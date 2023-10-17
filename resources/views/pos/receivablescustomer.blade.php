@@ -24,7 +24,7 @@
           </table>
         </div>
         
-        <form name="receive_payment_form" action="{{route('pos.receivepayment')}}" method="post">
+        <form name="receive_payment_form" id="receive_payment_form" action="{{route('pos.receivepayment')}}" method="post">
           @csrf
           <input type="text" hidden class="form-control" id="customer_id" name="customer_id">
           <div class="row">

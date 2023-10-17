@@ -201,8 +201,9 @@ document.addEventListener('DOMContentLoaded', function() {
       success: function(response) {
           // Handle success response
           console.log(response);
+          $('#receivablesCustomerModal').modal('hide');
           alert('Payment received successfully!');
-          
+          document.getElementById("receive_payment_form").reset();
       },
       error: function(error) {
           // Handle error response
