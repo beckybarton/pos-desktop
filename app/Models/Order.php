@@ -49,23 +49,6 @@ class Order extends Model
     }
 
     public static function getCustomerReceivables($customer){
-        // $orders = Order::select(
-        //         'orders.id',
-        //         'orders.created_at',
-        //         'orders.remaining_due as remaining_due',
-        //         'items.name as item_name',
-        //         'order_items.price',
-        //         'order_items.quantity',
-        //         DB::raw('SUM(orders.amount) as total_payable'),
-        //         DB::raw('SUM(orders.remaining_due) as remaining_due'),
-        //         DB::raw('SUM(payments.amount) as total_payments')
-        //     )
-        //     ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
-        //     ->leftJoin('payments', 'payments.id', '=', 'payments.customer_id')
-        //     ->leftJoin('items', 'order_items.item_id', '=', 'items.id')
-        //     ->where('orders.customer_id', $customer)
-        //     ->groupBy('orders.id', 'orders.created_at', 'items.name', 'order_items.price', 'order_items.quantity') 
-        //     ->get();
         $orders = Order::select(
                 'orders.id',
                 'orders.created_at',

@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     $('.edit-selling-price').val(item.selling_price);
     $('#editItemForm').attr('action', '/item/' + item.id);
     $('#editItemModal').modal('show');
-    console.log(item);
   });
 
   $(document).on('keydown', function(event) {
@@ -37,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
       event.preventDefault();
       $('#itemSearchModal').modal('show');
       $('#searchItemName').val('');
-      // console.log('item');
     }
     
     else if (event.key === "F3") {
@@ -73,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
       event.preventDefault();
       viewreceivables();
       // $('#receivablesModal').modal('show');
-      // console.log('view ar list');
     }
 
     else{
@@ -97,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
   $('#searchCustomerName').on('input', function() {
     event.preventDefault();
     var searchQuery = $('#searchCustomerName').val();
-    // console.log(searchQuery);
 
     $.ajax({
       url: '/search-customers',
@@ -187,6 +183,8 @@ document.addEventListener('DOMContentLoaded', function() {
   $('#receivePaymentBtn').click(function(){
     var payment_received = $('#payment_received').val();
     var customer_id = $('#customer_id').val();
+    var method = $('#method_received').val();
+
     
     // Perform AJAX POST request
     $.ajax({
@@ -195,13 +193,16 @@ document.addEventListener('DOMContentLoaded', function() {
       data: {
           payment_received: payment_received,
           customer_id: customer_id,
+          method: method,
       },
       headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
       success: function(response) {
           // Handle success response
+          console.log(response);
           alert('Payment received successfully!');
+          
       },
       error: function(error) {
           // Handle error response
@@ -209,10 +210,12 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log(error);
       }
     });
+  });
+
 });
 
 
-});
+
 
 function updateChange(){
   var totalDue = (parseFloat($('#dueAmount').val()) || 1);
@@ -229,7 +232,6 @@ function addToCustomerField(id,name){
   $('#customer').val(id);
   $('#customername').val(name);
   $('#customerSearchModal').modal('hide');
-  console.log($('#customer').val());
 }
 
 function addItemToTable(id, name, uom, selling_price) {
@@ -282,7 +284,6 @@ function updateDueAmount() {
 
 function saveOrder() {
   var formData = $('form').serialize(); // Serialize the form data
-  // console.log(formData);
   $.ajax({
     url: '/save-order',
     type: 'POST',
@@ -309,7 +310,6 @@ function viewreceivables(){
     success: function(response) {
       var tableBody = $('#receivablestable tbody');
       tableBody.empty();
-      // console.log(response.orders.original.orders);
       $.each(response.orders.original.orders, function(index, order) {
           var row = $('<tr>');
           row.append($('<td class="small">').text(String(order.customer_id)));
@@ -326,7 +326,6 @@ function viewreceivables(){
                       success: function(response) {
                         var receivablescustomertable = $('#receivablescustomertable tbody');
                         receivablescustomertable.empty();
-                        console.log(response.customerorders.original);
                         $.each(response.customerorders.original.orders, function(index, customerorder) {
                             var createdAt = new Date(customerorder.created_at);
                             var formattedDate = createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
@@ -357,7 +356,6 @@ function viewreceivables(){
 
                         var customerNameSpan = document.getElementById("customernamereceivables");
                         customerNameSpan.textContent = response.customerorders.original.customer_name;
-                        // console.log(response.customerorders.original.customer_name);
                         $('#customer_id').val(order.customer_id);
                         $('#receivablesCustomerModal').modal('show');
                       },

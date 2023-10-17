@@ -32,14 +32,23 @@
               <label for="payment_received" class="form-label">Payment Received:</label>
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" id="payment_received" name="payment_received">
+              <input type="number" class="form-control" id="payment_received" min="1" name="payment_received">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
+              <select class="form-select" id="method_received" name="method_received" required>
+                <option value="1">Cash</option>
+                <option value="2">Gcash</option>
+                <option value="3">Card</option>
+              </select>
+            
+            </div>
+
+            <div class="col-md-3">
               <label>&nbsp;</label> 
               <!-- <button type="submit" class="btn btn-success btn-block">Receive Payment</button> -->
               <button type="button" class="btn btn-success btn-block" id="receivePaymentBtn">Receive Payment</button>
             </div>
-        </div>
+          </div>
         </form>
       </div>
     </div>

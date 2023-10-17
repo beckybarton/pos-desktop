@@ -136,23 +136,42 @@ class PosController extends Controller
         $payment = new Payment();
         $payment->customer_id = $request->input('customer_id');
         $payment->amount = $request->input('payment_received');
-        // $payment->save();
-        $totalOrders = Order::totalOrders($request->input('customer_id'));
+        $payment->method = $request->input('method');
+        // ($payment->save());
 
-
-
-        if ($payment->save()) {
+        // $unpaid_orders = Order::getCustomerReceivables($request->input('customer_id'));
+        
+        if($payment->save()){
             $unpaid_orders = Order::where('customer_id', $request->input('customer_id'))
-                ->where('status', 'unpaid')
-                ->orderBy('created_at', 'asc'); // Assuming you want to update the oldest orders first
-                // ->take($totalOrders) // Take the first $totalOrders rows
-                // ->update(['payment_status' => 1]);
-            foreach ($unpaid_orders as $unpaid_order){
-                
-            }
-            
-        }
+                    ->whereNot('status', 'paid')
+                    ->orderBy('created_at', 'asc')
+                    ->get();
+            // $unpaid_orders_sum = $unpaid_orders->sum('remaining_due');
 
-        return back()->with('success', 'Customer Created Successfully!');
+            $payment_received = $request->input('payment_received');
+
+            foreach ($unpaid_orders as $unpaid_order) {
+                if ($payment_received >= $unpaid_order->remaining_due) {
+                    $payment_received -= $unpaid_order->remaining_due;
+                    $unpaid_order->payment += $unpaid_order->remaining_due;
+                    $unpaid_order->remaining_due = 0;
+                    $unpaid_order->status = "paid";
+                } else {
+                    $unpaid_order->payment += $payment_received;
+                    $unpaid_order->remaining_due -= $payment_received;
+                    $payment_received = 0;
+                }
+
+                $unpaid_order->save();
+
+                // $payment_received -= $unpaid_order->remaining_due;
+                if ($payment_received <= 0) {
+                    break;
+                }
+            }
+            // return back()->with('success', 'Customer Created Successfully!');
+            // return back()->with('success', $unpaid_orders);
+            return response()->json(['unpaid_orders' => $unpaid_orders]);
+        }
     }
 }
