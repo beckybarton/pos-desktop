@@ -44,6 +44,7 @@ class PosController extends Controller
     public function saveOrder(Request $request){
         $status = "";
         $remaining_due = 0;
+        $payment_status = null;
         if($request->input('method') === "0"){
             $status = 'unpaid';
             $remaining_due =  $request->input('dueAmount');
@@ -77,7 +78,6 @@ class PosController extends Controller
         $order->customer_id = $request->input('customer');
         $order->user_id = $request->input('cashier');
         $order->location_id = $request->input('location');
-        $order->payment_status = $request->input('method');
         $order->amount = $request->input('dueAmount');
         $order->payment = $payment_amount;
         $order->remaining_due = $remaining_due;

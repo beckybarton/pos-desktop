@@ -23,6 +23,7 @@
             </tbody>
           </table>
         </div>
+        
         <form name="receive_payment_form" action="{{route('pos.receivepayment')}}" method="post">
           @csrf
           <input type="text" hidden class="form-control" id="customer_id" name="customer_id">

@@ -15,7 +15,6 @@ class Order extends Model
         'location_id',
         'customer_id',
         'status',
-        'payment_status',
         'amount',
         'payment',
         'remaining_due',
@@ -50,24 +49,61 @@ class Order extends Model
     }
 
     public static function getCustomerReceivables($customer){
+        // $orders = Order::select(
+        //         'orders.id',
+        //         'orders.created_at',
+        //         'orders.remaining_due as remaining_due',
+        //         'items.name as item_name',
+        //         'order_items.price',
+        //         'order_items.quantity',
+        //         DB::raw('SUM(orders.amount) as total_payable'),
+        //         DB::raw('SUM(orders.remaining_due) as remaining_due'),
+        //         DB::raw('SUM(payments.amount) as total_payments')
+        //     )
+        //     ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
+        //     ->leftJoin('payments', 'payments.id', '=', 'payments.customer_id')
+        //     ->leftJoin('items', 'order_items.item_id', '=', 'items.id')
+        //     ->where('orders.customer_id', $customer)
+        //     ->groupBy('orders.id', 'orders.created_at', 'items.name', 'order_items.price', 'order_items.quantity') 
+        //     ->get();
         $orders = Order::select(
                 'orders.id',
-                'orders.created_at',
-                'orders.remaining_due as remaining_due',
                 'items.name as item_name',
                 'order_items.price',
                 'order_items.quantity',
-                DB::raw('SUM(order_items.quantity * order_items.price) as total_price')
             )
             ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->leftJoin('payments', 'orders.customer_id', '=', 'payments.customer_id') // Ensure this join condition is correct
             ->leftJoin('items', 'order_items.item_id', '=', 'items.id')
             ->where('orders.customer_id', $customer)
-            ->groupBy('orders.id', 'orders.created_at', 'items.name', 'order_items.price', 'order_items.quantity') // Group by customers.name
+            ->whereNot('orders.status', 'paid')
+            ->groupBy('orders.id', 'orders.created_at', 'items.name', 'order_items.price', 'order_items.quantity', 'orders.amount') 
             ->get();
 
-        $totalPriceSum = $orders->sum('remaining_due');
+        $unpaidorders = Order::select(
+                'orders.id',
+                'orders.created_at',
+                'orders.remaining_due as remaining_due',
+                'orders.payment as payment',
+                'orders.amount as payable',
+            )
+            ->where('orders.customer_id', $customer)
+            ->whereNot('orders.status', 'paid')
+            ->groupBy('orders.id', 'orders.created_at', 'orders.remaining_due', 'orders.payment', 'orders.amount') 
+            ->get();
+        
+
+        $total_remaining_due = $unpaidorders->sum('remaining_due');
+        $total_payable = $unpaidorders->sum('payable');
+        $total_payment = $unpaidorders->sum('payment');
         $customer_name = ucwords(Customer::find($customer)->name);
-        return response()->json(['orders' => $orders, 'totalPriceSum' => $totalPriceSum, 'customer_name' => $customer_name]);
+        return response()->json(['orders' => $orders, 
+            'total_remaining_due' => $total_remaining_due, 
+            'customer_name' => $customer_name, 
+            'total_payable' => $total_payable,
+            'total_payment' => $total_payment,
+            'unpaidorders' => $unpaidorders
+        ]);
     }
 
     public static function totalOrders($customer){
