@@ -12,6 +12,7 @@ use App\Models\OrderItem;
 use App\Models\Category;
 use App\Models\Payment;
 use App\Models\CustomerCredit;
+use App\Models\CustomerCreditDeduction;
 
 class PosController extends Controller
 {
@@ -49,6 +50,8 @@ class PosController extends Controller
         $used_credit = 0;
 
         $payment_amount = 0;
+
+        $existingCredit = CustomerCredit::where('customer_id', $request->input('customer'))->first();
         if($request->input('received') > $request->input('dueAmount')){
             $payment_amount = $request->input('dueAmount');
         }
@@ -60,7 +63,6 @@ class PosController extends Controller
             $status = 'unpaid';
             $remaining_due =  $request->input('dueAmount');
 
-            $existingCredit = CustomerCredit::where('customer_id', $request->input('customer'))->first();
             if($existingCredit && $existingCredit->remaining > 0){
                 if($existingCredit->remaining > $request->input('dueAmount')){
                     $payment_amount = $request->input('dueAmount');
@@ -73,9 +75,11 @@ class PosController extends Controller
                     $status = "partially paid";
                     $used_credit = $existingCredit->remaining;
                 }
+
             }
 
         }
+
         else{
             if($request->input('received') < $request->input('dueAmount')){
                 $status = 'partially paid';
@@ -106,6 +110,7 @@ class PosController extends Controller
             $item_ids = $request->input('item_id');
             $quantities = $request->input('quantity');
 
+            // SAVE ORDER_ITEMS
             foreach ($item_ids as $index => $item_id) {
                 $selling_price = Item::find($item_ids[$index])->selling_price;
                 $order_item = new OrderItem();
@@ -122,6 +127,7 @@ class PosController extends Controller
                 
             }
 
+            // SAVE PAYMENTS
             if($request->input('received')>0){
                 $payment = new Payment();
                 $payment->customer_id = $request->input('customer');
@@ -129,6 +135,21 @@ class PosController extends Controller
                 $payment->method = $request->input('method');
                 $payment->save();
             }
+
+            // SAVE CUSTOMERCREDIT
+            if($existingCredit){
+                $creditDeduction = new CustomerCreditDeduction();
+                $creditDeduction->order_id = $order->id;
+                $creditDeduction->customer_id = $request->input('customer');
+                $creditDeduction->used = $used_credit;
+                $creditDeduction->save();
+
+                $existingCredit->used = $used_credit;
+                $existingCredit->remaining = $existingCredit->remaining - $used_credit;
+                $existingCredit->save();
+            }
+
+
             return response()->json(['message' => "Thank you!"]);
         
         }
