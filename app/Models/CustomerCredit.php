@@ -19,4 +19,8 @@ class CustomerCredit extends Model
     public function customer(){
         return $this->belongsTo(Customer::class);
     }
+
+    public function customer_credit_tracking(){
+        return $this->hasMany(CustomerCreditTracking::class);
+    }
 }

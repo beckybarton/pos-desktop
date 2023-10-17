@@ -46,9 +46,35 @@ class PosController extends Controller
         $status = "";
         $remaining_due = 0;
         $payment_status = null;
+        $used_credit = 0;
+
+        $payment_amount = 0;
+        if($request->input('received') > $request->input('dueAmount')){
+            $payment_amount = $request->input('dueAmount');
+        }
+        else {
+            $payment_amount = $request->input('received');
+        }
+
         if($request->input('method') === "0"){
             $status = 'unpaid';
             $remaining_due =  $request->input('dueAmount');
+
+            $existingCredit = CustomerCredit::where('customer_id', $request->input('customer'))->first();
+            if($existingCredit && $existingCredit->remaining > 0){
+                if($existingCredit->remaining > $request->input('dueAmount')){
+                    $payment_amount = $request->input('dueAmount');
+                    $remaining_due = 0;
+                    $status = "paid";
+                    $used_credit = $request->input('dueAmount');
+                }
+                else{
+                    $payment = $existingCredit->remaining;
+                    $status = "partially paid";
+                    $used_credit = $existingCredit->remaining;
+                }
+            }
+
         }
         else{
             if($request->input('received') < $request->input('dueAmount')){
@@ -64,16 +90,6 @@ class PosController extends Controller
             }
             
         }
-
-        $payment_amount = 0;
-        if($request->input('received') > $request->input('dueAmount')){
-            $payment_amount = $request->input('dueAmount');
-        }
-        else {
-            $payment_amount = $request->input('received');
-        }
-
-        // $remaining_due = $payment_amount - $request->input('dueAmount');
 
         $order = new Order();
         $order->customer_id = $request->input('customer');
