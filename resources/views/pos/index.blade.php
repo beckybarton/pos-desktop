@@ -96,11 +96,11 @@
         </div>
     </form>
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" style="margin-left: 10px;">F2 Add Items</button>
-        <button type="button" class="btn btn-secondary" style="margin-left: 10px;">F3 Assign Customer</button>
-        <button type="button" class="btn btn-success" style="margin-left: 10px;">F5 Pay</button>
-        <button type="button" class="btn btn-primary"  style="margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCustomerModal">F6 Create Customer</button>
-        <button type="button" class="btn btn-danger"  style="margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#itemSearchModalLabel">F7 Unpaid Orders</button>
+        <button type="button" class="btn btn-primary" onclick="searchitemmodal()" style="margin-left: 10px;">F2 Add Items</button>
+        <button type="button" class="btn btn-secondary" onclick="customersearchmodal()" style="margin-left: 10px;">F3 Assign Customer</button>
+        <button type="button" class="btn btn-success" onclick="pay()" style="margin-left: 10px;">F5 Pay</button>
+        <button type="button" class="btn btn-primary" onclick="addcustomer()" style="margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCustomerModal">F6 Create Customer</button>
+        <button type="button" class="btn btn-danger" onclick="viewreceivables()" style="margin-left: 10px;">F7 Unpaid Orders</button>
     </div>
 
 

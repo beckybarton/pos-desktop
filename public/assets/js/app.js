@@ -34,43 +34,27 @@ document.addEventListener('DOMContentLoaded', function() {
   $(document).on('keydown', function(event) {
     if (event.key === "F2") {
       event.preventDefault();
-      $('#itemSearchModal').modal('show');
-      $('#searchItemName').val('');
+      searchitemmodal();
     }
     
     else if (event.key === "F3") {
       event.preventDefault();
-      $('#customerSearchModal').modal('show');
+      customersearchmodal();
     }
 
     else if (event.key === "F5") {
       event.preventDefault();
-      var customerValue = $('#customer').val();
-      var method = $('#method').val();
-      if (customerValue.trim() !== ''){
-        if (method === '0' && ($('#received').val() !== "") ){
-          alert('Please select payment method!');
-        }
-        else{
-          saveOrder();
-        }
-        
-      }
-      else{
-        alert('Add Customer');
-      }
-      
+      pay();      
     }
 
     else if (event.key === "F6") {
       event.preventDefault();
-      $('#addCustomerModal').modal('show');
+      addcustomer();
     }
 
     else if (event.key === "F7") {
       event.preventDefault();
       viewreceivables();
-      // $('#receivablesModal').modal('show');
     }
 
     else{
@@ -403,4 +387,34 @@ function viewreceivables(){
     }
   
   });
+}
+
+function searchitemmodal(){
+  $('#itemSearchModal').modal('show');
+  $('#searchItemName').val('');
+}
+
+function customersearchmodal(){
+  $('#customerSearchModal').modal('show');
+}
+
+function pay(){
+  var customerValue = $('#customer').val();
+  var method = $('#method').val();
+  if (customerValue.trim() !== ''){
+    if (method === '0' && ($('#received').val() !== "") ){
+      alert('Please select payment method!');
+    }
+    else{
+      saveOrder();
+    }
+    
+  }
+  else{
+    alert('Add Customer');
+  }
+}
+
+function addcustomer(){
+  $('#addCustomerModal').modal('show');
 }
