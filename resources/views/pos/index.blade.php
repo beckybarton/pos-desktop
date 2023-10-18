@@ -42,6 +42,14 @@
                 </strong></h2>
 
                 <div class="row mb-3">
+                    <label for="received" class="col-sm-5 col-form-label font-weight-bold">Available Credits:</label>
+                    <div class="col-sm-7">
+                        <input type="number" hidden class="form-control-plaintext" id="availablecredits" name="availablecredits">
+                        <input type="number" readonly class="form-control-plaintext" id="availablecreditstext" name="availablecreditstext">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
                     <label for="received" class="col-sm-5 col-form-label font-weight-bold">Amount Received:</label>
                     <div class="col-sm-7">
                         <input type="number" class="form-control" id="received" name="received">

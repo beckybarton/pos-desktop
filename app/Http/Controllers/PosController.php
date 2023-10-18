@@ -48,8 +48,11 @@ class PosController extends Controller
         $remaining_due = 0;
         $payment_status = null;
         $used_credit = 0;
+        $remaining_credit = 0;
 
         $payment_amount = 0;
+
+        $paymentInfo = $this->paymentInfo($request);
 
         $existingCredit = CustomerCredit::where('customer_id', $request->input('customer'))->first();
         if($request->input('received') > $request->input('dueAmount')){
@@ -59,23 +62,17 @@ class PosController extends Controller
             $payment_amount = $request->input('received');
         }
 
+        // IF UNPAID, AND UNPAID WITH EXISTING CREDITS
         if($request->input('method') === "0"){
             $status = 'unpaid';
             $remaining_due =  $request->input('dueAmount');
 
-            if($existingCredit && $existingCredit->remaining > 0){
-                if($existingCredit->remaining > $request->input('dueAmount')){
-                    $payment_amount = $request->input('dueAmount');
-                    $remaining_due = 0;
-                    $status = "paid";
-                    $used_credit = $request->input('dueAmount');
-                }
-                else{
-                    $payment = $existingCredit->remaining;
-                    $status = "partially paid";
-                    $used_credit = $existingCredit->remaining;
-                }
-
+            if($paymentInfo && $paymentInfo['remaining_credit'] !== 0){
+                $status = $paymentInfo['status'];
+                $remaining_due = $paymentInfo['remaining_due'];
+                $remaining_credit = $paymentInfo['remaining_credit'];
+                $used_credit = $paymentInfo['used_credit'] + $existingCredit->used;
+                $payment_amount = $paymentInfo['payment'];
             }
 
         }
@@ -84,6 +81,9 @@ class PosController extends Controller
             if($request->input('received') < $request->input('dueAmount')){
                 $status = 'partially paid';
                 $remaining_due = $request->input('dueAmount') - $request->input('received');
+                if($existingCredit){
+
+                }
             }
             else if($request->input('received') >= $request->input('dueAmount')){
                 $status = 'paid';
@@ -137,16 +137,20 @@ class PosController extends Controller
             }
 
             // SAVE CUSTOMERCREDIT
+            $newCreditDeduction = false;
             if($existingCredit){
-                $creditDeduction = new CustomerCreditDeduction();
-                $creditDeduction->order_id = $order->id;
-                $creditDeduction->customer_id = $request->input('customer');
-                $creditDeduction->used = $used_credit;
-                $creditDeduction->save();
+                $newCreditDeduction = $this->newCustomerCreditDeduction($order->id, $request, $paymentInfo['used_credit'], $remaining_credit, $existingCredit);
+                // $creditDeduction = new CustomerCreditDeduction();
+                // $creditDeduction->order_id = $order->id;
+                // $creditDeduction->customer_id = $request->input('customer');
+                // $creditDeduction->used = $used_credit;
+                // $creditDeduction->save();
 
-                $existingCredit->used = $used_credit;
-                $existingCredit->remaining = $existingCredit->remaining - $used_credit;
-                $existingCredit->save();
+                // //SAKTO RA ANG CREDIT NGA NAGAMIT
+                // $existingCredit->used = $used_credit;
+                // // $existingCredit->remaining = $existingCredit->remaining - $used_credit;
+                // $existingCredit->remaining = $remaining_credit;
+                // $existingCredit->save();
             }
 
 
@@ -157,6 +161,49 @@ class PosController extends Controller
         else{
             return response()->json(['message' => "Sorry."]);
         }
+    }
+
+    public function newCustomerCreditDeduction($order_id, $request, $used_credit, $remaining_credit, $existingCredit){
+        $creditDeduction = new CustomerCreditDeduction();
+        $creditDeduction->order_id = $order_id;
+        $creditDeduction->customer_id = $request->input('customer');
+        $creditDeduction->used = $used_credit;
+        $creditDeduction->save();
+
+        //SAKTO RA ANG CREDIT NGA NAGAMIT
+        $existingCredit->used = $used_credit;
+        // $existingCredit->remaining = $existingCredit->remaining - $used_credit;
+        $existingCredit->remaining = $remaining_credit;
+        $existingCredit->save();
+
+        return true;
+    }
+
+    public function paymentInfo($request){
+        $existingCredit = CustomerCredit::where('customer_id', $request->input('customer'))->first();
+        $credit = null;
+        if ($existingCredit){
+            if ($existingCredit->remaining > $request->input('dueAmount')){
+                $credit = [
+                    'payment' => $request->input('dueAmount'),
+                    'remaining_due' => 0,
+                    'status' => 'paid',
+                    'used_credit' => $request->input('dueAmount'),
+                    'remaining_credit' => $existingCredit->remaining - $request->input('dueAmount'),
+                ];
+            }
+            else{
+                $credit = [
+                    'payment' => $existingCredit->remaining,
+                    'remaining_due' => $request->input('dueAmount') - $existingCredit->remaining,
+                    'status' => 'partially paid',
+                    'used_credit' => $existingCredit->remaining,
+                    'remaining_credit' => 0
+                ];
+            }
+        }
+        return $credit;
+        
     }
 
     public function allReceivables(){
@@ -175,9 +222,6 @@ class PosController extends Controller
         $payment->customer_id = $request->input('customer_id');
         $payment->amount = $request->input('payment_received');
         $payment->method = $request->input('method');
-        // ($payment->save());
-
-        // $unpaid_orders = Order::getCustomerReceivables($request->input('customer_id'));
         
         if($payment->save()){
             $unpaid_orders = Order::where('customer_id', $request->input('customer_id'))
@@ -228,5 +272,10 @@ class PosController extends Controller
             // return back()->with('success', $unpaid_orders);
             return response()->json(['unpaid_orders' => $unpaid_orders]);
         }
+    }
+
+    public function getCustomerCredit(Request $request){
+        $credits = CustomerCredit::where('customer_id', $request->input('customer_id'))->first();
+        return response()->json(['credits' => $credits]);
     }
 }

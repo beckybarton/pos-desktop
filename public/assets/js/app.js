@@ -230,9 +230,31 @@ function updateChange(){
 }
 
 function addToCustomerField(id,name){
+  getCustomerCredits(id);
   $('#customer').val(id);
   $('#customername').val(name);
   $('#customerSearchModal').modal('hide');
+}
+
+function getCustomerCredits(id){
+  $('#availablecredits').val('');
+  $.ajax({
+    url: '/get-customer-credit', // Your Laravel route to handle payment submission
+    type: 'GET',
+    data: {
+        customer_id: id
+    },
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    success: function(response) {
+      $('#availablecredits').val(response.credits?.remaining ?? 0);
+      $('#availablecreditstext').val((response.credits?.remaining ?? 0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}));
+    },
+    error: function(error) {
+        console.log(error);
+    }
+  });
 }
 
 function addItemToTable(id, name, uom, selling_price) {
@@ -327,6 +349,7 @@ function viewreceivables(){
                       success: function(response) {
                         var receivablescustomertable = $('#receivablescustomertable tbody');
                         receivablescustomertable.empty();
+                        // console.log(response.customerorders.original.orders[1].price);
                         $.each(response.customerorders.original.orders, function(index, customerorder) {
                             var createdAt = new Date(customerorder.created_at);
                             var formattedDate = createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });

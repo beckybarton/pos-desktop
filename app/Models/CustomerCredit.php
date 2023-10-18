@@ -23,4 +23,5 @@ class CustomerCredit extends Model
     public function customer_credit_tracking(){
         return $this->hasMany(CustomerCreditTracking::class);
     }
+
 }
