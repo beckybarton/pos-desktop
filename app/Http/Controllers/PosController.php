@@ -81,9 +81,6 @@ class PosController extends Controller
             if($request->input('received') < $request->input('dueAmount')){
                 $status = 'partially paid';
                 $remaining_due = $request->input('dueAmount') - $request->input('received');
-                if($existingCredit){
-
-                }
             }
             else if($request->input('received') >= $request->input('dueAmount')){
                 $status = 'paid';
@@ -140,17 +137,6 @@ class PosController extends Controller
             $newCreditDeduction = false;
             if($existingCredit){
                 $newCreditDeduction = $this->newCustomerCreditDeduction($order->id, $request, $paymentInfo['used_credit'], $remaining_credit, $existingCredit);
-                // $creditDeduction = new CustomerCreditDeduction();
-                // $creditDeduction->order_id = $order->id;
-                // $creditDeduction->customer_id = $request->input('customer');
-                // $creditDeduction->used = $used_credit;
-                // $creditDeduction->save();
-
-                // //SAKTO RA ANG CREDIT NGA NAGAMIT
-                // $existingCredit->used = $used_credit;
-                // // $existingCredit->remaining = $existingCredit->remaining - $used_credit;
-                // $existingCredit->remaining = $remaining_credit;
-                // $existingCredit->save();
             }
 
 
@@ -171,7 +157,7 @@ class PosController extends Controller
         $creditDeduction->save();
 
         //SAKTO RA ANG CREDIT NGA NAGAMIT
-        $existingCredit->used = $used_credit;
+        $existingCredit->used = $existingCredit->used + $used_credit;
         // $existingCredit->remaining = $existingCredit->remaining - $used_credit;
         $existingCredit->remaining = $remaining_credit;
         $existingCredit->save();
