@@ -34,12 +34,14 @@ Route::get('/locations', [LocationController::class, 'index'])->name('location.i
 
 // CUSTOMERS
 Route::post('/customers/store', [CustomerController::class, 'store'])->name('customer.store')->middleware('auth');
+Route::get('/customers', [CustomerController::class, 'index'])->name('customer.index')->middleware('auth');
 
 // USERS
 Route::post('/users/store', [UserController::class, 'store'])->name('user.store')->middleware('auth');
 Route::get('/users', [UserController::class, 'index'])->name('user.index')->middleware('auth');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // POS
 Route::get('/pos', [PosController::class, 'index'])->name('pos.index')->middleware('auth');

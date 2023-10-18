@@ -8,11 +8,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                </li>
-
                 <li>
-                <button class="nav-link changepassword" id="changepassword" data-target="#changepasswordModal">Change Password</button>
+                    <button class="btn btn-primary changepassword" id="changepassword" data-target="#changepasswordModal">Change Password</button>
+                </li>
+                <li>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button class="btn btn-danger" type="submit">Logout</button>
+                    </form>
                 </li>
             </ul>
         </div>

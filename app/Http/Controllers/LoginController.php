@@ -31,10 +31,6 @@ class LoginController extends Controller
                 'login_time' => Carbon::now()->toDateTimeString()
             ]);
             Session::put('selected_location', $request->input('location'));
-            // Save location to the database
-            // $user = User::where('username', $request->input('username'))->first();
-            // $user->location = $request->input('location');
-            // $user->save();
 
             return redirect()->intended('/');
         }
@@ -44,4 +40,13 @@ class LoginController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return redirect('/login');
+    }
+
+    
 }

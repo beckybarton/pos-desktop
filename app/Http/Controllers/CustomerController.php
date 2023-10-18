@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\Location;
+use App\Models\Category;
+use App\Models\Item;
+
 
 class CustomerController extends Controller
 {
@@ -32,7 +35,15 @@ class CustomerController extends Controller
                 return back()->with('error', 'Customer Creation Not Successful!');
             }
         }
+    }
 
-        
+    public function index(){
+        $customers = Customer::orderBy('name', 'asc')
+            ->paginate(10);
+        $locations = Location::all();
+        $categories = Category::all();
+        $items = Item::all();
+      
+      return view('customers.index', compact('items', 'locations', 'categories', 'customers')); 
     }
 }

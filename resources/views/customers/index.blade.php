@@ -16,6 +16,7 @@
 
         <div class="table-responsive">
             <input type="text" class="form-control" id="searchinputitem" placeholder="Search by Name">
+            <p></p>
             <table class="table table-striped table-bordered table-hover" id="itemstable">
                 <thead class="thead-dark">
                     <tr>
