@@ -49,6 +49,7 @@ class PosController extends Controller
         $payment_status = null;
         $used_credit = 0;
         $remaining_credit = 0;
+        $method = $request->input('method');
 
         $payment_amount = 0;
 
@@ -73,6 +74,7 @@ class PosController extends Controller
                 $remaining_credit = $paymentInfo['remaining_credit'];
                 $used_credit = $paymentInfo['used_credit'] + $existingCredit->used;
                 $payment_amount = $paymentInfo['payment'];
+                $method = 4;
             }
 
         }
@@ -125,13 +127,11 @@ class PosController extends Controller
             }
 
             // SAVE PAYMENTS
-            if($request->input('received')>0){
-                $payment = new Payment();
-                $payment->customer_id = $request->input('customer');
-                $payment->amount = $payment_amount;
-                $payment->method = $request->input('method');
-                $payment->save();
-            }
+            $payment = new Payment();
+            $payment->customer_id = $request->input('customer');
+            $payment->amount = $payment_amount;
+            $payment->method = $method;
+            $payment->save();
 
             // SAVE CUSTOMERCREDIT
             $newCreditDeduction = false;
