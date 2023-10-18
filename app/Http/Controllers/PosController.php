@@ -67,7 +67,7 @@ class PosController extends Controller
             $status = 'unpaid';
             $remaining_due =  $request->input('dueAmount');
 
-            if($paymentInfo && $paymentInfo['remaining_credit'] !== 0){
+            if($paymentInfo && $existingCredit->remaining > 0){
                 $status = $paymentInfo['status'];
                 $remaining_due = $paymentInfo['remaining_due'];
                 $remaining_credit = $paymentInfo['remaining_credit'];
@@ -179,10 +179,18 @@ class PosController extends Controller
                 ];
             }
             else{
+                if($request->input('dueAmount') - $existingCredit->remaining == 0){
+                    $status = 'paid';
+                    $remaining_due = 0;
+                }
+                else{
+                    $status = 'partially paid';
+                    $remaining_due = $request->input('dueAmount') - $existingCredit->remaining;
+                }
                 $credit = [
                     'payment' => $existingCredit->remaining,
-                    'remaining_due' => $request->input('dueAmount') - $existingCredit->remaining,
-                    'status' => 'partially paid',
+                    'remaining_due' => $remaining_due,
+                    'status' => $status,
                     'used_credit' => $existingCredit->remaining,
                     'remaining_credit' => 0
                 ];
