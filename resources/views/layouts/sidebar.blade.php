@@ -6,6 +6,7 @@
         <a href="{{ route('customer.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-user"></i> Customers</a>
         @if ( auth()->user()->role == "admin" )
             <a href="{{ route('user.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-user"></i> Users</a>
+            <a href="{{ route('report.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-file"></i> Reports</a>
         @endif
         <a href="" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#addCategoryModal"><i class="fas fa-clipboard-list"></i> Add Category <i class="fas fa-plus"></i></a>
         <a href="" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#addItemModal"><i class="fas fa-clipboard-list"></i> Add Item <i class="fas fa-plus"></i></a>

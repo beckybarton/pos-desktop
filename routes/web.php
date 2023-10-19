@@ -8,6 +8,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ReportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,3 +54,6 @@ Route::post('/save-order', [PosController::class, 'saveOrder'])->name('pos.saveO
 Route::get('/all-receivables', [PosController::class, 'allReceivables'])->name('pos.allReceivables')->middleware('auth');
 Route::get('/customer-receivables', [PosController::class, 'customerReceivables'])->name('pos.customerReceivables')->middleware('auth');
 Route::post('/receive-payment', [PosController::class, 'receivepayment'])->name('pos.receivepayment')->middleware('auth');
+
+// REPORTS
+Route::get('/reports', [ReportController::class, 'index'])->name('report.index')->middleware('auth');
