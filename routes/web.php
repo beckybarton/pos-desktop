@@ -57,3 +57,5 @@ Route::post('/receive-payment', [PosController::class, 'receivepayment'])->name(
 
 // REPORTS
 Route::get('/reports', [ReportController::class, 'index'])->name('report.index')->middleware('auth');
+// Route::get('/daily-report', [ReportController::class, 'dailyreport'])->name('report.dailyreport')->middleware('auth');
+Route::get('daily-report/{date}', [ReportController::class, 'dailyreport'])->name('report.dailyreport')->middleware('auth');

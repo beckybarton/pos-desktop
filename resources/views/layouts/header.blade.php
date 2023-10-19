@@ -11,9 +11,16 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    @foreach (glob(public_path('assets/js/*.js')) as $file)
+        <script src="{{ asset('assets/js/' . basename($file)) }}"></script>
+    @endforeach
     
-    <script src="{{ asset('assets/js/app.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('assets/js/customers.js') }}"></script>
+    <script src="{{ asset('assets/js/reports.js') }}"></script> --}}
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
     <style>
         .no-border {
             border: solid 1px;

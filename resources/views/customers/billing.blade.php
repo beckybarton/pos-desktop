@@ -11,14 +11,14 @@
         .billing-statement {
             max-width: 800px;
             margin: 0 auto;
-            padding: 40px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 10px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            padding: 0;
         }
 
         .customer-info {
@@ -76,11 +76,15 @@
 </head>
 
 <body>
+    @php
+        $companydetails = (new \App\Models\Setting)->companydetails();
+    @endphp
 <div class="container mt-5">
     <div class="billing-statement bg-light p-4">
-        <div class="header">
-            <h2 class="mb-4">C-ONE Sports Center</h2>
-            <h3 class="mb-4">Billing Statement</h3>
+        <div class="header" style="padding: 10px !important;">
+            <h2>C-ONE Sports Center</h2>
+            <h3>Billing Statement</h3>
+            <p>{{ ucwords($companydetails[0]->address) }}</p>
         </div>
 
         <div class="customer-info">
@@ -126,7 +130,7 @@
                 </tbody>
             </table>
             <hr>
-            <p class="small">Please make checks payable to: C-ONE Sports Center</p>
+            <p class="small">Please make checks payable to: {{ strtoupper($companydetails[0]->company_name) }}</p>
         </div>
     </div>
 </div>
