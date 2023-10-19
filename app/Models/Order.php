@@ -81,7 +81,8 @@ class Order extends Model
         $total_payable = $unpaidorders->sum('payable');
         $total_payment = $unpaidorders->sum('payment');
         $customer_name = ucwords(Customer::find($customer)->name);
-        return response()->json(['orders' => $orders, 
+
+        return (['orders' => $orders, 
             'total_remaining_due' => $total_remaining_due, 
             'customer_name' => $customer_name, 
             'total_payable' => $total_payable,
