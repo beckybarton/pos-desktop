@@ -35,6 +35,7 @@ Route::get('/locations', [LocationController::class, 'index'])->name('location.i
 // CUSTOMERS
 Route::post('/customers/store', [CustomerController::class, 'store'])->name('customer.store')->middleware('auth');
 Route::get('/customers', [CustomerController::class, 'index'])->name('customer.index')->middleware('auth');
+Route::get('/download-soa/{customerId}', [CustomerController::class, 'downloadSoa']);
 
 // USERS
 Route::post('/users/store', [UserController::class, 'store'])->name('user.store')->middleware('auth');

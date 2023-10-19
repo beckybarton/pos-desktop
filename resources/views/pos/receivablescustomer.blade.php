@@ -50,6 +50,10 @@
             </div>
           </div>
         </form>
+        <hr>
+        <div class="footer" id="downloadbuttondiv">
+          
+        </div>
       </div>
     </div>
   </div>

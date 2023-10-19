@@ -52,6 +52,7 @@ class Order extends Model
         $orders = Order::select(
                 'orders.id',
                 'orders.created_at',
+                'locations.name as location_name',
                 'items.name as item_name',
                 'order_items.price',
                 'order_items.quantity',
@@ -59,9 +60,10 @@ class Order extends Model
             ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
             ->leftJoin('payments', 'orders.customer_id', '=', 'payments.customer_id') // Ensure this join condition is correct
             ->leftJoin('items', 'order_items.item_id', '=', 'items.id')
+            ->leftJoin('locations', 'orders.location_id', '=', 'locations.id') 
             ->where('orders.customer_id', $customer)
             ->whereNot('orders.status', 'paid')
-            ->groupBy('orders.id', 'orders.created_at', 'items.name', 'order_items.price', 'order_items.quantity', 'orders.amount') 
+            ->groupBy('orders.id', 'orders.created_at', 'items.name', 'order_items.price', 'order_items.quantity', 'orders.amount', 'locations.name') 
             ->get();
 
         $unpaidorders = Order::select(

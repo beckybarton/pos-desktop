@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 
 class CustomerController extends Controller
@@ -55,5 +56,12 @@ class CustomerController extends Controller
             ->get();
       
         return view('customers.index', compact('items', 'locations', 'categories', 'customers', 'orders')); 
+    }
+
+    public function downloadSoa($customerId){
+        $customerorders = Order::getCustomerReceivables($customerId);
+        // dd($customerorders);
+        $pdf = PDF::loadView('customers.billing', ['customerorders' => $customerorders]);
+        return $pdf->download('billing_statement.pdf');
     }
 }

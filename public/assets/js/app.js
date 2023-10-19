@@ -364,6 +364,17 @@ function viewreceivables(){
                         var customerNameSpan = document.getElementById("customernamereceivables");
                         customerNameSpan.textContent = response.customerorders.customer_name;
                         $('#customer_id').val(order.customer_id);
+
+                        var downloadbuttondiv = $('#downloadbuttondiv');
+                        downloadbuttondiv.empty();
+
+                        var downloadButton = document.createElement('a');
+                        var downloadUrl = '/download-soa/' + order.customer_id;
+                        downloadButton.setAttribute('href', downloadUrl);
+                        downloadButton.setAttribute('class', 'btn btn-primary');
+                        downloadButton.textContent = 'Download Billing Statement';
+                        downloadbuttondiv.append(downloadButton);
+
                         $('#receivablesCustomerModal').modal('show');
                       },
                       error: function(error) {
