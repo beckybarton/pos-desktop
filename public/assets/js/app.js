@@ -57,6 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
       viewreceivables();
     }
 
+    else if (event.key === "F8") {
+      event.preventDefault();
+      returntodashboard();
+    }
+
     else{
 
     }
@@ -427,4 +432,8 @@ function pay(){
 
 function addcustomer(){
   $('#addCustomerModal').modal('show');
+}
+
+function returntodashboard(){
+  window.location.href = '/dashboard';
 }

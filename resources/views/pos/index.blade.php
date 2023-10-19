@@ -101,6 +101,7 @@
         <button type="button" class="btn btn-success" onclick="pay()" style="margin-left: 10px;">F5 Pay</button>
         <button type="button" class="btn btn-primary" onclick="addcustomer()" style="margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCustomerModal">F6 Create Customer</button>
         <button type="button" class="btn btn-danger" onclick="viewreceivables()" style="margin-left: 10px;">F7 Unpaid Orders</button>
+        <button type="button" class="btn btn-danger" onclick="returntodashboard()" style="margin-left: 10px;">F8 Return to Dashboard</button>
     </div>
 
 
