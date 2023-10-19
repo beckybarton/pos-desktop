@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropForeign(['category_id']);
+            // $table->unsignedBigInteger(['category_id']);
         });
     }
 

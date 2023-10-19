@@ -1,3 +1,4 @@
+
 @include('layouts.header')
 @include('layouts.navbar')
 <div class="row">
@@ -13,7 +14,6 @@
             {{ session('error') }}
             </div>
         @endif
-
         <div class="table-responsive">
             <input type="text" class="form-control" id="searchinputitem" placeholder="Search by Name">
             <p></p>
@@ -22,15 +22,17 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
+                        <th class="text-end">Remaining due</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($customers as $customer)
+                    @foreach($orders as $order)
                         <tr>
-                            <td>{{ $customer->id }}</td>
-                            <td>{{ $customer->name }}</td>
-                            <td>Action</td>
+                            <td class="customer-id">{{ $order->customer_id }}</td>
+                            <td>{{ $order->customer_name }}</td>
+                            <td class="text-end">{{ number_format($order->total_remaining_due,2) }}</td>
+                            <td><button class="btn btn-primary view-customer">View</button></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -47,3 +49,4 @@
 </div>
 
 @include('layouts.footer')
+@include('pos.receivablescustomer')

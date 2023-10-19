@@ -7,6 +7,8 @@ use App\Models\Customer;
 use App\Models\Location;
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 
 
 class CustomerController extends Controller
@@ -43,7 +45,15 @@ class CustomerController extends Controller
         $locations = Location::all();
         $categories = Category::all();
         $items = Item::all();
+
+        $orders = Order::select('orders.customer_id', 
+                    'customers.name as customer_name', 
+                    DB::raw('SUM(orders.remaining_due) as total_remaining_due')
+                )
+            ->leftJoin('customers', 'orders.customer_id', '=', 'customers.id')
+            ->groupBy('orders.customer_id', 'customers.name')
+            ->get();
       
-      return view('customers.index', compact('items', 'locations', 'categories', 'customers')); 
+        return view('customers.index', compact('items', 'locations', 'categories', 'customers', 'orders')); 
     }
 }
