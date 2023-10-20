@@ -14,6 +14,7 @@ use App\Models\Payment;
 use App\Models\CustomerCredit;
 use App\Models\CustomerCreditDeduction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -25,16 +26,26 @@ class ReportController extends Controller
         return view('reports.index', compact('items','locations', 'categories'));
     }
 
-    public function dailyreport($startdate) {
-        $sumOrdersAmount = Order::whereDate('created_at', $startdate)->sum('amount');
-        // return (['orders' => $orders, 
-        //     'total_remaining_due' => $total_remaining_due, 
-        //     'customer_name' => $customer_name, 
-        //     'total_payable' => $total_payable,
-        //     'total_payment' => $total_payment,
-        //     'unpaidorders' => $unpaidorders
-        // ]);
-        return response()->json(['sumOrdersAmount' => $sumOrdersAmount
+    public function dailyreport($startdate, $enddate) {
+        $sumOrdersAmount = Order::whereBetween('created_at', [$startdate, $enddate])->sum('amount');
+        // $sumOrdersAmount = Order::whereDate('created_at', $startdate)->sum('amount');
+
+        $categorizedSales = DB::table('order_items')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('categories', 'items.category_id', '=', 'categories.id')
+            ->whereBetween('order_items.created_at', [$startdate, $enddate])
+            ->select('categories.name as category_name',
+                DB::raw('SUM(order_items.price * order_items.quantity) as amount'))
+            ->orderBy('order_items.created_at', 'desc')
+            ->groupBy('categories.name')
+            ->orderBy('category_name', 'asc') 
+            ->get();
+
+        // $paymentmethods = DB::table('orders')
+        //     ->join('payments', )
+
+        return response()->json(['sumOrdersAmount' => $sumOrdersAmount,
+            'categorizedSales' => $categorizedSales
             ]);
         // return response()->json($sumOrdersAmount);
         // return response()->json($sumOrdersAmount);

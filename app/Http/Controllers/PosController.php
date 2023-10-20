@@ -64,7 +64,7 @@ class PosController extends Controller
         }
 
         // IF UNPAID, AND UNPAID WITH EXISTING CREDITS
-        if($request->input('method') === "Mark Unpaid"){
+        if($request->input('method') === "Unpaid"){
             $status = 'unpaid';
             $remaining_due =  $request->input('dueAmount');
 

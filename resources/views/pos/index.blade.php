@@ -60,7 +60,7 @@
                     <label for="method" class="col-sm-5 col-form-label font-weight-bold">Payment Method:</label>
                     <div class="col-sm-7">
                         <select class="form-select" id="method" name="method" required>
-                            <option value="Mark Unpaid">Mark Unpaid</option>
+                            <option value="Unpaid">Mark Unpaid</option>
                             <option value="Cash">Cash</option>
                             <option value="Gcash">Gcash</option>
                             <option value="Card">Card</option>

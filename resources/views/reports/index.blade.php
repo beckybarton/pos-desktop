@@ -29,16 +29,17 @@
                     <label class="form-label">Type of Report</label>
                 </div>
             </div>
+            
             <form>
                 <div class="row">
                     <div class="col-md-3">
                         <input type="text" class="form-control" id="searchinputitem" placeholder="Type keywords">
                     </div>
                     <div class="col-md-3">
-                        <input type="date" class="form-control" id="startdate" name="startdate">
+                        <input type="datetime-local" class="form-control" id="startdate" name="startdate">
                     </div>
                     <div class="col-md-3">
-                        <input type="date" class="form-control" id="enddate" name="enddate">
+                        <input type="datetime-local" class="form-control" id="enddate" name="enddate">
                     </div>
                     <div class="col-md-3">
                         <select class="form-select" id="reporttype" name="reporttype">
@@ -54,6 +55,8 @@
                     <button type="button" class="btn btn-primary generate" id="generate" name="generate">Generate</button>
                 </div>
             </div>
+            <br>
+            <hr>
             <div class="row">
                 <div class="reportsbody" id="reportsbody" name="reportsbody">
                     @include('reports.daily')
