@@ -27,6 +27,16 @@ class ReportController extends Controller
 
     public function dailyreport($startdate) {
         $sumOrdersAmount = Order::whereDate('created_at', $startdate)->sum('amount');
-        return response()->json($sumOrdersAmount);
+        // return (['orders' => $orders, 
+        //     'total_remaining_due' => $total_remaining_due, 
+        //     'customer_name' => $customer_name, 
+        //     'total_payable' => $total_payable,
+        //     'total_payment' => $total_payment,
+        //     'unpaidorders' => $unpaidorders
+        // ]);
+        return response()->json(['sumOrdersAmount' => $sumOrdersAmount
+            ]);
+        // return response()->json($sumOrdersAmount);
+        // return response()->json($sumOrdersAmount);
     }   
 }

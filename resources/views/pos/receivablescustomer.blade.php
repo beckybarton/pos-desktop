@@ -36,9 +36,9 @@
             </div>
             <div class="col-md-3">
               <select class="form-select" id="method_received" name="method_received" required>
-                <option value="1">Cash</option>
-                <option value="2">Gcash</option>
-                <option value="3">Card</option>
+                <option value="Cash">Cash</option>
+                <option value="Gcash">Gcash</option>
+                <option value="Card">Card</option>
               </select>
             
             </div>

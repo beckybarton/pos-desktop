@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {  
     $('#generate').click(function() {
+        // $('#reportsbody').empty();  
         var url = null;
         var data = null;
         var reporttype = $('#reporttype').val();
@@ -15,12 +16,20 @@ document.addEventListener('DOMContentLoaded', function() {
             url: url,
             method: 'GET',
             success: function(responsedata) {
-                $('#reportsbody').empty();
                 console.log(responsedata);
-                var reportsbody = document.getElementById('reportsbody');
-                reportsbody.textContent = 'New text content';
+                var dailyreportstable = $('#daily-reports tbody');
+                dailyreportstable.empty();
+
+                var row_title = $('<tr>');
+                row_title.append($('<td class="small font-weight-bold" colspan="5"><strong>').text("Daily Sales Report"));
+                dailyreportstable.append(row_title);
+
+                var row_totalsales = $('<tr>');
+                row_totalsales.append($('<td class="small font-weight-bold" colspan="5"><strong>').text("Total Sales"));
+                row_totalsales.append($('<td class="small font-weight-bold text-end" colspan="1"><strong>').text(String(responsedata.sumOrdersAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
+                dailyreportstable.append(row_totalsales);
     
-                $('#daily-report-content').removeClass('d-none');
+                
                 $('#startdate').val('');
     
             }
