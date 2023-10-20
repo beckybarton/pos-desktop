@@ -41,11 +41,22 @@ class ReportController extends Controller
             ->orderBy('category_name', 'asc') 
             ->get();
 
-        // $paymentmethods = DB::table('orders')
-        //     ->join('payments', )
+        $collectionsDateSales = DB::table('payments')
+            ->join('orders', 'payments.order_id', "=", 'orders.id')
+            ->whereBetween('orders.created_at', [$startdate, $enddate])
+            ->select('payments.method as method',
+                        DB::raw('SUM(payments.amount) as totalpayment')
+                    )
+            ->orderBy('payments.method')
+            ->groupBy('payments.method')
+            ->get();
+        
+        $unpaidDate = $sumOrdersAmount - $collectionsDateSales->sum('totalpayment');
 
         return response()->json(['sumOrdersAmount' => $sumOrdersAmount,
-            'categorizedSales' => $categorizedSales
+            'categorizedSales' => $categorizedSales,
+            'collectionsDateSales' => $collectionsDateSales,
+            'unpaidDate' => $unpaidDate
             ]);
         // return response()->json($sumOrdersAmount);
         // return response()->json($sumOrdersAmount);

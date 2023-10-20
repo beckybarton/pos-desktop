@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 row_categorizedSalesTitle.append($('<td colspan="3" class="small font-weight-bold"><strong>').text("Categorized Sales"));
                 dailyreportstable.append(row_categorizedSalesTitle);
 
+
                 $.each(responsedata.categorizedSales, function(index, categorizedSale) {
                     var row_categorized = $('<tr>');
                     row_categorized.append($('<td class="small">').text(""));
@@ -43,6 +44,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     dailyreportstable.append(row_categorized);
                 });
 
+                var row_collections_today_title = $('<tr>');
+                row_collections_today_title.append($('<td colspan="3" class="small font-weight-bold"><strong>').text("Collections from Today's Sales"));
+                dailyreportstable.append(row_collections_today_title);
+
+                $.each(responsedata.collectionsDateSales, function(index, collection){
+                    var row_collectiontoday = $('<tr>');
+                    row_collectiontoday.append($('<td class="small">').text(""));
+                    row_collectiontoday.append($('<td class="small">').text(String(collection.method)));
+                    row_collectiontoday.append($('<td class="small text-end">').text(String(collection.totalpayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
+                    dailyreportstable.append(row_collectiontoday);
+                });
+
+                var row_unpaidtoday = $('<tr>');
+                row_unpaidtoday.append($('<td class="small">').text(""));
+                row_unpaidtoday.append($('<td class="small">').text(String("Unpaid")));
+                row_unpaidtoday.append($('<td class="small text-end">').text(String(responsedata.unpaidDate.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
+                dailyreportstable.append(row_unpaidtoday);
                 // var categorized report
     
                 
