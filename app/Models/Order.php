@@ -36,6 +36,10 @@ class Order extends Model
         return $this->belongsTo(Location::class);
     }
 
+    public function payment(){
+        return $this->hasMany(Payment::class);
+    }
+
     public static function getAllReceivables(){
         $orders = Order::select('orders.customer_id', 
                     'customers.name as customer_name', 

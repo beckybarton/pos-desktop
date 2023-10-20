@@ -127,11 +127,15 @@ class PosController extends Controller
             }
 
             // SAVE PAYMENTS
-            $payment = new Payment();
-            $payment->customer_id = $request->input('customer');
-            $payment->amount = $payment_amount;
-            $payment->method = $method;
-            $payment->save();
+            if($request->input('method') !== "Unpaid"){
+                $payment = new Payment();
+                $payment->customer_id = $request->input('customer');
+                $payment->amount = $payment_amount;
+                $payment->method = $method;
+                $payment->order_id = $order->id;
+                $payment->save();
+            }
+                
 
             // SAVE CUSTOMERCREDIT
             $newCreditDeduction = false;
@@ -212,32 +216,46 @@ class PosController extends Controller
     }
 
     public function receivepayment(Request $request){
-        $payment = new Payment();
-        $payment->customer_id = $request->input('customer_id');
-        $payment->amount = $request->input('payment_received');
-        $payment->method = $request->input('method');
+        // $payment = new Payment();
+        // $payment->customer_id = $request->input('customer_id');
+        // $payment->amount = $request->input('payment_received');
+        // $payment->method = $request->input('method');
         
-        if($payment->save()){
+        // if($payment->save()){
             $unpaid_orders = Order::where('customer_id', $request->input('customer_id'))
                     ->whereNot('status', 'paid')
                     ->orderBy('created_at', 'asc')
                     ->get();
 
             $payment_received = $request->input('payment_received');
+            $payment_amount = 0;
+            $payment_remaining_due = 0;
 
             foreach ($unpaid_orders as $unpaid_order) {
                 if ($payment_received >= $unpaid_order->remaining_due) {
+                    $payment_remaining_due = $unpaid_order->remaining_due;
                     $payment_received -= $unpaid_order->remaining_due;
                     $unpaid_order->payment += $unpaid_order->remaining_due;
                     $unpaid_order->remaining_due = 0;
                     $unpaid_order->status = "paid";
-                } else {
+                    $payment_amount = $payment_remaining_due;
+                } 
+                else {
                     $unpaid_order->payment += $payment_received;
                     $unpaid_order->remaining_due -= $payment_received;
                     $payment_received = 0;
+                    $payment_amount = $request->input('payment_received');
                 }
 
-                $unpaid_order->save();
+                // $unpaid_order->save();
+                if($unpaid_order->save()){
+                    $payment = new Payment();
+                    $payment->customer_id = $unpaid_order->customer_id;
+                    $payment->amount = $payment_amount;
+                    $payment->order_id = $unpaid_order->id;
+                    $payment->method = $request->input('method');
+                    $payment->save();
+                }
 
                 if ($payment_received <= 0) {
                     break;
@@ -262,10 +280,8 @@ class PosController extends Controller
                 
                 $credit->save();
             }
-            // return back()->with('success', 'Customer Created Successfully!');
-            // return back()->with('success', $unpaid_orders);
             return response()->json(['unpaid_orders' => $unpaid_orders]);
-        }
+        // }
     }
 
     public function getCustomerCredit(Request $request){
