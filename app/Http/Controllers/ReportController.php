@@ -54,10 +54,23 @@ class ReportController extends Controller
         
         $unpaidDate = $sumOrdersAmount - $collectionsDateSales->sum('totalpayment');
 
+        $collectionsPreviousSales = DB::table('payments')
+        ->join('orders', 'payments.order_id', "=", 'orders.id')
+        ->where('orders.created_at', '<', $startdate)
+        ->select('payments.method as method',
+                    DB::raw('SUM(payments.amount) as totalpayment')
+                )
+        ->orderBy('payments.method')
+        ->groupBy('payments.method')
+        ->get();
+
+        // $collectionsPreviousSalesAmount = sum(total)
+
         return response()->json(['sumOrdersAmount' => $sumOrdersAmount,
             'categorizedSales' => $categorizedSales,
             'collectionsDateSales' => $collectionsDateSales,
-            'unpaidDate' => $unpaidDate
+            'unpaidDate' => $unpaidDate,
+            'collectionsPreviousSales' => $collectionsPreviousSales
             ]);
         // return response()->json($sumOrdersAmount);
         // return response()->json($sumOrdersAmount);

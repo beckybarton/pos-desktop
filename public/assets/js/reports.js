@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 dailyreportstable.empty();
 
                 var row_title = $('<tr>');
-                row_title.append($('<td colspan="3" class="small font-weight-bold"><strong>').text("Daily Sales Report"));
+                row_title.append($('<td colspan="3" class="small font-weight-bold text-center"><strong>').text("Daily Sales Report"));
                 dailyreportstable.append(row_title);
 
                 var row_totalsales = $('<tr>');
@@ -61,10 +61,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 row_unpaidtoday.append($('<td class="small">').text(String("Unpaid")));
                 row_unpaidtoday.append($('<td class="small text-end">').text(String(responsedata.unpaidDate.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
                 dailyreportstable.append(row_unpaidtoday);
-                // var categorized report
-    
                 
-                // $('#startdate').val('');
+                var row_collections_previous_title = $('<tr>');
+                row_collections_previous_title.append($('<td colspan="3" class="small font-weight-bold"><strong>').text("Collections from Previous Unpaid Orders"));
+                dailyreportstable.append(row_collections_previous_title);
+
+                $.each(responsedata.collectionsPreviousSales, function(index, collection){
+                    var row_collectionprevious = $('<tr>');
+                    row_collectionprevious.append($('<td class="small">').text(""));
+                    row_collectionprevious.append($('<td class="small">').text(String(collection.method)));
+                    row_collectionprevious.append($('<td class="small text-end">').text(String(collection.totalpayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
+                    dailyreportstable.append(row_collectionprevious);
+                });
     
             }
         });
