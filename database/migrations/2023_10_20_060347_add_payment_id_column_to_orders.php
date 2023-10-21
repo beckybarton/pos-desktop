@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('payments', function (Blueprint $table) {
             // $table->unsignedBigInteger('order_id')->after('amount')->nullable()->default(null); 
 
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            // $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
         });
     }
 

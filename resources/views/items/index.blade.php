@@ -19,6 +19,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>ID</th>
+                        <th>Category</th>
                         <th>Name</th>
                         <th>UOM</th>
                         <th>Amount</th>
@@ -29,7 +30,8 @@
                     @foreach($items as $item)
                         <tr>
                             <td>{{ $item->id }}</td>
-                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->category_name }}</td>
+                            <td>{{ $item->item_name }}</td>
                             <td>{{ $item->uom }}</td>
                             <td>{{ number_format($item->selling_price,2) }}</td>
                             <td>

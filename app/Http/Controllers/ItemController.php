@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Location;
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
@@ -52,11 +53,17 @@ class ItemController extends Controller
     }
 
     public function index() {
-        $items = Item::orderBy('name', 'asc')
-          ->paginate(10);
+        // $items = Item::orderBy('name', 'asc')
+        //     ->join('categories', 'items.category_id', '=', 'categories.id')
+        //     ->paginate(10);
+        $items = Item::select('items.id as id', 'items.name as item_name', 'categories.name as category_name', 'items.selling_price', 'items.uom')
+            ->orderBy('items.name', 'asc')
+            ->join('categories', 'items.category_id', '=', 'categories.id')
+            ->paginate(10);
         $locations = Location::all();
         $categories = Category::all();
         
+        // dd($items);
         return view('items.index', compact('items', 'locations', 'categories'));
     }
 
