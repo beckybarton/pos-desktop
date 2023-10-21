@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Order;
+use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 use PDF;
 
@@ -46,6 +47,7 @@ class CustomerController extends Controller
         $locations = Location::all();
         $categories = Category::all();
         $items = Item::all();
+        $setting = Setting::first();
 
         $orders = Order::select('orders.customer_id', 
                     'customers.name as customer_name', 
@@ -55,7 +57,7 @@ class CustomerController extends Controller
             ->groupBy('orders.customer_id', 'customers.name')
             ->get();
       
-        return view('customers.index', compact('items', 'locations', 'categories', 'customers', 'orders')); 
+        return view('customers.index', compact('items', 'locations', 'categories', 'customers', 'orders', 'setting')); 
     }
 
     public function downloadSoa($customerId){

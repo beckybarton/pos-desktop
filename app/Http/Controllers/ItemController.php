@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Location;
 use App\Models\Category;
+use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
@@ -59,8 +60,9 @@ class ItemController extends Controller
             ->paginate(10);
         $locations = Location::all();
         $categories = Category::all();
+        $setting = Setting::first();
         
-        return view('items.index', compact('items', 'locations', 'categories'));
+        return view('items.index', compact('items', 'locations', 'categories', 'setting'));
     }
 
     public function update(Request $request, Item $item)

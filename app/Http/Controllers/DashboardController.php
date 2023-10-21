@@ -15,8 +15,9 @@ class DashboardController extends Controller
         ->paginate(10);
       $locations = Location::all();
       $categories = Category::all();
+      $setting = Setting::first();
       
-      return view('dashboard.index', compact('items', 'locations', 'categories'));
+      return view('dashboard.index', compact('items', 'locations', 'categories', 'setting'));
     }
 
     public function setting() {

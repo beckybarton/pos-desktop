@@ -48,4 +48,3 @@
 </div>
 
 @include('layouts.footer')
-@include('dashboard.settings')

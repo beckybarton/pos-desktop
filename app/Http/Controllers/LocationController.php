@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Location;
 use App\Models\Category;
+use App\Models\Setting;
 
 class LocationController extends Controller
 {
@@ -35,7 +36,8 @@ class LocationController extends Controller
           ->paginate(10);
         $alllocations = Location::all();
         $categories = Category::all();
+        $setting = Setting::first();
         
-        return view('locations.index', compact('locations', 'alllocations', 'categories'));
+        return view('locations.index', compact('locations', 'alllocations', 'categories', 'setting'));
     }
 }

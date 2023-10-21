@@ -23,7 +23,8 @@ class ReportController extends Controller
         ->paginate(10);
         $locations = Location::all();
         $categories = Category::all();
-        return view('reports.index', compact('items','locations', 'categories'));
+        $setting = Setting::first();
+        return view('reports.index', compact('items','locations', 'categories', 'setting'));
     }
 
     public function dailyreport($startdate, $enddate) {

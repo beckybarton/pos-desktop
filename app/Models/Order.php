@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
 class Order extends Model
 {
     use HasFactory;
@@ -117,12 +117,14 @@ class Order extends Model
         return $totalPriceSum;
     }
 
-    public function setCreatedAtAttribute($value)
-    {
-        // Assuming $value is in the default timezone of your application
+    public function setCreatedAtAttribute($value){
         $timezone = Setting::first()->timezone;
-        $this->attributes['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $value, 'your_default_timezone')
-            ->timezone('Asia/Shanghai') // Set the desired timezone
+        $this->attributes['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $value, date_default_timezone_get())
+            ->timezone($timezone) 
+            ->toDateTimeString();
+
+            $this->attributes['updated_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $value, date_default_timezone_get())
+            ->timezone($timezone) 
             ->toDateTimeString();
     }
 }

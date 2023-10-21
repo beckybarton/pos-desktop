@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Location;
 use App\Models\Category;
+use App\Models\Setting;
 
 class UserController extends Controller
 {
@@ -50,7 +51,8 @@ class UserController extends Controller
           ->paginate(10);
         $locations = Location::all();
         $categories = Category::all();
+        $setting = Setting::first();
         
-        return view('users.index', compact('users', 'locations', 'categories'));
+        return view('users.index', compact('users', 'locations', 'categories', 'setting'));
     }
 }
