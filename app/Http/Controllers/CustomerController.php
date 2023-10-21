@@ -49,15 +49,39 @@ class CustomerController extends Controller
         $items = Item::all();
         $setting = Setting::first();
 
-        $orders = Order::select('orders.customer_id', 
-                    'customers.name as customer_name', 
-                    DB::raw('SUM(orders.remaining_due) as total_remaining_due')
-                )
-            ->leftJoin('customers', 'orders.customer_id', '=', 'customers.id')
-            ->groupBy('orders.customer_id', 'customers.name')
-            ->get();
+        // $orders = Order::select('orders.customer_id', 
+        //             'customers.name as customer_name', 
+        //             DB::raw('SUM(orders.remaining_due) as total_remaining_due')
+        //         )
+        //     ->leftJoin('customers', 'orders.customer_id', '=', 'customers.id')
+        //     ->groupBy('orders.customer_id', 'customers.name')
+        //     ->get();
+
+        // $collectionsDateSales = DB::table('payments')
+        //     ->join('orders', 'payments.order_id', "=", 'orders.id')
+        //     ->whereBetween('orders.created_at', [$startdate, $enddate])
+        //     ->select('payments.method as method',
+        //                 DB::raw('SUM(payments.amount) as totalpayment')
+        //             )
+        //     ->orderBy('payments.method')
+        //     ->groupBy('payments.method')
+        //     ->get();
+
+        // $customers = Customer::select('customers.name as name', 
+        //                 'customers.id as id')
+        //             ->join('orders', 'orders.customer_id', "=", 'customers.id')
+        //             ->groupBy('customers.name', 'customers.id')
+        //             ->paginate(10);
+
+        $customers = Customer::select('customers.name as name', 
+                    'customers.id as id',
+                    DB::raw('SUM(orders.remaining_due) as total_remaining_due')) // Calculate the total remaining_due using SUM
+                ->leftJoin('orders', 'orders.customer_id', '=', 'customers.id')
+                ->groupBy('customers.name', 'customers.id')
+                ->paginate(10);
+
       
-        return view('customers.index', compact('items', 'locations', 'categories', 'customers', 'orders', 'setting')); 
+        return view('customers.index', compact('items', 'locations', 'categories', 'customers', 'setting')); 
     }
 
     public function downloadSoa($customerId){

@@ -27,11 +27,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($orders as $order)
+                    @foreach($customers as $customer)
                         <tr>
-                            <td class="customer-id">{{ $order->customer_id }}</td>
-                            <td>{{ $order->customer_name }}</td>
-                            <td class="text-end">{{ number_format($order->total_remaining_due,2) }}</td>
+                            <td class="customer-id">{{ $customer->id }}</td>
+                            <td>{{ $customer->name }}</td>
+                            <td class="text-end">{{ number_format($customer->total_remaining_due,2) }}</td>
                             <td><button class="btn btn-primary view-customer">View</button></td>
                         </tr>
                     @endforeach
