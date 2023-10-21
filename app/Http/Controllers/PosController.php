@@ -133,7 +133,6 @@ class PosController extends Controller
                 
             }
 
-            // SAVE PAYMENTS
             if($request->input('method') !== "Unpaid"){
                 $payment = new Payment();
                 $payment->customer_id = $request->input('customer');
@@ -223,72 +222,63 @@ class PosController extends Controller
     }
 
     public function receivepayment(Request $request){
-        // $payment = new Payment();
-        // $payment->customer_id = $request->input('customer_id');
-        // $payment->amount = $request->input('payment_received');
-        // $payment->method = $request->input('method');
+        $unpaid_orders = Order::where('customer_id', $request->input('customer_id'))
+                ->whereNot('status', 'paid')
+                ->orderBy('created_at', 'asc')
+                ->get();
+
+        $payment_received = $request->input('payment_received');
+        $payment_amount = 0;
+        $payment_remaining_due = 0;
+
+        foreach ($unpaid_orders as $unpaid_order) {
+            if ($payment_received <= 0) {
+                break;
+            }
         
-        // if($payment->save()){
-            $unpaid_orders = Order::where('customer_id', $request->input('customer_id'))
-                    ->whereNot('status', 'paid')
-                    ->orderBy('created_at', 'asc')
-                    ->get();
-
-            $payment_received = $request->input('payment_received');
-            $payment_amount = 0;
-            $payment_remaining_due = 0;
-
-            foreach ($unpaid_orders as $unpaid_order) {
-                if ($payment_received >= $unpaid_order->remaining_due) {
-                    $payment_remaining_due = $unpaid_order->remaining_due;
-                    $payment_received -= $unpaid_order->remaining_due;
-                    $unpaid_order->payment += $unpaid_order->remaining_due;
-                    $unpaid_order->remaining_due = 0;
-                    $unpaid_order->status = "paid";
-                    $payment_amount = $payment_remaining_due;
-                } 
-                else {
-                    $unpaid_order->payment += $payment_received;
-                    $unpaid_order->remaining_due -= $payment_received;
-                    $payment_received = 0;
-                    $payment_amount = $request->input('payment_received');
-                }
-
-                // $unpaid_order->save();
-                if($unpaid_order->save()){
-                    $payment = new Payment();
-                    $payment->customer_id = $unpaid_order->customer_id;
-                    $payment->amount = $payment_amount;
-                    $payment->order_id = $unpaid_order->id;
-                    $payment->method = $request->input('method');
-                    $payment->save();
-                }
-
-                if ($payment_received <= 0) {
-                    break;
-                }
+            if ($payment_received >= $unpaid_order->remaining_due) {
+                $payment_amount = $unpaid_order->remaining_due;
+                $payment_received -= $unpaid_order->remaining_due;
+                $unpaid_order->payment += $unpaid_order->remaining_due;
+                $unpaid_order->remaining_due = 0;
+                $unpaid_order->status = "paid";
+            } else {
+                $payment_amount = $payment_received;
+                $unpaid_order->payment += $payment_received;
+                $unpaid_order->remaining_due -= $payment_received;
+                $payment_received = 0; // Set payment_received to 0 to exit the loop
             }
+        
+            $payment = new Payment();
+            $payment->customer_id = $unpaid_order->customer_id;
+            $payment->amount = $payment_amount;
+            $payment->order_id = $unpaid_order->id;
+            $payment->method = $request->input('method');
 
-            $unpaid_orders_sum = $unpaid_orders->sum('remaining_due');
-            if ($payment_received > $unpaid_orders_sum){
-                $existingCredit = CustomerCredit::where('customer_id', $request->input('customer_id'))->first();
-                if ($existingCredit){
-                    $credit = $existingCredit;
-                    $credit->amount = $credit->amount + ($payment_received - $unpaid_orders_sum);
-                    $credit->remaining = $credit->remaining + ($payment_received - $unpaid_orders_sum);
-                }
-                else{
-                    $credit = new CustomerCredit();
-                    $credit->customer_id = $request->input('customer_id');
-                    $credit->amount = $payment_received - $unpaid_orders_sum;
-                    $credit->used = 0;
-                    $credit->remaining = $payment_received - $unpaid_orders_sum;
-                }
-                
-                $credit->save();
+            $payment->save();
+            $unpaid_order->save();
+        }
+        
+
+        $unpaid_orders_sum = $unpaid_orders->sum('remaining_due');
+        if ($payment_received > $unpaid_orders_sum){
+            $existingCredit = CustomerCredit::where('customer_id', $request->input('customer_id'))->first();
+            if ($existingCredit){
+                $credit = $existingCredit;
+                $credit->amount = $credit->amount + ($payment_received - $unpaid_orders_sum);
+                $credit->remaining = $credit->remaining + ($payment_received - $unpaid_orders_sum);
             }
-            return response()->json(['unpaid_orders' => $unpaid_orders]);
-        // }
+            else{
+                $credit = new CustomerCredit();
+                $credit->customer_id = $request->input('customer_id');
+                $credit->amount = $payment_received - $unpaid_orders_sum;
+                $credit->used = 0;
+                $credit->remaining = $payment_received - $unpaid_orders_sum;
+            }
+            
+            $credit->save();
+        }
+        return response()->json(['unpaid_orders' => $unpaid_orders]);
     }
 
     public function getCustomerCredit(Request $request){
