@@ -16,5 +16,11 @@
             <a href class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="fas fa-user"></i> Add User <i class="fas fa-plus"></i></a>
             <a href="{{ route('dashboard.setting') }}" class="list-group-item list-group-item-action"><i class="fas fa-cogs"></i> Settings</a>
         @endif
+        <button class="list-group-item list-group-item-action btn btn-primary changepassword" id="changepassword" data-target="#changepasswordModal">Change Password</button>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button class="btn btn-danger list-group-item list-group-item-action" type="submit">Logout</button>
+        </form>
+        
     </ul>
 </div>

@@ -11,12 +11,6 @@
                 <li>
                     <button class="btn btn-primary changepassword" id="changepassword" data-target="#changepasswordModal">Change Password</button>
                 </li>
-                <li>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button class="btn btn-danger" type="submit">Logout</button>
-                    </form>
-                </li>
             </ul>
         </div>
     </div>
