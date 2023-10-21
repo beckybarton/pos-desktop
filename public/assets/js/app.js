@@ -417,7 +417,7 @@ function pay(){
   var customerValue = $('#customer').val();
   var method = $('#method').val();
   if (customerValue.trim() !== ''){
-    if (method === '0' && ($('#received').val() !== "") ){
+    if (method === 'Unpaid' && ($('#received').val() !== "") ){
       alert('Please select payment method!');
     }
     else{
