@@ -15,7 +15,7 @@
         @endif
 
         <div class="table-responsive">
-            <form action="{{route('dashboard.storesetting')}}" method="post">
+            <form action="{{route('setting.storesetting')}}" method="post">
                 @csrf
                 @if($setting)
                     <div class="form-group">

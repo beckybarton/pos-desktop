@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var enddate = $('#enddate').val();
         // var formattedStartDate = moment(startdate, 'YYYY-MM-DD').format('YYYY-MM-DD');
     
-        if (reporttype == 0){
+        if (reporttype == "Daily Report"){
             // url = 'daily-report/' + startdate;
             var url = 'daily-report/' + startdate + '/' + enddate;
 

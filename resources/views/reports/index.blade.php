@@ -43,9 +43,9 @@
                     </div>
                     <div class="col-md-3">
                         <select class="form-select" id="reporttype" name="reporttype">
-                            <option value="0">Daily Report</option>
-                            <option value="1">Sold Items : Detailed</option>
-                            <option value="2">Sold Items : Summarized</option>
+                            <option value="Daily Report">Daily Report</option>
+                            <option value="Sold Items : Detailed">Sold Items : Detailed</option>
+                            <option value="Sold Items : Summarized">Sold Items : Summarized</option>
                         </select>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
             <div class="row">
                 <div class="reportsbody" id="reportsbody" name="reportsbody">
                     @include('reports.daily')
-                    @include('reports.solditems')
+                    {{-- @include('reports.solditems') --}}
                 </div>
             </div>
         </div>

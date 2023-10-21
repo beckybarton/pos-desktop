@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SettingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,11 +20,15 @@ use App\Http\Controllers\ReportController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+// DASHBOARD
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index')->middleware('auth');
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
-Route::get('/setting', [DashboardController::class, 'setting'])->middleware('auth')->name('dashboard.setting');
-Route::post('/setting/store', [DashboardController::class, 'storesetting'])->middleware('auth')->name('dashboard.storesetting');
+
+// SETTINGS
+Route::get('/setting', [SettingController::class, 'setting'])->middleware('auth')->name('setting.company');
+Route::get('/denomiation', [SettingController::class, 'denomination'])->middleware('auth')->name('setting.denomination');
+Route::post('/setting/store', [SettingController::class, 'storesetting'])->middleware('auth')->name('setting.storesetting');
+Route::post('/denomiation/store', [SettingController::class, 'storedenomiation'])->middleware('auth')->name('setting.storedenomiation');
 
 // ITEMS
 Route::post('/items/store', [ItemController::class, 'store'])->name('item.store')->middleware('auth');
