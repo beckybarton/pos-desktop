@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var row_unpaidtoday = $('<tr>');
                 row_unpaidtoday.append($('<td class="small">').text(""));
                 row_unpaidtoday.append($('<td class="small">').text(String("Unpaid")));
-                row_unpaidtoday.append($('<td class="small text-end">').text(String(responsedata.unpaidDate.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
+                row_unpaidtoday.append($('<td class="small text-end">').text(String(responsedata.totalunpaid.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
                 dailyreportstable.append(row_unpaidtoday);
                 
                 var row_collections_previous_title = $('<tr>');
@@ -72,6 +72,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     row_collectionprevious.append($('<td class="small">').text(String(collection.method)));
                     row_collectionprevious.append($('<td class="small text-end">').text(String(collection.totalpayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
                     dailyreportstable.append(row_collectionprevious);
+                });
+
+                var row_unpaid_title = $('<tr>');
+                row_unpaid_title.append($('<td colspan="3" class="small font-weight-bold"><strong>').text("List of Unpaid Customers"));
+                dailyreportstable.append(row_unpaid_title);
+
+                $.each(responsedata.listunpaidcustomers, function(index, unpaidcustomer){
+                    var row_unpaidcustomer = $('<tr>');
+                    row_unpaidcustomer.append($('<td class="small">').text(""));
+                    row_unpaidcustomer.append($('<td class="small">').text(String(unpaidcustomer.name)));
+                    row_unpaidcustomer.append($('<td class="small text-end">').text(String(unpaidcustomer.amount.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
+                    dailyreportstable.append(row_unpaidcustomer);
                 });
     
             }

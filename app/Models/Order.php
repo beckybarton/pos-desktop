@@ -123,8 +123,8 @@ class Order extends Model
             ->timezone($timezone) 
             ->toDateTimeString();
 
-            $this->attributes['updated_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $value, date_default_timezone_get())
-            ->timezone($timezone) 
-            ->toDateTimeString();
+        $this->attributes['updated_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $value, date_default_timezone_get())
+        ->timezone($timezone) 
+        ->toDateTimeString();
     }
 }
