@@ -85,4 +85,17 @@ class ItemController extends Controller
 
         
     }
+
+    public function categories(){
+        // $items = Item::select('items.id as id', 'items.name as item_name', 'categories.name as category_name', 'items.selling_price', 'items.uom')
+        //     ->orderBy('items.name', 'asc')
+        //     ->join('categories', 'items.category_id', '=', 'categories.id')
+        //     ->paginate(10);
+        $locations = Location::all();
+        $setting = Setting::first();
+        $categories = Category::orderBy('name', 'desc')
+          ->paginate(10);
+        
+        return view('items.categories', compact('locations', 'categories', 'setting'));
+    }
 }

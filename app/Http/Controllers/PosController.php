@@ -133,7 +133,7 @@ class PosController extends Controller
                 
             }
 
-            if($request->input('method') !== "Unpaid"){
+            if($request->input('method') !== "Unpaid" || $existingCredit){
                 $payment = new Payment();
                 $payment->customer_id = $request->input('customer');
                 $payment->amount = $payment_amount;

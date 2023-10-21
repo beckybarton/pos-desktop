@@ -30,6 +30,7 @@ Route::post('/items/store', [ItemController::class, 'store'])->name('item.store'
 Route::get('/items', [ItemController::class, 'index'])->name('item.index')->middleware('auth');
 Route::put('/item/{id}', [ItemController::class, 'update'])->name('item.update')->middleware('auth');
 Route::post('/categories/store', [ItemController::class, 'storecategory'])->name('item.storecategory')->middleware('auth');
+Route::get('/categories', [ItemController::class, 'categories'])->name('item.categories')->middleware('auth');
 
 // LOCATIONS
 Route::post('/locations/store', [LocationController::class, 'store'])->name('location.store')->middleware('auth');

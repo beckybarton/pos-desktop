@@ -13,7 +13,6 @@
             {{ session('error') }}
             </div>
         @endif
-
         <div class="table-responsive">
             <input type="text" class="form-control" id="searchinputitem" placeholder="Search by Name">
             <p></p>
@@ -26,17 +25,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($locations as $location)
+                    @foreach($categories as $category)
                         <tr>
-                            <td>{{ $location->id }}</td>
-                            <td>{{ $location->name }}</td>
-                            <td>Action</td>
+                            <td>{{ $category->id }}</td>
+                            <td>{{ ucwords($category->name) }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning edit-item" id="edit-category" data-target="#editItemModal" data-category="{{ $category }}">Edit</button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
             <div class="mt-4">
-                {{ $locations->links('pagination::bootstrap-4') }}
+                {{ $categories->links('pagination::bootstrap-4') }}
             </div>
             </div>
         </div>
@@ -47,3 +48,4 @@
 </div>
 
 @include('layouts.footer')
+@include('items.edit')
