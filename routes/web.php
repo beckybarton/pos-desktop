@@ -22,6 +22,8 @@ use App\Http\Controllers\ReportController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index')->middleware('auth');
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
+Route::get('/setting', [DashboardController::class, 'setting'])->middleware('auth')->name('dashboard.setting');
+Route::post('/setting/store', [DashboardController::class, 'storesetting'])->middleware('auth')->name('dashboard.storesetting');
 
 // ITEMS
 Route::post('/items/store', [ItemController::class, 'store'])->name('item.store')->middleware('auth');

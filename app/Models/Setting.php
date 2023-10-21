@@ -9,6 +9,11 @@ class Setting extends Model
 {
     use HasFactory;
 
+    protected $fillable =[
+        'company_name',
+        'address'
+    ];
+
     public function companydetails(){
         $companydetails = Setting::get();
         return $companydetails;

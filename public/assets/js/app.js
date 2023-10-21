@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
   $(document).on('click', '.edit-item', function() {
     var item = $(this).data('item');
     $('.edit-id').val(item.id);
-    $('.edit-name').val(item.name);
+    $('.edit-name').val(item.item_name);
     $('.edit-uom').val(item.uom);
     $('.edit-selling-price').val(item.selling_price);
     $('#editItemForm').attr('action', '/item/' + item.id);

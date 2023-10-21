@@ -14,6 +14,7 @@
         <a href=""class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#addCustomerModal"><i class="fas fa-user"></i> Add Customer <i class="fas fa-plus"></i></a>
         @if ( auth()->user()->role == "admin" )
             <a href class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="fas fa-user"></i> Add User <i class="fas fa-plus"></i></a>
+            <a href="{{ route('dashboard.setting') }}" class="list-group-item list-group-item-action"><i class="fas fa-cogs"></i> Settings</a>
         @endif
     </ul>
 </div>

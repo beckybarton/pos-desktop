@@ -15,6 +15,7 @@
         @endif
         <div class="table-responsive">
             <input type="text" class="form-control" id="searchinputitem" placeholder="Search by Name">
+            <p></p>
             <table class="table table-striped table-bordered table-hover" id="itemstable">
                 <thead class="thead-dark">
                     <tr>
@@ -30,9 +31,9 @@
                     @foreach($items as $item)
                         <tr>
                             <td>{{ $item->id }}</td>
-                            <td>{{ $item->category_name }}</td>
-                            <td>{{ $item->item_name }}</td>
-                            <td>{{ $item->uom }}</td>
+                            <td>{{ ucwords($item->category_name) }}</td>
+                            <td>{{ ucwords($item->item_name) }}</td>
+                            <td>{{ ucwords($item->uom) }}</td>
                             <td>{{ number_format($item->selling_price,2) }}</td>
                             <td>
                                 <button class="btn btn-sm btn-warning edit-item" id="edit-item" data-target="#editItemModal" data-item="{{ $item }}">Edit</button>

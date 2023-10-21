@@ -20,7 +20,13 @@ class PosController extends Controller
         $setting = Setting::first();
         $locations = Location::all();
         $categories = Category::all();
-        return view('pos.index', compact('setting','locations', 'categories'));
+        if($setting){
+            return view('pos.index', compact('setting','locations', 'categories'));
+        }
+        else{
+            return redirect()->route('dashboard.setting')->with('error', 'Setup company details first.');
+        }
+        
     }
 
     public function searchItems(Request $request){

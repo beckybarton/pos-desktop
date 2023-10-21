@@ -53,9 +53,6 @@ class ItemController extends Controller
     }
 
     public function index() {
-        // $items = Item::orderBy('name', 'asc')
-        //     ->join('categories', 'items.category_id', '=', 'categories.id')
-        //     ->paginate(10);
         $items = Item::select('items.id as id', 'items.name as item_name', 'categories.name as category_name', 'items.selling_price', 'items.uom')
             ->orderBy('items.name', 'asc')
             ->join('categories', 'items.category_id', '=', 'categories.id')
@@ -63,7 +60,6 @@ class ItemController extends Controller
         $locations = Location::all();
         $categories = Category::all();
         
-        // dd($items);
         return view('items.index', compact('items', 'locations', 'categories'));
     }
 
