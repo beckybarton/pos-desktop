@@ -1,7 +1,7 @@
 @include('layouts.header')
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <span class="navbar-brand">{{ $setting->company_name }}</span>
+            <span class="navbar-brand">{{ $setting->company_name }}</span> || 
         </div>
     </nav>
     <form>

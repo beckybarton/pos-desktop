@@ -17,14 +17,44 @@
         <div class="table-responsive">
             <form action="{{route('dashboard.storesetting')}}" method="post">
                 @csrf
-                <div class="form-group">
-                  <label for="name">Company Name:</label>
-                  <input type="text" class="form-control" name="company_name" required>
-                </div>
-                <div class="form-group">
-                  <label for="name">Address:</label>
-                  <input type="text" class="form-control" name="address" required>
-                </div>
+                @if($setting)
+                    <div class="form-group">
+                        <label for="name">Company Name:</label>
+                        <input type="text" class="form-control" name="company_name" value="{{ $setting->company_name }}" required>
+                    </div>
+                    <div class="form-group">
+                    <label for="name">Address:</label>
+                    <input type="text" class="form-control" name="address" value="{{ $setting->address }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="timezone">Select Timezone:</label>
+                        <select class="form-control" id="timezone" name="timezone">
+                            @foreach(timezone_identifiers_list() as $timezone)
+                                <option value="{{ $timezone }}">{{ $timezone }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                
+                @else
+                    <div class="form-group">
+                        <label for="name">Company Name:</label>
+                        <input type="text" class="form-control" name="company_name" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="name">Address:</label>
+                        <input type="text" class="form-control" name="address" required>
+                      </div>
+                    <div class="form-group">
+                        <label for="timezone">Select Timezone:</label>
+                        <select class="form-control" id="timezone" name="timezone">
+                            @foreach(timezone_identifiers_list() as $timezone)
+                                <option value="{{ $timezone }}">{{ $timezone }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                
+                @endif
+                
                 <br>
                 <button class="btn btn-success" type="submit" name="settings">Update</button>
             </form>

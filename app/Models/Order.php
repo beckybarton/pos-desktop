@@ -116,4 +116,13 @@ class Order extends Model
         $totalPriceSum = $orders->sum('remaining_due');
         return $totalPriceSum;
     }
+
+    public function setCreatedAtAttribute($value)
+    {
+        // Assuming $value is in the default timezone of your application
+        $timezone = Setting::first()->timezone;
+        $this->attributes['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $value, 'your_default_timezone')
+            ->timezone('Asia/Shanghai') // Set the desired timezone
+            ->toDateTimeString();
+    }
 }

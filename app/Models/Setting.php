@@ -11,7 +11,8 @@ class Setting extends Model
 
     protected $fillable =[
         'company_name',
-        'address'
+        'address',
+        'timezone'
     ];
 
     public function companydetails(){
