@@ -15,12 +15,22 @@
         @endif
 
         <div class="table-responsive">
-            <form action="{{route('setting.storesetting')}}" method="post">
+            <form action="{{ route('setting.storedenomination') }}" method="post" class="row g-3">
                 @csrf
+                <div id="denominationsContainer">
+                    <label for="amounts" class="form-label">Denominations</label>
+                    @foreach($denominations as $denomination)
+                        <input type="number" required class="form-control" name="amounts[]" id="amounts" value="{{ $denomination->amount }}" required>
+                        <br>
+                    @endforeach
+                    <input type="number" required class="form-control" name="amounts[]" id="amounts" required>
+                </div>
                 
-                
-                <br>
-                <button class="btn btn-success" type="submit" name="settings">Update</button>
+                <hr>
+                <div class="col-md-6">
+                    <button type="button" id="addDenominationdBtn" class="btn btn-primary mr-2">Add Denomination</button>
+                    <button class="btn btn-success" type="submit" name="settings">Update</button>
+                </div>
             </form>
         </div>
 

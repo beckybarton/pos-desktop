@@ -26,9 +26,9 @@ Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name
 
 // SETTINGS
 Route::get('/setting', [SettingController::class, 'setting'])->middleware('auth')->name('setting.company');
-Route::get('/denomiation', [SettingController::class, 'denomination'])->middleware('auth')->name('setting.denomination');
+Route::get('/denomination', [SettingController::class, 'denomination'])->middleware('auth')->name('setting.denominations');
 Route::post('/setting/store', [SettingController::class, 'storesetting'])->middleware('auth')->name('setting.storesetting');
-Route::post('/denomiation/store', [SettingController::class, 'storedenomiation'])->middleware('auth')->name('setting.storedenomiation');
+Route::post('/denomination/store', [SettingController::class, 'storedenomination'])->middleware('auth')->name('setting.storedenomination');
 
 // ITEMS
 Route::post('/items/store', [ItemController::class, 'store'])->name('item.store')->middleware('auth');

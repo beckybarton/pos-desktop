@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\Location;
 use App\Models\Category;
 use App\Models\Setting;
+use App\Models\Denomination;
 
 class SettingController extends Controller
 {
@@ -54,8 +55,20 @@ class SettingController extends Controller
         return view('settings.denominations', compact('denominations', 'locations', 'categories', 'setting'));
     }
 
-    public function storedenomiation(Request $request){
-        
+    public function storedenomination(Request $request){
+        $amounts = $request->input('amounts');
+
+        foreach ($amounts as $amount){
+            $denimoninationExist = Denomination::where('amount', $amount)->exists();
+            if (!$denimoninationExist){
+                $denomination = New Denomination();
+                $denomination->amount = $amount;
+                $denomination->save();
+            }
+        }
+        return back()->with('success', 'Denominations Updated Successfully!');
+        // dd($amounts);
+
     }
 
 
