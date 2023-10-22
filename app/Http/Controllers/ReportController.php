@@ -56,6 +56,7 @@ class ReportController extends Controller
         $collectionsPreviousSales = DB::table('payments')
         ->join('orders', 'payments.order_id', "=", 'orders.id')
         ->where('orders.created_at', '<', $startdate)
+        ->whereBetween('payments.created_at', [$startdate, $enddate])
         ->select('payments.method as method',
                     DB::raw('SUM(payments.amount) as totalpayment')
                 )
