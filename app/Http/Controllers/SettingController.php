@@ -46,8 +46,18 @@ class SettingController extends Controller
         }
     }
 
-    public function denomination(){
+    public function getdenominations(){
         $denominations = Denomination::all();
+        return $denominations;
+    }
+
+    public function jsondenominations(){
+        $denominations = $this->getdenominations();
+        return response()->json($denominations);
+    }
+
+    public function denomination(){
+        $denominations = $this->getdenominations();
         $locations = Location::all();
         $categories = Category::all();
         $setting = Setting::first();

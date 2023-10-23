@@ -21,71 +21,68 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(responsedata);
                 var dailyreportstable = $('#daily-reports tbody');
                 dailyreportstable.empty();
-
-                var row_title = $('<tr>');
-                row_title.append($('<td colspan="3" class="small font-weight-bold text-center"><strong>').text("Daily Sales Report"));
-                dailyreportstable.append(row_title);
-
-                var row_totalsales = $('<tr>');
-                row_totalsales.append($('<td class="small font-weight-bold" colspan="2"><strong>').text("Total Sales"));
-                row_totalsales.append($('<td class="small font-weight-bold text-end"><strong>').text(String(responsedata.sumOrdersAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}))));
-                dailyreportstable.append(row_totalsales);
-
-                var row_categorizedSalesTitle = $('<tr>');
-                row_categorizedSalesTitle.append($('<td colspan="3" class="small font-weight-bold"><strong>').text("Categorized Sales"));
-                dailyreportstable.append(row_categorizedSalesTitle);
-
-
-                $.each(responsedata.categorizedSales, function(index, categorizedSale) {
-                    var row_categorized = $('<tr>');
-                    row_categorized.append($('<td class="small">').text(""));
-                    row_categorized.append($('<td class="small">').text(String(categorizedSale.category_name)));
-                    row_categorized.append($('<td class="small text-end">').text(String(categorizedSale.amount.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
-                    dailyreportstable.append(row_categorized);
+            
+                var createRow = function(columns) {
+                    var row = $('<tr>');
+                    columns.forEach(function(column, index) {
+                        var cell = $('<td class="small">').text(column);
+                        if (index === columns.length - 1) {
+                            cell.addClass('text-end');
+                        }
+                        row.append(cell);
+                    });
+                    return row;
+                };
+                dailyreportstable.append(createRow(["", "", "Daily Sales Report"]));
+                dailyreportstable.append(createRow(["", "Total Sales", responsedata.sumOrdersAmount.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
+                dailyreportstable.append(createRow(["", "Categorized Sales", ""]));
+                responsedata.categorizedSales.forEach(function(categorizedSale) {
+                    dailyreportstable.append(createRow(["", categorizedSale.category_name, categorizedSale.amount.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
+                });
+                dailyreportstable.append(createRow(["", "Collections from Today's Sales", ""]));
+                responsedata.collectionsDateSales.forEach(function(collection) {
+                    dailyreportstable.append(createRow(["", collection.method, collection.totalpayment.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
+                });
+                dailyreportstable.append(createRow(["", "Unpaid", responsedata.totalunpaid.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
+                dailyreportstable.append(createRow(["", "Collections from Previous Unpaid Orders", ""]));
+                responsedata.collectionsPreviousSales.forEach(function(collection) {
+                    dailyreportstable.append(createRow(["", collection.method, collection.totalpayment.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
+                });
+                dailyreportstable.append(createRow(["", "Excess Payments from Customers", ""]));
+                dailyreportstable.append(createRow(["", "List of Unpaid Customers", ""]));
+                responsedata.listunpaidcustomers.forEach(function(unpaidcustomer) {
+                    dailyreportstable.append(createRow(["", unpaidcustomer.name, unpaidcustomer.amount.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
                 });
 
-                var row_collections_today_title = $('<tr>');
-                row_collections_today_title.append($('<td colspan="3" class="small font-weight-bold"><strong>').text("Collections from Today's Sales"));
-                dailyreportstable.append(row_collections_today_title);
+                var reportbuttonsdiv = $('#reportbuttonsdiv');
+                reportbuttonsdiv.append($('<button class="btn btn-danger btn-sm">Download</button>')
+                    .click(function() {
+                        // console.log('download');
+                        $('#cashonhandModal').modal('show');
+                        $.ajax({
+                            url: '/json-denominations',
+                            method: 'GET',
+                            success: function(response){
+                                console.log(response);
+                                response.forEach(function(denomination) {
+                                    var cashonhand = $('#cashonhand');
+                                    cashonhand.append(
+                                        "<div class='row'>" +
+                                        "<div class='form-group col-md-3'>" +
+                                        "<input class='form-control form-control-plaintext' name='denominations[]' value='" + denomination.amount + "'>" +
+                                        "</div>" +
+                                        "<div class='form-group col-md-6' style='margin-bottom:10px;'>" +
+                                        "<input class='form-control' name='amounts[]' placeholder='pieces'>" +
+                                        "</div>" +
+                                        "</div>"
+                                    );
 
-                $.each(responsedata.collectionsDateSales, function(index, collection){
-                    var row_collectiontoday = $('<tr>');
-                    row_collectiontoday.append($('<td class="small">').text(""));
-                    row_collectiontoday.append($('<td class="small">').text(String(collection.method)));
-                    row_collectiontoday.append($('<td class="small text-end">').text(String(collection.totalpayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
-                    dailyreportstable.append(row_collectiontoday);
-                });
 
-                var row_unpaidtoday = $('<tr>');
-                row_unpaidtoday.append($('<td class="small">').text(""));
-                row_unpaidtoday.append($('<td class="small">').text(String("Unpaid")));
-                row_unpaidtoday.append($('<td class="small text-end">').text(String(responsedata.totalunpaid.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
-                dailyreportstable.append(row_unpaidtoday);
+                                });
+                            }
+                        });
+                }));
                 
-                var row_collections_previous_title = $('<tr>');
-                row_collections_previous_title.append($('<td colspan="3" class="small font-weight-bold"><strong>').text("Collections from Previous Unpaid Orders"));
-                dailyreportstable.append(row_collections_previous_title);
-
-                $.each(responsedata.collectionsPreviousSales, function(index, collection){
-                    var row_collectionprevious = $('<tr>');
-                    row_collectionprevious.append($('<td class="small">').text(""));
-                    row_collectionprevious.append($('<td class="small">').text(String(collection.method)));
-                    row_collectionprevious.append($('<td class="small text-end">').text(String(collection.totalpayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
-                    dailyreportstable.append(row_collectionprevious);
-                });
-
-                var row_unpaid_title = $('<tr>');
-                row_unpaid_title.append($('<td colspan="3" class="small font-weight-bold"><strong>').text("List of Unpaid Customers"));
-                dailyreportstable.append(row_unpaid_title);
-
-                $.each(responsedata.listunpaidcustomers, function(index, unpaidcustomer){
-                    var row_unpaidcustomer = $('<tr>');
-                    row_unpaidcustomer.append($('<td class="small">').text(""));
-                    row_unpaidcustomer.append($('<td class="small">').text(String(unpaidcustomer.name)));
-                    row_unpaidcustomer.append($('<td class="small text-end">').text(String(unpaidcustomer.amount.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}))));
-                    dailyreportstable.append(row_unpaidcustomer);
-                });
-    
             }
         });
     }); 

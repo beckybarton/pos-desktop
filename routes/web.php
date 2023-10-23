@@ -27,6 +27,7 @@ Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name
 // SETTINGS
 Route::get('/setting', [SettingController::class, 'setting'])->middleware('auth')->name('setting.company');
 Route::get('/denomination', [SettingController::class, 'denomination'])->middleware('auth')->name('setting.denominations');
+Route::get('/json-denominations', [SettingController::class, 'jsondenominations'])->middleware('auth')->name('setting.jsondenominations');
 Route::post('/setting/store', [SettingController::class, 'storesetting'])->middleware('auth')->name('setting.storesetting');
 Route::post('/denomination/store', [SettingController::class, 'storedenomination'])->middleware('auth')->name('setting.storedenomination');
 

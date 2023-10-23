@@ -51,8 +51,8 @@
                 </div>
             </form>
             <div class="row">
-                <div class="col-md-3">
-                    <button type="button" class="btn btn-primary generate" id="generate" name="generate">Generate</button>
+                <div class="col-md-3" id="reportbuttonsdiv">
+                    <button type="button" class="btn btn-primary btn-sm generate" id="generate" name="generate">Generate</button>
                 </div>
             </div>
             <br>
@@ -68,4 +68,5 @@
 </div>
 
 @include('layouts.footer')
+@include('reports.cashonhand')
 
