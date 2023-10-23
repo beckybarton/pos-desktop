@@ -84,7 +84,9 @@ class ReportController extends Controller
             'listunpaidcustomers' => $listunpaidcustomers,
             'totalunpaid' => $totalunpaid
             ]);
-        // return response()->json($sumOrdersAmount);
-        // return response()->json($sumOrdersAmount);
     }   
+
+    public function dailysave (Request $request){
+        dd($request);
+    }
 }

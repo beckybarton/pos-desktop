@@ -8,7 +8,12 @@
         </div>
         <div class="modal-body">
             <div id="cashonhand">
+                <form action="{{ route('report.dailysave') }}" method="post">
+                    <div id="cashonhanddenominations">
 
+                    </div>
+                    <button class="btn btn-sm btn-success" type="submit">Save</button>
+                </form>
             </div>
         </div>
       </div>

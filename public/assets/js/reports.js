@@ -63,22 +63,34 @@ document.addEventListener('DOMContentLoaded', function() {
                             url: '/json-denominations',
                             method: 'GET',
                             success: function(response){
+                                var cashonhand = $('#cashonhanddenominations');
+                                cashonhand.empty();
                                 console.log(response);
                                 response.forEach(function(denomination) {
-                                    var cashonhand = $('#cashonhand');
-                                    cashonhand.append(
-                                        "<div class='row'>" +
-                                        "<div class='form-group col-md-3'>" +
-                                        "<input class='form-control form-control-plaintext' name='denominations[]' value='" + denomination.amount + "'>" +
-                                        "</div>" +
-                                        "<div class='form-group col-md-6' style='margin-bottom:10px;'>" +
-                                        "<input class='form-control' name='amounts[]' placeholder='pieces'>" +
-                                        "</div>" +
-                                        "</div>"
+                                    var row = $("<div class='row'></div>");
+                                
+                                    var denominationInput = $("<div class='form-group col-md-3'></div>").append(
+                                        "<input class='form-control form-control-plaintext' name='denominations[]' value='" + denomination.amount + "'>"
                                     );
-
-
+                                
+                                    var piecesInput = $("<div class='form-group col-md-3' style='margin-bottom:10px;'></div>").append(
+                                        "<input class='form-control' name='pieces[]' placeholder='pieces'>"
+                                    );
+                                
+                                    var totalInput = $("<div class='form-group col-md-3' style='margin-bottom:10px;'></div>").append(
+                                        "<input class='form-control-plaintext' id='totals' name='totals[]'>"
+                                    );
+                                
+                                    piecesInput.find('input').on('input', function() {
+                                        var pieces = parseInt($(this).val()) || 0;
+                                        var denominationValue = parseInt(denomination.amount) || 0;
+                                        totalInput.find('input').val(pieces * denominationValue);
+                                    });
+                                
+                                    row.append(denominationInput, piecesInput, totalInput);
+                                    cashonhand.append(row);
                                 });
+                                
                             }
                         });
                 }));
