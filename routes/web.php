@@ -66,6 +66,8 @@ Route::post('/receive-payment', [PosController::class, 'receivepayment'])->name(
 
 // REPORTS
 Route::get('/reports', [ReportController::class, 'index'])->name('report.index')->middleware('auth');
-Route::get('daily-report/{date}', [ReportController::class, 'dailyreport'])->name('report.dailyreport')->middleware('auth');
-Route::get('daily-report/{startdate}/{enddate}', [ReportController::class, 'dailyreport'])->name('report.dailyreport')->middleware('auth');
-Route::post('daily-report-save', [ReportController::class, 'dailysave'])->name('report.dailysave')->middleware('auth');
+Route::get('/daily-report/{date}', [ReportController::class, 'dailyreport'])->name('report.dailyreport')->middleware('auth');
+Route::get('/daily-report/{startdate}/{enddate}', [ReportController::class, 'jsondailyreport'])->name('report.jsondailyreport')->middleware('auth');
+Route::post('/daily-report-save', [ReportController::class, 'dailysave'])->name('report.dailysave')->middleware('auth');
+Route::get('/previous', [ReportController::class, 'getPrevious'])->name('report.previous')->middleware('auth');
+Route::get('/report/download/{id}', [ReportController::class, 'download'])->name('report.download')->middleware('auth');

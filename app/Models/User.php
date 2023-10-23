@@ -44,4 +44,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // user has many reports
+    public function reports(){
+        return $this->hasMany(Report::class);
+    }
 }

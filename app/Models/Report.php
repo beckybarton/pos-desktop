@@ -12,10 +12,15 @@ class Report extends Model
     protected $fillable = [
         'type',
         'start',
-        'end'
+        'end',
+        'user_id',
     ];
 
     public function cash_on_hand(){
         return $this->hasMany(CashOnHand::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

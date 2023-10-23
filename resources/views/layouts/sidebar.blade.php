@@ -13,6 +13,7 @@
                 @if (auth()->user()->role == "admin")
                     <a href="{{ route('user.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-user"></i> Users</a>
                     <a href="{{ route('report.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-file"></i> Reports</a>
+                    <a href="{{ route('report.previous') }}" class="list-group-item list-group-item-action"><i class="fas fa-file"></i> Previous Reports</a>
                 @endif
             </div>
         </div>

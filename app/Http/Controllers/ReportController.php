@@ -17,21 +17,33 @@ use App\Models\CustomerCreditDeduction;
 use Carbon\Carbon;
 use App\Models\Report;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class ReportController extends Controller
 {
+    public function getAll(){
+        $locations = Location::all();
+        $categories = Category::all();
+        $setting = Setting::first();
+        return [$locations, $categories, $setting];
+    }
     public function index(){
         $items = Item::orderBy('name', 'desc')
         ->paginate(10);
         $locations = Location::all();
         $categories = Category::all();
         $setting = Setting::first();
+
         return view('reports.index', compact('items','locations', 'categories', 'setting'));
+    }
+
+    public function jsondailyreport($startdate, $enddate){
+        $dailyreport = $this->dailyreport($startdate, $enddate);
+        return response()->json($dailyreport);
     }
 
     public function dailyreport($startdate, $enddate) {
         $sumOrdersAmount = Order::whereBetween('created_at', [$startdate, $enddate])->sum('amount');
-        // $sumOrdersAmount = Order::whereDate('created_at', $startdate)->sum('amount');
 
         $categorizedSales = DB::table('order_items')
             ->join('items', 'order_items.item_id', '=', 'items.id')
@@ -78,14 +90,13 @@ class ReportController extends Controller
 
         $totalunpaid = $listunpaidcustomers->sum('amount');
             
-
-        return response()->json(['sumOrdersAmount' => $sumOrdersAmount,
+        return ['sumOrdersAmount' => $sumOrdersAmount,
             'categorizedSales' => $categorizedSales,
             'collectionsDateSales' => $collectionsDateSales,
             'collectionsPreviousSales' => $collectionsPreviousSales,
             'listunpaidcustomers' => $listunpaidcustomers,
             'totalunpaid' => $totalunpaid
-            ]);
+            ];
     }   
 
     public function dailysave (Request $request){
@@ -93,6 +104,7 @@ class ReportController extends Controller
         $report->start = $request->startdate;
         $report->end = $request->enddate;
         $report->type = $request->reporttype;
+        $report->user_id = auth()->user()->id;
         $report->save();
 
         $denominations = $request->input('denominations');
@@ -109,8 +121,36 @@ class ReportController extends Controller
             }
             
         }
+
+        $this->download($report->id);
         
         return redirect()->back();
 
+    }
+
+    public function download($report){
+        $report = Report::find($report);
+        // if report->type is daily report, then call dailyreport and pass report->start and report->end
+        if ($report->type == 'daily'){
+            // $dailyreport = $this->dailyreport($report->start, $report->end);
+            // $pdf = PDF::loadView('pdf.sample', $dailyreport);
+            // return $pdf->download('sample.pdf');
+            // $pdf = PDF::loadView('reports.dailyreport', compact('dailyreport', 'report'));
+            // return $pdf->download('dailyreport.pdf');
+        }
+        else{
+            // $pdf = PDF::loadView('pdf.sample', $data);
+            // return $pdf->download('sample.pdf');
+
+        }
+
+    }
+
+    public function getPrevious(){
+        $locations = Location::all();
+        $categories = Category::all();
+        $setting = Setting::first();
+        $reports = Report::orderBy('created_at', 'desc')->paginate(10);
+        return view('reports.previous', compact('reports', 'locations', 'categories', 'setting'));
     }
 }
