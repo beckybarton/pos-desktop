@@ -9,15 +9,18 @@
         <div class="modal-body">
             <div id="cashonhand">
                 <form action="{{ route('report.dailysave') }}" method="post">
-                    <div class="row">
-                        <div class="col-md-3">Denomination</div>
-                        <div class="col-md-3">Pieces</div>
-                        <div class="col-md-3">Amount</div>
-                    </div>
-                    <div id="cashonhanddenominations">
+                  @csrf
+                  <div class="row" id="otherdetailsdiv">
+                  </div>
+                  <div class="row">
+                      <div class="col-md-3">Denomination</div>
+                      <div class="col-md-3">Pieces</div>
+                      <div class="col-md-3">Amount</div>
+                  </div>
+                  <div id="cashonhanddenominations">
 
-                    </div>
-                    <button class="btn btn-sm btn-success" type="submit">Save</button>
+                  </div>
+                  <button class="btn btn-sm btn-success" type="submit">Save</button>
                 </form>
             </div>
         </div>

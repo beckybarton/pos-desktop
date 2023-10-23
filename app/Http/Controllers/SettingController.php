@@ -77,7 +77,6 @@ class SettingController extends Controller
             }
         }
         return back()->with('success', 'Denominations Updated Successfully!');
-        // dd($amounts);
 
     }
 

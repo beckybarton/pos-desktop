@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CashOnHand;
 use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\Item;
@@ -14,6 +15,7 @@ use App\Models\Payment;
 use App\Models\CustomerCredit;
 use App\Models\CustomerCreditDeduction;
 use Carbon\Carbon;
+use App\Models\Report;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
@@ -87,6 +89,28 @@ class ReportController extends Controller
     }   
 
     public function dailysave (Request $request){
-        dd($request);
+        $report = new Report();
+        $report->start = $request->startdate;
+        $report->end = $request->enddate;
+        $report->type = $request->reporttype;
+        $report->save();
+
+        $denominations = $request->input('denominations');
+        $pieces = $request->input('pieces');
+
+        foreach ($denominations as $index => $denomination) {
+            if($pieces[$index] != '0'){
+                $cashonhand = new CashOnHand();
+                $cashonhand->report_id = $report->id;
+                $cashonhand->denomination = $denomination;
+                $cashonhand->pcs = $pieces[$index];
+                $cashonhand->amount = $pieces[$index] * $denomination;
+                $cashonhand->save();
+            }
+            
+        }
+        
+        return redirect()->back();
+
     }
 }

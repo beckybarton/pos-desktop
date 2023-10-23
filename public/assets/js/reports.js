@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
             url: url,
             method: 'GET',
             success: function(responsedata) {
-                console.log(responsedata);
                 var dailyreportstable = $('#daily-reports tbody');
                 dailyreportstable.empty();
             
@@ -57,7 +56,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 var reportbuttonsdiv = $('#reportbuttonsdiv');
                 reportbuttonsdiv.append($('<button class="btn btn-danger btn-sm">Download</button>')
                     .click(function() {
-                        // console.log('download');
+                        var startdate = $('#startdate').val();
+                        var enddate = $('#enddate').val();
+                        var reporttype = $('#reporttype').val();
+
+                        var startdateinput = $('<input type="hidden" name="startdate" value="' + startdate + '">');
+                        var enddateinput = $('<input type="hidden" name="enddate" value="' + enddate + '">');
+                        var reporttypeinput = $('<input type="hidden" name="reporttype" value="' + reporttype + '">');
+                        
+                        $('#otherdetailsdiv').append(startdateinput);
+                        $('#otherdetailsdiv').append(enddateinput);
+                        $('#otherdetailsdiv').append(reporttypeinput);
                         $('#cashonhandModal').modal('show');
                         $.ajax({
                             url: '/json-denominations',
@@ -65,20 +74,19 @@ document.addEventListener('DOMContentLoaded', function() {
                             success: function(response){
                                 var cashonhand = $('#cashonhanddenominations');
                                 cashonhand.empty();
-                                console.log(response);
                                 response.forEach(function(denomination) {
                                     var row = $("<div class='row'></div>");
                                 
                                     var denominationInput = $("<div class='form-group col-md-3'></div>").append(
-                                        "<input class='form-control form-control-plaintext' name='denominations[]' value='" + denomination.amount + "'>"
+                                        "<input class='form-control form-control-plaintext' readonly name='denominations[]' value='" + denomination.amount + "'>"
                                     );
                                 
                                     var piecesInput = $("<div class='form-group col-md-3' style='margin-bottom:10px;'></div>").append(
-                                        "<input class='form-control' name='pieces[]' placeholder='pieces'>"
+                                        "<input class='form-control' style='padding:5px;' name='pieces[]' required placeholder='pieces' value='0'>"
                                     );
                                 
                                     var totalInput = $("<div class='form-group col-md-3' style='margin-bottom:10px;'></div>").append(
-                                        "<input class='form-control-plaintext' id='totals' name='totals[]'>"
+                                        "<input class='form-control-plaintext' id='totals' readonly name='totals[]'>"
                                     );
                                 
                                     piecesInput.find('input').on('input', function() {
@@ -90,7 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                     row.append(denominationInput, piecesInput, totalInput);
                                     cashonhand.append(row);
                                 });
-                                
                             }
                         });
                 }));
