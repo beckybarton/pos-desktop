@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     piecesInput.find('input').on('input', function() {
                                         var pieces = parseInt($(this).val()) || 0;
                                         var denominationValue = parseInt(denomination.amount) || 0;
-                                        totalInput.find('input').val(pieces * denominationValue);
+                                        totalInput.find('input').val((pieces * denominationValue).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}));
                                     });
                                 
                                     row.append(denominationInput, piecesInput, totalInput);
