@@ -130,13 +130,12 @@ class ReportController extends Controller
 
     public function download($report){
         $report = Report::find($report);
-        // if report->type is daily report, then call dailyreport and pass report->start and report->end
-        if ($report->type == 'daily'){
-            // $dailyreport = $this->dailyreport($report->start, $report->end);
-            // $pdf = PDF::loadView('pdf.sample', $dailyreport);
-            // return $pdf->download('sample.pdf');
-            // $pdf = PDF::loadView('reports.dailyreport', compact('dailyreport', 'report'));
-            // return $pdf->download('dailyreport.pdf');
+        if ($report->type == "Daily Report"){
+            $dailyreport = json_decode(json_encode($this->dailyreport($report->start, $report->end)));
+            $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report'));
+            // return view('pdfs.dailyreport', compact('dailyreport', 'report'));
+            return $pdf->download('dailyreport.pdf');
+            // dd($dailyreport);
         }
         else{
             // $pdf = PDF::loadView('pdf.sample', $data);
