@@ -61,7 +61,7 @@ class ReportController extends Controller
             ->orderBy('category_name', 'asc') 
             ->get();
 
-        $collectionsDateSales = DB::table('payments')
+        $collectionsDateSalesbyMethod = DB::table('payments')
             ->join('orders', 'payments.order_id', "=", 'orders.id')
             ->whereBetween('orders.created_at', [$startdate, $enddate])
             ->select('payments.method as method',
@@ -72,7 +72,7 @@ class ReportController extends Controller
             ->get();
         
 
-        $collectionsPreviousSales = DB::table('payments')
+        $collectionsPreviousSalesbyMethod = DB::table('payments')
         ->join('orders', 'payments.order_id', "=", 'orders.id')
         ->where('orders.created_at', '<', $startdate)
         ->whereBetween('payments.created_at', [$startdate, $enddate])
@@ -82,6 +82,7 @@ class ReportController extends Controller
         ->orderBy('payments.method')
         ->groupBy('payments.method')
         ->get();
+
 
         $listunpaidcustomers = DB::table('customers')
             ->join('orders', 'customers.id', "=", 'orders.customer_id')
@@ -96,17 +97,39 @@ class ReportController extends Controller
         $totalunpaid = $listunpaidcustomers->sum('amount');
         $totalcollections = $allcollections->sum('totalpayment');
 
+        $solditems = $this->solditems($startdate, $enddate);
+
             
         return ['sumOrdersAmount' => $sumOrdersAmount,
             'categorizedSales' => $categorizedSales,
-            'collectionsDateSales' => $collectionsDateSales,
-            'collectionsPreviousSales' => $collectionsPreviousSales,
+            'collectionsDateSalesbyMethod' => $collectionsDateSalesbyMethod,
+            'collectionsPreviousSalesbyMethod' => $collectionsPreviousSalesbyMethod,
             'listunpaidcustomers' => $listunpaidcustomers,
             'totalunpaid' => $totalunpaid,
             'allcollections' => $allcollections,
             'totalcollections' => $totalcollections
             ];
     }   
+
+    public function solditems($start, $end){
+        $solditems = DB::table('order_items')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('categories', 'items.category_id', '=', 'categories.id')
+            ->whereBetween('order_items.created_at', [$start, $end])
+            ->select('items.name as item_name',
+                'categories.name as category_name',
+                'items.selling_price as price',
+                DB::raw('SUM(order_items.quantity) as quantity'),
+                DB::raw('SUM(order_items.quantity * items.selling_price) as total_price'))
+            ->orderBy('order_items.created_at', 'desc')
+            ->groupBy('items.name', 'categories.name', 'items.selling_price')
+            ->orderBy('item_name', 'asc') 
+            ->get();
+
+        
+        
+        return ['solditems' => $solditems];        
+    }
 
     public function dailysave (Request $request){
         $report = new Report();
@@ -119,43 +142,35 @@ class ReportController extends Controller
         $denominations = $request->input('denominations');
         $pieces = $request->input('pieces');
 
-        foreach ($denominations as $index => $denomination) {
-            if($pieces[$index] != '0'){
-                $cashonhand = new CashOnHand();
-                $cashonhand->report_id = $report->id;
-                $cashonhand->denomination = $denomination;
-                $cashonhand->pcs = $pieces[$index];
-                $cashonhand->amount = $pieces[$index] * $denomination;
-                $cashonhand->save();
-            }
+        // foreach ($denominations as $index => $denomination) {
+        //     if($pieces[$index] != '0'){
+        //         $cashonhand = new CashOnHand();
+        //         $cashonhand->report_id = $report->id;
+        //         $cashonhand->denomination = $denomination;
+        //         $cashonhand->pcs = $pieces[$index];
+        //         $cashonhand->amount = $pieces[$index] * $denomination;
+        //         $cashonhand->save();
+        //     }
             
-        }
+        // }
 
         return $this->download($report->id);
 
     }
 
     public function download($report){
-        // return view('pdfs.dailyreport');
         $report = Report::find($report);
-        // dd($report);
-        // return view('pdfs.dailyreport');
-        // $report = Report::find($report);
         if ($report->type == "Daily Report"){
+            $solditems = json_decode(json_encode($this->solditems($report->start, $report->end)));
             $dailyreport = json_decode(json_encode($this->dailyreport($report->start, $report->end)));
-        //     // dd($dailyreport);
-            $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report'));
-            // return view('pdfs.dailyreport', compact('dailyreport', 'report'));
-            return $pdf->download('dailyreport.pdf');
-        //     // dd($dailyreport);
-        // }
-        // else{
-        //     // $pdf = PDF::loadView('pdf.sample', $data);
-        //     // return $pdf->download('sample.pdf');
-
+            return view('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems'));
+            dd($solditems);
         }
 
     }
+    
+            // $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems'));
+            // return $pdf->download('dailyreport.pdf');
 
     public function getPrevious(){
         $locations = Location::all();

@@ -26,7 +26,7 @@
                 <tr>
                     <td colspan="3"><strong>Collections from Today's Sales</strong></td>
                 </tr>
-                @foreach ($dailyreport->collectionsDateSales as $collection )
+                @foreach ($dailyreport->collectionsDateSalesbyMethod as $collection )
                     <tr>
                         <td></td>
                         <td>{{ ucwords($collection->method) }}</td>
@@ -42,7 +42,7 @@
                 <tr>
                     <td colspan="3"><strong>Collections from Previous Unpaid Customers</strong></td>
                 </tr>
-                @foreach ($dailyreport->collectionsPreviousSales as $collection )
+                @foreach ($dailyreport->collectionsPreviousSalesbyMethod as $collection )
                 <tr>
                     <td></td>
                     <td>{{ ucwords($collection->method) }}</td>
@@ -68,14 +68,39 @@
                 </tr>
             </table>
             <br>
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <tr>
                     <td colspan="2"><strong>List of Unpaid Customers</strong></td>
                 </tr>
                 @foreach ($dailyreport->listunpaidcustomers as $customer)
                     <tr>
                         <td>{{ $customer->name }}</td>
-                        <td>{{ number_format($customer->amount,2) }}</td>
+                        <td class="text-end">{{ number_format($customer->amount,2) }}</td>
+                    </tr>
+                @endforeach
+            </table>
+
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <td class="thead-dark" colspan="4"><strong>Sold Items</strong></td>
+                    </tr>  
+                </thead> 
+                <thead>
+                    <tr>
+                        <td>Item Name</td>
+                        <td class="text-end">Price</td>
+                        <td class="text-end">Quantity</td>
+                        <td class="text-end">Total</td>
+                    </tr>
+                </thead>
+                @foreach ($solditems->solditems as $solditem)
+                    <tr>
+                        <td>{{ $solditem->item_name }}</td>
+                        <td class="text-end">{{ number_format($solditem->price,2) }}</td>
+                        <td class="text-end">{{ number_format($solditem->quantity,2) }}</td>
+                        <td class="text-end">{{ number_format($solditem->total_price,2) }}</td>
+                        {{-- <td class="text-end">{{ number_format($solditem->amount,2) }}</td> --}}
                     </tr>
                 @endforeach
             </table>
