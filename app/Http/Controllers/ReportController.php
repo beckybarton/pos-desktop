@@ -121,14 +121,36 @@ class ReportController extends Controller
                 'items.selling_price as price',
                 DB::raw('SUM(order_items.quantity) as quantity'),
                 DB::raw('SUM(order_items.quantity * items.selling_price) as total_price'))
-            ->orderBy('order_items.created_at', 'desc')
+            ->orderBy('category_name', 'asc')
             ->groupBy('items.name', 'categories.name', 'items.selling_price')
             ->orderBy('item_name', 'asc') 
+            ->get();       
+        
+        return ['solditems' => $solditems];        
+    }
+
+    public function orderitemspercustomer($start, $end){
+        // get all order_items, with items (order_items.item_id), and customers (order.customer_id) where order_items.created_at is between start and end
+        $orderitemspercustomer = DB::table('order_items')
+            ->join('items', 'order_items.item_id', '=', 'items.id')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->join('customers', 'orders.customer_id', '=', 'customers.id')
+            ->whereBetween('order_items.created_at', [$start, $end])
+            ->select(
+                'orders.id as order_id',
+                'customers.name as customer_name',
+                'items.name as item_name',
+                'items.selling_price as price',
+                DB::raw('SUM(order_items.quantity) as quantity'),
+                DB::raw('SUM(order_items.quantity * items.selling_price) as total_price')
+            )
+            ->groupBy('orders.id', 'customers.name', 'items.name', 'items.selling_price')
+            ->orderBy('customer_name', 'asc')
+            ->orderBy('orders.id', 'asc')
             ->get();
 
         
-        
-        return ['solditems' => $solditems];        
+        return ['orderitemspercustomer', $orderitemspercustomer];
     }
 
     public function dailysave (Request $request){
@@ -161,10 +183,13 @@ class ReportController extends Controller
     public function download($report){
         $report = Report::find($report);
         if ($report->type == "Daily Report"){
-            $solditems = json_decode(json_encode($this->solditems($report->start, $report->end)));
-            $dailyreport = json_decode(json_encode($this->dailyreport($report->start, $report->end)));
-            return view('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems'));
-            dd($solditems);
+            // $solditems = json_decode(json_encode($this->solditems($report->start, $report->end)));
+            // $dailyreport = json_decode(json_encode($this->dailyreport($report->start, $report->end)));
+            $orderitemspercustomer = json_decode(json_encode($this->orderitemspercustomer($report->start, $report->end)));
+            // return view('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems'));
+            dd($orderitemspercustomer);
+            // $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems', 'orderitemspercustomer'));
+            // return $pdf->download('dailyreport.pdf');
         }
 
     }
