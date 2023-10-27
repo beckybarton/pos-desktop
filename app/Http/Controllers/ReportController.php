@@ -45,6 +45,11 @@ class ReportController extends Controller
     public function dailyreport($startdate, $enddate) {
         $sumOrdersAmount = Order::whereBetween('created_at', [$startdate, $enddate])->sum('amount');
 
+        $allcollections = Payment::whereBetween('created_at', [$startdate, $enddate])
+            ->select('method', DB::raw('SUM(amount) as totalpayment'))
+            ->groupBy('method') 
+            ->get();
+
         $categorizedSales = DB::table('order_items')
             ->join('items', 'order_items.item_id', '=', 'items.id')
             ->join('categories', 'items.category_id', '=', 'categories.id')
@@ -89,13 +94,17 @@ class ReportController extends Controller
             ->get();
 
         $totalunpaid = $listunpaidcustomers->sum('amount');
+        $totalcollections = $allcollections->sum('totalpayment');
+
             
         return ['sumOrdersAmount' => $sumOrdersAmount,
             'categorizedSales' => $categorizedSales,
             'collectionsDateSales' => $collectionsDateSales,
             'collectionsPreviousSales' => $collectionsPreviousSales,
             'listunpaidcustomers' => $listunpaidcustomers,
-            'totalunpaid' => $totalunpaid
+            'totalunpaid' => $totalunpaid,
+            'allcollections' => $allcollections,
+            'totalcollections' => $totalcollections
             ];
     }   
 
@@ -122,24 +131,27 @@ class ReportController extends Controller
             
         }
 
-        $this->download($report->id);
-        
-        return redirect()->back();
+        return $this->download($report->id);
 
     }
 
     public function download($report){
+        // return view('pdfs.dailyreport');
         $report = Report::find($report);
+        // dd($report);
+        // return view('pdfs.dailyreport');
+        // $report = Report::find($report);
         if ($report->type == "Daily Report"){
             $dailyreport = json_decode(json_encode($this->dailyreport($report->start, $report->end)));
+        //     // dd($dailyreport);
             $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report'));
             // return view('pdfs.dailyreport', compact('dailyreport', 'report'));
             return $pdf->download('dailyreport.pdf');
-            // dd($dailyreport);
-        }
-        else{
-            // $pdf = PDF::loadView('pdf.sample', $data);
-            // return $pdf->download('sample.pdf');
+        //     // dd($dailyreport);
+        // }
+        // else{
+        //     // $pdf = PDF::loadView('pdf.sample', $data);
+        //     // return $pdf->download('sample.pdf');
 
         }
 

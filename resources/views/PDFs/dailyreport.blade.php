@@ -22,19 +22,62 @@
                         <td class="text-end">{{ number_format($categorizedSale->amount,2) }}
                     </tr>
                 @endforeach
-                {{-- @foreach ($unpaidtransactions as $unpaidtransaction)
+
+                <tr>
+                    <td colspan="3"><strong>Collections from Today's Sales</strong></td>
+                </tr>
+                @foreach ($dailyreport->collectionsDateSales as $collection )
                     <tr>
-                        <td class="small text-left">{{ str_pad($unpaidtransaction->id, 4, '0', STR_PAD_LEFT) }}</td>
-                        <td class="small text-left">{{ Carbon\Carbon::parse($unpaidtransaction->created_at)->format('M d, Y') }}</td>
-                        <td class="small text-left">{{ ucwords($unpaidtransaction->vehicle_type->name) }}</td>
-                        <td class="small text-left">{{ strtoupper($unpaidtransaction->plate_number) }}</td>
-                        <td class="text-end small">{{ number_format($unpaidtransaction->amount,2) }}</td>
-                    </tr>   
-                @endforeach --}}
-                {{-- <tr>
-                    <td class="small text-left" colspan="4"><strong>Total Payable: </strong></td>
-                    <td class="text-end small"><strong>{{number_format($totalPayable,2)}}</strong></td>
-                </tr> --}}
+                        <td></td>
+                        <td>{{ ucwords($collection->method) }}</td>
+                        <td class="text-end">{{ number_format($collection->totalpayment,2) }}</td>
+                    </tr>
+                @endforeach
+                <tr>
+                    <td></td>
+                    <td>Unpaid</td>
+                    <td class="text-end">{{ number_format($dailyreport->totalunpaid,2) }}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="3"><strong>Collections from Previous Unpaid Customers</strong></td>
+                </tr>
+                @foreach ($dailyreport->collectionsPreviousSales as $collection )
+                <tr>
+                    <td></td>
+                    <td>{{ ucwords($collection->method) }}</td>
+                    <td class="text-end">{{ number_format($collection->totalpayment,2) }}</td>
+                </tr>
+                @endforeach
+
+                <tr>
+                    <td colspan="3"><strong>Total Collections</strong></td>
+                </tr>
+                @foreach ($dailyreport->allcollections as $collection )
+                <tr>
+                    <td></td>
+                    <td>{{ ucwords($collection->method) }}</td>
+                    <td class="text-end">{{ number_format($collection->totalpayment,2) }}</td>
+                </tr>
+                @endforeach
+
+                <tr>
+                    <td></td>
+                    <td><strong>Total Collections</strong></td>
+                    <td class="text-end">{{ number_format($dailyreport->totalcollections,2) }}</td>
+                </tr>
+            </table>
+            <br>
+            <table class="table table-striped">
+                <tr>
+                    <td colspan="2"><strong>List of Unpaid Customers</strong></td>
+                </tr>
+                @foreach ($dailyreport->listunpaidcustomers as $customer)
+                    <tr>
+                        <td>{{ $customer->name }}</td>
+                        <td>{{ number_format($customer->amount,2) }}</td>
+                    </tr>
+                @endforeach
             </table>
             <hr>
             <p class="small">Prepared by: {{ ucwords($report->user->first_name) }} {{ ucwords($report->user->last_name) }}</p>

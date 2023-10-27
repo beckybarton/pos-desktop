@@ -8,18 +8,17 @@
         .billing-statement {
             max-width: 800px;
             margin: 0 auto;
-            padding: 40px;
+            padding: 5px;
             border: 1px solid #ccc;
             border-radius: 10px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
         }
 
         .customer-info {
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
         table.table-striped tbody tr:nth-child(odd) {
             background-color: #f2f2f2;
@@ -40,7 +39,7 @@
 
         table th,
         table td {
-            padding: 0.25rem;
+            padding: 0.10rem;
             vertical-align: top;
             border-top: 1px solid #dee2e6;
         }

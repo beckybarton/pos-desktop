@@ -44,6 +44,7 @@
                     <div class="col-md-3">
                         <select class="form-select" id="reporttype" name="reporttype">
                             <option value="Daily Report">Daily Report</option>
+                            <option value="Sales Transactions">Sales Transactions</option>
                             <option value="Sold Items : Detailed">Sold Items : Detailed</option>
                             <option value="Sold Items : Summarized">Sold Items : Summarized</option>
                         </select>
