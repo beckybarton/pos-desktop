@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     var row = $("<div class='row'></div>");
                                 
                                     var denominationInput = $("<div class='form-group col-md-3'></div>").append(
-                                        "<input class='form-control form-control-plaintext' readonly name='denominations[]' value='" + denomination.amount + "'>"
+                                        "<input style='padding:5px;' class='form-control form-control-plaintext' readonly name='denominations[]' value='" + denomination.amount + "'>"
                                     );
                                 
                                     var piecesInput = $("<div class='form-group col-md-3' style='margin-bottom:10px;'></div>").append(

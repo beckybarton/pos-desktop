@@ -169,6 +169,14 @@ class ReportController extends Controller
         return ['orderitemspercustomer' => $orderitemspercustomer];
     }
 
+    public function getCashonHand($report){
+        $cashonhand = CashOnHand::where('report_id', $report)->get();
+        $totalcashonhand = $cashonhand->sum('amount');
+        return ['cashonhand' => $cashonhand,
+            'totalcashonhand' => $totalcashonhand
+        ];
+    }
+
     public function dailysave (Request $request){
         $report = new Report();
         $report->start = $request->startdate;
@@ -180,17 +188,17 @@ class ReportController extends Controller
         $denominations = $request->input('denominations');
         $pieces = $request->input('pieces');
 
-        // foreach ($denominations as $index => $denomination) {
-        //     if($pieces[$index] != '0'){
-        //         $cashonhand = new CashOnHand();
-        //         $cashonhand->report_id = $report->id;
-        //         $cashonhand->denomination = $denomination;
-        //         $cashonhand->pcs = $pieces[$index];
-        //         $cashonhand->amount = $pieces[$index] * $denomination;
-        //         $cashonhand->save();
-        //     }
+        foreach ($denominations as $index => $denomination) {
+            if($pieces[$index] != '0'){
+                $cashonhand = new CashOnHand();
+                $cashonhand->report_id = $report->id;
+                $cashonhand->denomination = $denomination;
+                $cashonhand->pcs = $pieces[$index];
+                $cashonhand->amount = $pieces[$index] * $denomination;
+                $cashonhand->save();
+            }
             
-        // }
+        }
 
         return $this->downloadreport($report->id);
 
@@ -202,7 +210,8 @@ class ReportController extends Controller
             $solditems = json_decode(json_encode($this->solditems($report->start, $report->end)));
             $dailyreport = json_decode(json_encode($this->dailyreport($report->start, $report->end)));
             $orderitemspercustomer = json_decode(json_encode($this->orderitemspercustomer($report->start, $report->end)));
-            $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems', 'orderitemspercustomer'));
+            $cashonhand = json_decode(json_encode($this->getCashonHand($report->id)));
+            $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems', 'orderitemspercustomer', 'cashonhand'));
             return $pdf->download('dailyreport.pdf');
         }
 

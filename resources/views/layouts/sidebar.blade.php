@@ -13,7 +13,7 @@
                 @if (auth()->user()->role == "admin")
                     <a href="{{ route('user.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-user"></i> Users</a>
                     <a href="{{ route('report.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-file"></i> Reports</a>
-                    {{-- <a href="{{ route('report.previous') }}" class="list-group-item list-group-item-action"><i class="fas fa-file"></i> Previous Reports</a> --}}
+                    <a href="{{ route('report.previous') }}" class="list-group-item list-group-item-action"><i class="fas fa-file"></i> Previous Reports</a>
                 @endif
             </div>
         </div>
@@ -53,9 +53,9 @@
                     <a href="{{ route('setting.company') }}" class="list-group-item list-group-item-action">
                         <i class="fas fa-cogs"></i> Company Information
                     </a>
-                    {{-- <a href="{{ route('setting.denominations') }}" class="list-group-item list-group-item-action">
+                    <a href="{{ route('setting.denominations') }}" class="list-group-item list-group-item-action">
                         <i class="fas fa-money-bill"></i> Denominations
-                    </a> --}}
+                    </a>
                 @endif
                 <button class="list-group-item list-group-item-action btn btn-primary changepassword" id="changepassword" data-bs-target="#changepasswordModal">
                     <i class="fas fa-key"></i> Change Password
