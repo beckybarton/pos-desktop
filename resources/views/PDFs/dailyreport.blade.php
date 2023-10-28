@@ -7,7 +7,7 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
+            <table class="table table-striped table-bordered table-hover small">
                 <tr>
                     <td colspan="2"><strong>Total Sales</strong></td>
                     <td class="text-end">{{ number_format($dailyreport->sumOrdersAmount,2) }}
@@ -68,7 +68,19 @@
                 </tr>
             </table>
             <hr>
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered small">
+                <tr>
+                    <td colspan="2"><strong>List of Payments from Previous Orders</strong></td>
+                </tr>
+                @foreach ($dailyreport->collectionsPreviousSalesbyCustomer as $customer)
+                    <tr>
+                        <td>{{ $customer->name }}</td>
+                        <td class="text-end">{{ number_format($customer->totalpayment,2) }}</td>
+                    </tr>
+                @endforeach
+            </table>
+            <hr>
+            <table class="table table-striped table-bordered small">
                 <tr>
                     <td colspan="2"><strong>List of Unpaid Customers</strong></td>
                 </tr>

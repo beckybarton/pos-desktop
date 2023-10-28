@@ -83,6 +83,20 @@ class ReportController extends Controller
         ->groupBy('payments.method')
         ->get();
 
+        // get all payments where payments.order_id with orders.created_at is less than the start date, and where payment.created_at is between startdate and end date. group this by payments.customer_id and get the customer name
+        $collectionsPreviousSalesbyCustomer = DB::table('payments')
+            ->join('orders', 'payments.order_id', "=", 'orders.id')
+            ->join('customers', 'payments.customer_id', "=", 'customers.id')
+            ->where('orders.created_at', '<', $startdate)
+            ->whereBetween('payments.created_at', [$startdate, $enddate])
+            ->select('orders.customer_id as customer_id',
+                        'customers.name as name',
+                        DB::raw('SUM(payments.amount) as totalpayment')
+                    )
+            ->orderBy('orders.customer_id')
+            ->groupBy('orders.customer_id', 'customers.name')
+            ->get();
+
 
         $listunpaidcustomers = DB::table('customers')
             ->join('orders', 'customers.id', "=", 'orders.customer_id')
@@ -107,7 +121,8 @@ class ReportController extends Controller
             'listunpaidcustomers' => $listunpaidcustomers,
             'totalunpaid' => $totalunpaid,
             'allcollections' => $allcollections,
-            'totalcollections' => $totalcollections
+            'totalcollections' => $totalcollections,
+            'collectionsPreviousSalesbyCustomer' => $collectionsPreviousSalesbyCustomer
             ];
     }   
 
@@ -189,19 +204,9 @@ class ReportController extends Controller
             $orderitemspercustomer = json_decode(json_encode($this->orderitemspercustomer($report->start, $report->end)));
             $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems', 'orderitemspercustomer'));
             return $pdf->download('dailyreport.pdf');
-
-
-
-
-            
-            // return view('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems', 'orderitemspercustomer'));
-            // dd($orderitemspercustomer);
         }
 
     }
-    
-            // $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems'));
-            // return $pdf->download('dailyreport.pdf');
 
     public function getPrevious(){
         $locations = Location::all();
