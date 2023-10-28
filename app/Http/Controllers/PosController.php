@@ -13,6 +13,7 @@ use App\Models\Category;
 use App\Models\Payment;
 use App\Models\CustomerCredit;
 use App\Models\CustomerCreditDeduction;
+use App\Models\Excess;
 use Carbon\Carbon;
 
 class PosController extends Controller
@@ -276,7 +277,15 @@ class PosController extends Controller
                 $credit->remaining = $payment_received - $unpaid_orders_sum;
             }
             
-            $credit->save();
+            if($credit->save()){
+                $excess = new Excess();
+                $excess->amount = $payment_received - $unpaid_orders_sum;
+                $excess->payment_id = $payment->id;
+                $excess->save();
+            }
+            
+
+
         }
         return response()->json(['unpaid_orders' => $unpaid_orders]);
     }

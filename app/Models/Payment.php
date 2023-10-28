@@ -34,4 +34,8 @@ class Payment extends Model
             ->toDateTimeString();
     }
 
+    public function excess(){
+        return $this->hasOne(Excess::class);
+    }
+
 }
