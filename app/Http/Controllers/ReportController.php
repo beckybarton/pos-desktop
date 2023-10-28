@@ -45,10 +45,57 @@ class ReportController extends Controller
     public function dailyreport($startdate, $enddate) {
         $sumOrdersAmount = Order::whereBetween('created_at', [$startdate, $enddate])->sum('amount');
 
-        $allcollections = Payment::whereBetween('created_at', [$startdate, $enddate])
+        $datecollections = Payment::whereBetween('created_at', [$startdate, $enddate])
             ->select('method', DB::raw('SUM(amount) as totalpayment'))
             ->groupBy('method') 
             ->get();
+        
+        // // get all excess where created_at betwwen stardate and enddate group by method and get the sum per method
+        // $excesspaymentsbymethods = DB::table('excesses')
+        //     ->whereBetween('excesses.created_at', [$startdate, $enddate])
+        //     ->select(
+        //         'excesses.method as method',
+        //         DB::raw('SUM(excesses.amount) as total_amount'))
+        //     ->groupBy('excesses.method') 
+        //     ->get();
+
+        // $allcollections = DB::table(DB::raw('(SELECT method, amount FROM excesses WHERE created_at BETWEEN ? AND ?) AS excesses_data
+        //                      UNION ALL
+        //                      (SELECT method, amount FROM payments WHERE created_at BETWEEN ? AND ?) AS payments_data'), [$startdate, $enddate, $startdate, $enddate])
+        //     ->select('method', DB::raw('SUM(amount) as total_amount'))
+        //     ->groupBy('method')
+        //     ->get();
+
+        // $excessesData = DB::table('excesses')
+        //     ->select('method', 'amount')
+        //     ->whereBetween('created_at', [$startdate, $enddate]);
+
+        // $allcollections = DB::table('payments')
+        //     ->select('method', 'amount')
+        //     ->whereBetween('created_at', [$startdate, $enddate])
+        //     ->unionAll($excessesData)
+        //     ->select('method', DB::raw('SUM(amount) as total_amount'))
+        //     ->groupBy('method')
+        //     ->get();
+
+        $groupedData = DB::table('excesses')
+            ->select('method', 'amount', 'id')
+            ->whereBetween('created_at', [$startdate, $enddate])
+            ->unionAll(
+                DB::table('payments')
+                    ->select('method', 'amount', 'id')
+                    ->whereBetween('created_at', [$startdate, $enddate])
+            )
+            ->get();
+
+        $allcollections = $groupedData->groupBy('method');
+        // $allcollections = $groupedData->map(function ($items) {
+        //     return [
+        //         'amount' => $items->sum('amount'),
+        //         'method' => $items->first()->method // Assuming all items in the group have the same method
+        //     ];
+        // });
+        
 
         $categorizedSales = DB::table('order_items')
             ->join('items', 'order_items.item_id', '=', 'items.id')
@@ -91,10 +138,13 @@ class ReportController extends Controller
             ->whereBetween('payments.created_at', [$startdate, $enddate])
             ->select('orders.customer_id as customer_id',
                         'customers.name as name',
+                        'orders.id as order_id',
+                        DB::raw('GROUP_CONCAT(orders.id) as order_ids'), 
+                        DB::raw('GROUP_CONCAT(payments.id) as payment_ids'), 
                         DB::raw('SUM(payments.amount) as totalpayment')
                     )
             ->orderBy('orders.customer_id')
-            ->groupBy('orders.customer_id', 'customers.name')
+            ->groupBy('orders.customer_id', 'customers.name', 'orders.id', 'payments.id')
             ->get();
 
 
@@ -109,7 +159,7 @@ class ReportController extends Controller
             ->get();
 
         $totalunpaid = $listunpaidcustomers->sum('amount');
-        $totalcollections = $allcollections->sum('totalpayment');
+        // $totalcollections = $allcollections->sum('totalpayment');
 
         $solditems = $this->solditems($startdate, $enddate);
 
@@ -121,8 +171,10 @@ class ReportController extends Controller
             'listunpaidcustomers' => $listunpaidcustomers,
             'totalunpaid' => $totalunpaid,
             'allcollections' => $allcollections,
-            'totalcollections' => $totalcollections,
-            'collectionsPreviousSalesbyCustomer' => $collectionsPreviousSalesbyCustomer
+            // 'totalcollections' => $totalcollections,
+            'collectionsPreviousSalesbyCustomer' => $collectionsPreviousSalesbyCustomer,
+            'datecollections' => $datecollections,
+            'solditems' => $solditems
             ];
     }   
 
@@ -141,7 +193,39 @@ class ReportController extends Controller
             ->orderBy('item_name', 'asc') 
             ->get();       
         
-        return ['solditems' => $solditems];        
+        return ['solditems' => $solditems];    
+    }  
+        
+    public function excesspayments($start, $end){
+        $excesspaymentsbycustomers = DB::table('excesses')
+            ->join('payments', 'excesses.payment_id', '=', 'payments.id')
+            ->join('orders', 'payments.order_id', '=', 'orders.id')
+            ->join('customers', 'orders.customer_id', '=', 'customers.id')
+            ->whereBetween('excesses.created_at', [$start, $end])
+            ->select('orders.id as order_id',
+                'customers.name as customer_name',
+                'excesses.amount as amount',
+                'excesses.method as method',
+                'excesses.created_at as created_at')
+            ->orderBy('orders.id', 'asc')
+            ->get();
+
+        
+        $excesspaymentsbymethods = DB::table('excesses')
+            ->join('payments', 'excesses.payment_id', '=', 'payments.id')
+            ->join('orders', 'payments.order_id', '=', 'orders.id')
+            ->join('customers', 'orders.customer_id', '=', 'customers.id')
+            ->whereBetween('excesses.created_at', [$start, $end])
+            ->select(
+                'excesses.method as method',
+                DB::raw('SUM(excesses.amount) as total_amount'))
+            ->groupBy('excesses.method') 
+            ->get();
+
+
+        return ['excesspaymentsbycustomers' => $excesspaymentsbycustomers, 
+                'excesspaymentsbymethods' => $excesspaymentsbymethods
+            ];
     }
 
     public function orderitemspercustomer($start, $end){
@@ -211,8 +295,10 @@ class ReportController extends Controller
             $dailyreport = json_decode(json_encode($this->dailyreport($report->start, $report->end)));
             $orderitemspercustomer = json_decode(json_encode($this->orderitemspercustomer($report->start, $report->end)));
             $cashonhand = json_decode(json_encode($this->getCashonHand($report->id)));
-            $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems', 'orderitemspercustomer', 'cashonhand'));
-            return $pdf->download('dailyreport.pdf');
+            $excesspayments = json_decode(json_encode($this->excesspayments($report->start, $report->end)));
+            // $pdf = PDF::loadView('pdfs.dailyreport', compact('dailyreport', 'report', 'solditems', 'orderitemspercustomer', 'cashonhand', 'excesspayments'));
+            // return $pdf->download('dailyreport.pdf');
+            dd($dailyreport->allcollections);
         }
 
     }

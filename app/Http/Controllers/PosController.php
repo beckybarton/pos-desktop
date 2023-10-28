@@ -281,6 +281,7 @@ class PosController extends Controller
                 $excess = new Excess();
                 $excess->amount = $payment_received - $unpaid_orders_sum;
                 $excess->payment_id = $payment->id;
+                $excess->method = $request->input('method');
                 $excess->save();
             }
             

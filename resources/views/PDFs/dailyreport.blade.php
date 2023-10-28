@@ -20,8 +20,9 @@
                     <td class="text-end">{{ number_format($categorizedSale->amount,2) }}
                 </tr>
             @endforeach
-
-            <tr>
+        </table>
+        <hr>
+            {{-- <tr>
                 <td colspan="3"><strong>Collections from Today's Sales</strong></td>
             </tr>
             @foreach ($dailyreport->collectionsDateSalesbyMethod as $collection )
@@ -35,34 +36,69 @@
                 <td></td>
                 <td>Unpaid</td>
                 <td class="text-end">{{ number_format($dailyreport->totalunpaid,2) }}</td>
-            </tr>
+            </tr> --}}
 
-            <tr>
+            {{-- <tr>
                 <td colspan="3"><strong>Collections from Previous Unpaid Customers</strong></td>
-            </tr>
-            @foreach ($dailyreport->collectionsPreviousSalesbyMethod as $collection )
+            </tr> --}}
+            {{-- @foreach ($dailyreport->collectionsPreviousSalesbyMethod as $collection )
             <tr>
                 <td></td>
                 <td>{{ ucwords($collection->method) }}</td>
                 <td class="text-end">{{ number_format($collection->totalpayment,2) }}</td>
             </tr>
-            @endforeach
-
+            @endforeach --}}
+        <table class="table table-striped table-bordered table-hover small">
             <tr>
                 <td colspan="3"><strong>Total Collections</strong></td>
             </tr>
-            @foreach ($dailyreport->allcollections as $collection )
+            <tr>
+                <td colspan="3"><strong>From Sales</strong></td>
+            </tr>
+            @foreach ($dailyreport->datecollections as $collection )
                 <tr>
                     <td></td>
                     <td>{{ ucwords($collection->method) }}</td>
                     <td class="text-end">{{ number_format($collection->totalpayment,2) }}</td>
                 </tr>
+            @endforeach 
+            @if($dailyreport->collectionsPreviousSalesbyMethod)
+                <tr>
+                    <td colspan="3"><strong>From Payments of Previous Unpaid Orders</strong></td>
+                </tr>
+                @foreach ($dailyreport->collectionsPreviousSalesbyMethod as $collection )
+                <tr>
+                    <td></td>
+                    <td>{{ ucwords($collection->method) }}</td>
+                    <td class="text-end">{{ number_format($collection->totalpayment,2) }}</td>
+                </tr>
+                @endforeach
+            @endif
+                
+            <tr>
+                <td colspan="3"><strong>From Excess/Advance Payments</strong></td>
+            </tr>
+            @foreach ($excesspayments->excesspaymentsbymethods as $excesspaymentsbymethods)
+                <tr>
+                    <td></td>
+                    <td>{{ ucwords($excesspaymentsbymethods->method) }}</td>
+                    <td class="text-end">{{ number_format($excesspaymentsbymethods->total_amount,2) }}</td>
+                </tr>                
             @endforeach
             <tr>
-                <td></td>
-                <td><strong>Total Collections</strong></td>
-                <td class="text-end">{{ number_format($dailyreport->totalcollections,2) }}</td>
+                <td colspan="3"><strong>Overall Collections</strong></td>
             </tr>
+            @foreach ($dailyreport->allcollections as $allcollection)
+                <tr>
+                    <td></td>
+                    <td>{{ ucwords($allcollection->method) }}</td>
+                    <td class="text-end">{{ number_format($allcollection->amount,2) }}</td>
+                </tr>                
+            @endforeach
+
+        </table>
+        <hr>
+        <table class="table table-bordered table-striped small">
             <tr>
                 <td colspan="3"><strong>Cash Breakdown</strong></td>
             </tr> 
@@ -83,22 +119,49 @@
                 <td class="text-end">Total</td>
                 <td class="text-end">{{ number_format($cashonhand->totalcashonhand,2) }}</td>
             </tr>
-
-            
         </table>
         <hr>
         <table class="table table-striped table-bordered small">
             <tr>
                 <td colspan="2"><strong>List of Payments from Previous Orders</strong></td>
             </tr>
+            <tr>
+                <td>Customer</td>
+                <td class="text-end">Amount</td>
+            </tr>
             @foreach ($dailyreport->collectionsPreviousSalesbyCustomer as $customer)
                 <tr>
-                    <td>{{ $customer->name }}</td>
+                    <td>{{ ucwords($customer->name) }} [Orders: {{ implode(',', explode(',', $customer->order_ids)) }} ] [Payments: {{ implode(',', explode(',', $customer->payment_ids)) }} ]</td>
                     <td class="text-end">{{ number_format($customer->totalpayment,2) }}</td>
                 </tr>
             @endforeach
         </table>
         <hr>
+        @if ($excesspayments)
+            <table class="table table-striped table-bordered small">
+                <thead>
+                    <tr>
+                        <td colspan="3"><strong>Excess Payments from Customers</strong></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Customer</td>
+                        <td>Method</td>
+                        <td class="text-end">Amount</td>
+                    </tr>   
+                    @foreach ($excesspayments->excesspaymentsbycustomers as $excess)
+                        <tr>
+                            <td> {{ ucwords($excess->customer_name) }} </td>
+                            <td> {{ ucwords($excess->method) }} </td>
+                            <td class="text-end"> {{ number_format($excess->amount,2) }} </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <hr>
+        @endif
+        
         <table class="table table-striped table-bordered small">
             <tr>
                 <td colspan="2"><strong>List of Unpaid Customers</strong></td>
@@ -109,6 +172,11 @@
                     <td class="text-end">{{ number_format($customer->amount,2) }}</td>
                 </tr>
             @endforeach
+            <tr>
+                <td><strong>Total</strong></td>
+                <td class="text-end"><strong>{{ number_format($dailyreport->totalunpaid,2) }}</strong></td>
+                    
+            </tr>
         </table>
         <hr>
         <table class="table table-striped table-bordered small">
