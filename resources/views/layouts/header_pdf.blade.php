@@ -58,7 +58,7 @@
         }
 
         .small {
-            font-size: 0.875rem; /* 14px */
+            font-size: 0.75rem; /* 14px */
         }
 
         .text-left{

@@ -80,16 +80,16 @@
                 @endforeach
             </table>
             <hr>
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered small">
                 <thead>
                     <tr>
-                        <td class="thead-dark" colspan="5"><strong>Sold Items</strong></td>
+                        <td class="thead-dark small" colspan="5"><strong>Sold Items</strong></td>
                     </tr>  
                 </thead> 
                 <thead>
                     <tr>
-                        <td>Category</td>
-                        <td>Item Name</td>
+                        <td class="small">Category</td>
+                        <td class="small">Item Name</td>
                         <td class="text-end">Price</td>
                         <td class="text-end">Quantity</td>
                         <td class="text-end">Total</td>
@@ -97,14 +97,69 @@
                 </thead>
                 @foreach ($solditems->solditems as $solditem)
                     <tr>
-                        <td>{{ $solditem->category_name }}</td>
-                        <td>{{ $solditem->item_name }}</td>
-                        <td class="text-end">{{ number_format($solditem->price,2) }}</td>
-                        <td class="text-end">{{ number_format($solditem->quantity,2) }}</td>
-                        <td class="text-end">{{ number_format($solditem->total_price,2) }}</td>
-                        {{-- <td class="text-end">{{ number_format($solditem->amount,2) }}</td> --}}
+                        <td class="small">{{ $solditem->category_name }}</td>
+                        <td class="small">{{ $solditem->item_name }}</td>
+                        <td class="text-end small">{{ number_format($solditem->price,2) }}</td>
+                        <td class="text-end small">{{ number_format($solditem->quantity,2) }}</td>
+                        <td class="text-end small">{{ number_format($solditem->total_price,2) }}</td>
                     </tr>
                 @endforeach
+            </table>
+            <hr>
+            <table class="table table-bordered small">
+                <thead>
+                    <tr>
+                        <td colspan="6"><strong>Transaction Logs</strong></td>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <td>Date/Time</td>
+                        <td>Order ID</td>
+                        <td>Customer Name</td>
+                        <td>Item Name</td>
+                        <td class="text-end">Price</td>
+                        <td class="text-end">Quantity</td>
+                        <td class="text-end">Total</td>
+                        <td class="text-end">Payment</td>
+                        <td class="text-end">Balance</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $groupedOrders = collect($orderitemspercustomer->orderitemspercustomer)->groupBy('order_id');
+                    @endphp
+
+                    @foreach ($groupedOrders as $orderId => $orders)
+                        @php
+                            $totalOrders = count($orders);
+                        @endphp
+
+                        @foreach ($orders as $index => $order)
+                            <tr>
+                                <td>{{ Carbon\Carbon::parse($order->created_at)->format('m/d/y h:i A') }}</td>
+                                <td>{{ str_pad($orderId, 5, '0', STR_PAD_LEFT) }}</td>
+                                <td>{{ ucwords($order->customer_name) }}</td>
+                                <td>{{ ucwords($order->item_name) }}</td>
+                                <td class="text-end">{{ number_format($order->price, 2) }}</td>
+                                <td class="text-end">{{ number_format($order->quantity, 2) }}</td>
+                                <td class="text-end">{{ number_format($order->total_price, 2) }}</td>
+                                @if ($loop->last && $index + 1 === $totalOrders)
+                                    <td class="text-end text-primary"><strong>{{ number_format($order->payment, 2) }}</strong></td>
+                                @else
+                                    <td class="text-end"> </td>
+                                @endif
+                                @if ($loop->last && $index + 1 === $totalOrders)
+                                    <td class="text-end text-primary"><strong>{{ number_format($order->remaining_due, 2) }}</strong></td>
+                                @else
+                                    <td class="text-end"> </td>
+                                @endif
+                                
+                            </tr>
+                        @endforeach
+                    @endforeach
+
+                </tbody>
             </table>
             <hr>
             <p class="small">Prepared by: {{ ucwords($report->user->first_name) }} {{ ucwords($report->user->last_name) }}</p>
