@@ -6,7 +6,6 @@
         }
 
         .billing-statement {
-            max-width: 800px;
             margin: 0 auto;
             padding: 5px;
             border: 1px solid #ccc;
@@ -58,11 +57,19 @@
         }
 
         .small {
-            font-size: 0.75rem; /* 14px */
+            font-size: 0.625rem; /* 14px */
         }
 
         .text-left{
             text-align: left;
+        }
+
+        .text-center{
+            text-align: center;
+        }
+
+        .double-line {
+            border-bottom: solid black; /* You can adjust the thickness (3px in this example) */
         }
 
 

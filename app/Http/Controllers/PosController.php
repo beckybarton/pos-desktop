@@ -120,10 +120,12 @@ class PosController extends Controller
             // SAVE ORDER_ITEMS
             foreach ($item_ids as $index => $item_id) {
                 $selling_price = Item::find($item_ids[$index])->selling_price;
+                $cost = Item::find($item_ids[$index])->cost;
                 $order_item = new OrderItem();
                 $order_item->order_id = $order->id;
                 $order_item->item_id = $item_ids[$index];
                 $order_item->price = $selling_price;
+                $order_item->cost = $cost;
                 $order_item->quantity = $quantities[$index];
                 $order_item->save();
 

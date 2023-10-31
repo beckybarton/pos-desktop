@@ -52,7 +52,7 @@
                 </div>
             </form>
             <div class="row">
-                <div class="col-md-3" id="reportbuttonsdiv">
+                <div class="col-md-6" id="reportbuttonsdiv">
                     <button type="button" class="btn btn-primary btn-sm generate" id="generate" name="generate">Generate</button>
                 </div>
             </div>

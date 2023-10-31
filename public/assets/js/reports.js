@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // var formattedStartDate = moment(startdate, 'YYYY-MM-DD').format('YYYY-MM-DD');
     
         if (reporttype == "Daily Report"){
-            // url = 'daily-report/' + startdate;
             var url = 'daily-report/' + startdate + '/' + enddate;
 
         }
@@ -47,16 +46,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsedata.collectionsPreviousSalesbyMethod.forEach(function(collection) {
                     dailyreportstable.append(createRow(["", collection.method, collection.totalpayment.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
                 });
-                dailyreportstable.append(createRow(["", "Total Collections", ""]));
-                responsedata.allcollections.forEach(function(collection) {
-                    dailyreportstable.append(createRow(["", collection.method, collection.totalpayment.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
-                });
-                dailyreportstable.append(createRow(["", "Total Collections", responsedata.totalcollections.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
+                // dailyreportstable.append(createRow(["", "Total Collections", ""]));
+                // responsedata.allcollections.forEach(function(collection) {
+                //     dailyreportstable.append(createRow(["", collection.method, collection.totalpayment.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
+                // });
+                // dailyreportstable.append(createRow(["", "Total Collections", responsedata.totalcollections.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
                 dailyreportstable.append(createRow(["", "List of Unpaid Customers", ""]));
                 responsedata.listunpaidcustomers.forEach(function(unpaidcustomer) {
                     dailyreportstable.append(createRow(["", unpaidcustomer.name, unpaidcustomer.amount.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
                 });
 
+                console.log('show download');
                 var reportbuttonsdiv = $('#reportbuttonsdiv');
                 reportbuttonsdiv.append($('<button class="btn btn-danger btn-sm">Download</button>')
                     .click(function() {
