@@ -1,7 +1,7 @@
 @include('layouts.header')
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <span class="navbar-brand">{{ $setting->company_name }}</span> || 
+            <span class="navbar-brand">{{ $setting->company_name }}</span>
         </div>
     </nav>
     <form>
@@ -95,14 +95,35 @@
             </div>
         </div>
     </form>
-    <div class="btn-group">
+    {{-- <div class="btn-group">
         <button type="button" class="btn btn-primary" onclick="searchitemmodal()" style="margin-left: 10px;">F2 Add Items</button>
         <button type="button" class="btn btn-secondary" onclick="customersearchmodal()" style="margin-left: 10px;">F3 Assign Customer</button>
         <button type="button" class="btn btn-success" onclick="pay()" style="margin-left: 10px;">F5 Pay</button>
         <button type="button" class="btn btn-primary" onclick="addcustomer()" style="margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCustomerModal">F6 Create Customer</button>
         <button type="button" class="btn btn-danger" onclick="viewreceivables()" style="margin-left: 10px;">F7 Unpaid Orders</button>
         <button type="button" class="btn btn-danger" onclick="returntodashboard()" style="margin-left: 10px;">F8 Return to Dashboard</button>
+    </div> --}}
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="Basic buttons">
+            <button type="button" class="btn btn-primary" onclick="searchitemmodal()">F2 Add Items</button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Basic buttons">
+            <button type="button" class="btn btn-secondary" onclick="customersearchmodal()">F3 Assign Customer</button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Basic buttons">
+            <button type="button" class="btn btn-success" onclick="pay()">F5 Pay</button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Basic buttons">
+            <button type="button" class="btn btn-primary" onclick="addcustomer()" data-bs-toggle="modal" data-bs-target="#addCustomerModal">F6 Create Customer</button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Basic buttons">
+            <button type="button" class="btn btn-danger" onclick="viewreceivables()">F7 Unpaid Orders</button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic buttons">
+            <button type="button" class="btn btn-danger" onclick="returntodashboard()">F8 Return to Dashboard</button>
+        </div>
     </div>
+    
 
 
 
