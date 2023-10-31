@@ -52,17 +52,26 @@ class ReportController extends Controller
 
         $datecollections = Payment::join('orders', 'payments.order_id', '=', 'orders.id')
             ->whereBetween('orders.created_at', [$startdate, $enddate])
+            ->whereNot('payments.method', 'credit')
             ->select('payments.method', DB::raw('SUM(payments.amount) as totalpayment'))
             ->groupBy('payments.method') 
             ->get();
 
 
-        $allcollections = DB::table(DB::raw('(SELECT method, amount FROM payments 
+        // $allcollections = DB::table(DB::raw('(SELECT method, amount FROM payments 
+        //         UNION ALL 
+        //         SELECT method, amount FROM excesses) AS combined_data'))
+        //     ->select('method', DB::raw('SUM(amount) as total_amount'))
+        //     ->groupBy('method')
+        //     ->get();
+
+        $allcollections = DB::table(DB::raw('(SELECT method, amount FROM payments WHERE method <> "credit"
                 UNION ALL 
                 SELECT method, amount FROM excesses) AS combined_data'))
             ->select('method', DB::raw('SUM(amount) as total_amount'))
             ->groupBy('method')
             ->get();
+
 
         $categorizedSales = DB::table('order_items')
             ->join('items', 'order_items.item_id', '=', 'items.id')

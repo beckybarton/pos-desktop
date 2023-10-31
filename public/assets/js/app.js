@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });  
     
   // SEARCH ITEMS
+
   $('#searchItemName').on('input', function() {
     event.preventDefault();
     var searchQuery = $('#searchItemName').val();
@@ -115,19 +116,22 @@ document.addEventListener('DOMContentLoaded', function() {
       success: function(data) {
         $('#searchResultsTableBody').empty();
 
-        data.forEach(function(item) {
-            var formattedPrice = parseFloat(item.selling_price).toFixed(2);
-            var resultHtml = '<tr>' +
-                '<td>' + item.name + '</td>' +
-                '<td>' + formattedPrice + '</td>' +
-                '<td>' + item.uom + '</td>' +
-                '<td><button class="btn btn-primary btn-sm float-end" onclick="addItemToTable(\'' + item.id + '\', \'' + item.name + '\', \'' + item.uom + '\', \'' + item.selling_price + '\')">Add</button></td>' +
-                '</tr>';
-            $('#searchResultsTableBody').append(resultHtml);
+        // data.forEach(function(item) {
+        data.forEach(function(item, index) {
+          var formattedPrice = parseFloat(item.selling_price).toFixed(2);
+          var resultHtml = '<tr>' +
+            '<td>' + item.name + '</td>' +
+            '<td>' + formattedPrice + '</td>' +
+            '<td>' + item.uom + '</td>' +
+            '<td><button class="btn btn-primary btn-sm float-end" onclick="addItemToTable(\'' + item.id + '\', \'' + item.name + '\', \'' + item.uom + '\', \'' + item.selling_price + '\')">Add</button></td>' +
+            '</tr>';
+          $('#searchResultsTableBody').append(resultHtml);
         });
       }
     });
   });
+
+  
 
   $('#selectedItemsTable tbody').on('input', 'input[type="number"]', function() {
     updateDueAmount();
@@ -205,6 +209,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+// function selectRow(row) {
+//   // Remove previous selection
+//   if (selectedRow) {
+//       selectedRow.removeClass('selected-row');
+//   }
+
+//   // Set new selection
+//   selectedRow = row;
+//   selectedRow.addClass('selected-row');
+// }
 
 
 function updateChange(){

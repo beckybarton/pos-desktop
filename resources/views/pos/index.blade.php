@@ -71,8 +71,8 @@
                 <div class="row mb-3">
                     <label for="customer" class="col-sm-5 col-form-label font-weight-bold">Customer:</label>
                     <div class="col-sm-7">
-                        <input type="text" hidden readonly class="form-control-plaintext" id="customer" name="customer" required>
-                        <input type="text" readonly class="form-control-plaintext" id="customername" name="customername" required>
+                        <input type="text" hidden readonly class="form-control-plaintext text-danger" id="customer" name="customer" required>
+                        <input type="text" readonly class="form-control-plaintext text-danger" id="customername" name="customername" required>
                     </div>
                 </div>
 
@@ -95,15 +95,15 @@
             </div>
         </div>
     </form>
-    {{-- <div class="btn-group">
+    <div class="btn-group">
         <button type="button" class="btn btn-primary" onclick="searchitemmodal()" style="margin-left: 10px;">F2 Add Items</button>
         <button type="button" class="btn btn-secondary" onclick="customersearchmodal()" style="margin-left: 10px;">F3 Assign Customer</button>
         <button type="button" class="btn btn-success" onclick="pay()" style="margin-left: 10px;">F5 Pay</button>
         <button type="button" class="btn btn-primary" onclick="addcustomer()" style="margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCustomerModal">F6 Create Customer</button>
         <button type="button" class="btn btn-danger" onclick="viewreceivables()" style="margin-left: 10px;">F7 Unpaid Orders</button>
         <button type="button" class="btn btn-danger" onclick="returntodashboard()" style="margin-left: 10px;">F8 Return to Dashboard</button>
-    </div> --}}
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+    </div>
+    {{-- <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="Basic buttons">
             <button type="button" class="btn btn-primary" onclick="searchitemmodal()">F2 Add Items</button>
         </div>
@@ -122,7 +122,7 @@
         <div class="btn-group" role="group" aria-label="Basic buttons">
             <button type="button" class="btn btn-danger" onclick="returntodashboard()">F8 Return to Dashboard</button>
         </div>
-    </div>
+    </div> --}}
     
 
 

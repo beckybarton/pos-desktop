@@ -27,6 +27,9 @@
             padding: 0;
             text-align: right;
         }
+        .focused-row {
+            background-color: #f2f2f2; /* or any background color you prefer */
+        }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>

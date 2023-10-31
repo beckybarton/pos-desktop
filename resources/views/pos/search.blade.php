@@ -7,11 +7,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <!-- Search Form -->
-        <!-- <form id="itemSearchForm"> -->
           <div class="mb-3">
             <label for="searchItemName" class="form-label">Item Name:</label>
-            <input type="text" class="form-control" id="searchItemName" required>
+            <input type="text" class="form-control" id="searchItemName" required autocomplete="off">
           </div>
 
           <div class="mb-3">
@@ -29,9 +27,6 @@
               </tbody>
             </table>
           </div>
-        <!-- </form> -->
-        
-        <!-- Search Results (to be populated dynamically) -->
         <div id="searchResults"></div>
       </div>
     </div>
