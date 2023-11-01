@@ -46,11 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsedata.collectionsPreviousSalesbyMethod.forEach(function(collection) {
                     dailyreportstable.append(createRow(["", collection.method, collection.totalpayment.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
                 });
-                // dailyreportstable.append(createRow(["", "Total Collections", ""]));
-                // responsedata.allcollections.forEach(function(collection) {
-                //     dailyreportstable.append(createRow(["", collection.method, collection.totalpayment.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
-                // });
-                // dailyreportstable.append(createRow(["", "Total Collections", responsedata.totalcollections.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
+                
                 dailyreportstable.append(createRow(["", "List of Unpaid Customers", ""]));
                 responsedata.listunpaidcustomers.forEach(function(unpaidcustomer) {
                     dailyreportstable.append(createRow(["", unpaidcustomer.name, unpaidcustomer.amount.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));

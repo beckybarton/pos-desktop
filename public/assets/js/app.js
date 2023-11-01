@@ -329,7 +329,6 @@ function saveOrder() {
 }
 
 function viewreceivables(){
-  // var paginationLinksHTML = '{{ $customerNames->links("pagination::bootstrap-4") }}';
  
   $.ajax({
     url: '/all-receivables',
@@ -407,7 +406,7 @@ function viewreceivables(){
       $('#receivablesModal').modal('show'); // Show the main modal again when the loop finishes
       $('#receivablesCustomerModal').on('hidden.bs.modal', function (e) {
         $('#receivablesModal').modal('show'); // Show the main modal when the customer modal is closed
-    });
+      });
     },
   
     error: function(xhr, status, error) {

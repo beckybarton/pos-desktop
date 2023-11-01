@@ -57,8 +57,7 @@
         }
 
         .small {
-            font-size: 0.625rem; /* 14px */
-        }
+            font-size: 0.625rem;
 
         .text-left{
             text-align: left;
@@ -69,9 +68,7 @@
         }
 
         .double-line {
-            border-bottom: solid black; /* You can adjust the thickness (3px in this example) */
-        }
-
+            border-bottom: solid black; 
 
 
 
