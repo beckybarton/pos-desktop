@@ -1,5 +1,24 @@
 let totalDue = 0;
 document.addEventListener('DOMContentLoaded', function() {  
+
+// var formData = $('form').serialize(); // Serialize the form data
+//   $.ajax({
+//     url: '/save-order',
+//     type: 'POST',
+//     data: formData,
+//     headers: {
+//       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//     },
+//     success: function(response) {
+//         alert("Transaction saved!");
+//         $('form')[0].reset();
+//         $('#selectedItemsTable tbody').empty();
+//       },
+//       error: function(error) {
+//           console.error('Error occurred while submitting the form:', error);
+//       }
+//   });
+
   $(document).ready(function() {
     $('#searchinputitem').on('keyup change', function() {
         var searchText = $('#searchinputitem').val().toLowerCase();

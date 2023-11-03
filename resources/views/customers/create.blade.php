@@ -11,7 +11,8 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-        <form action="{{route('customer.store')}}" method="post">
+        <form id="customerform" action="{{route('customer.store')}}" method="post">
+          {{-- <form id="customerform"> --}}
           @csrf
           <div class="form-group">
             <label for="name">Name:</label>
