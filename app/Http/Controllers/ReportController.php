@@ -45,11 +45,6 @@ class ReportController extends Controller
     public function dailyreport($startdate, $enddate) {
         $sumOrdersAmount = Order::whereBetween('created_at', [$startdate, $enddate])->sum('amount');
 
-        // $datecollections = Payment::whereBetween('created_at', [$startdate, $enddate])
-        //     ->select('method', DB::raw('SUM(amount) as totalpayment'))
-        //     ->groupBy('method') 
-        //     ->get();
-
         $datecollections = Payment::join('orders', 'payments.order_id', '=', 'orders.id')
             ->whereBetween('orders.created_at', [$startdate, $enddate])
             ->whereNot('payments.method', 'credit')
@@ -57,20 +52,23 @@ class ReportController extends Controller
             ->groupBy('payments.method') 
             ->get();
 
-
-        // $allcollections = DB::table(DB::raw('(SELECT method, amount FROM payments 
-        //         UNION ALL 
-        //         SELECT method, amount FROM excesses) AS combined_data'))
-        //     ->select('method', DB::raw('SUM(amount) as total_amount'))
-        //     ->groupBy('method')
-        //     ->get();
-
         $allcollections = DB::table(DB::raw('(SELECT method, amount FROM payments WHERE method <> "credit"
                 UNION ALL 
                 SELECT method, amount FROM excesses) AS combined_data'))
             ->select('method', DB::raw('SUM(amount) as total_amount'))
             ->groupBy('method')
             ->get();
+
+        // $allcollections = DB::table(DB::raw('(SELECT method, amount, created_at FROM payments WHERE method <> "credit")
+        //     UNION ALL 
+        //     (SELECT method, amount, created_at FROM excesses)
+        //     AS combined_data'))
+        //     ->select('method', DB::raw('SUM(amount) as total_amount'))
+        //     ->whereRaw('combined_data.created_at BETWEEN :startdate AND :enddate', ['start' => $startdate, 'end' => $enddate])
+        //     ->groupBy('method')
+        //     ->get();
+
+
 
 
         $categorizedSales = DB::table('order_items')
@@ -94,6 +92,9 @@ class ReportController extends Controller
             ->groupBy('payments.method')
             ->get();
         
+        $collectionsDateSalesCash = $collectionsDateSalesbyMethod->where('method', 'Cash')->sum('totalpayment');
+        $collectionsDateSalesGcash = $collectionsDateSalesbyMethod->where('method', 'Gcash')->sum('totalpayment');
+
 
         $collectionsPreviousSalesbyMethod = DB::table('payments')
         ->join('orders', 'payments.order_id', "=", 'orders.id')
@@ -105,6 +106,9 @@ class ReportController extends Controller
         ->orderBy('payments.method')
         ->groupBy('payments.method')
         ->get();
+
+        $collectionsPreviousSalesCash = $collectionsPreviousSalesbyMethod->where('method', 'Cash')->sum('totalpayment');
+        $collectionsPreviousSalesGcash = $collectionsPreviousSalesbyMethod->where('method', 'Gcash')->sum('totalpayment');
 
         // get all payments where payments.order_id with orders.created_at is less than the start date, and where payment.created_at is between startdate and end date. group this by payments.customer_id and get the customer name
         $collectionsPreviousSalesbyCustomer = DB::table('payments')
@@ -140,6 +144,9 @@ class ReportController extends Controller
 
         $solditems = $this->solditems($startdate, $enddate);
 
+        $cashcollections_noexcess = $collectionsDateSalesCash + $collectionsPreviousSalesCash;
+        $Gcashcollections_noexcess = $collectionsDateSalesGcash + $collectionsPreviousSalesGcash;
+
             
         return ['sumOrdersAmount' => $sumOrdersAmount,
             'categorizedSales' => $categorizedSales,
@@ -151,7 +158,9 @@ class ReportController extends Controller
             // 'totalcollections' => $totalcollections,
             'collectionsPreviousSalesbyCustomer' => $collectionsPreviousSalesbyCustomer,
             'datecollections' => $datecollections,
-            'solditems' => $solditems
+            'solditems' => $solditems,
+            'cashcollections_noexcess' => $cashcollections_noexcess,
+            'Gcashcollections_noexcess' => $Gcashcollections_noexcess
             ];
     }   
 
@@ -206,9 +215,14 @@ class ReportController extends Controller
             ->groupBy('excesses.method') 
             ->get();
 
+        $excesspaymentscash = $excesspaymentsbymethods->where('method', 'cash')->sum('total_amount');
+        $excesspaymentsgcash = $excesspaymentsbymethods->where('method', 'Gcash')->sum('total_amount');
+
 
         return ['excesspaymentsbycustomers' => $excesspaymentsbycustomers, 
-                'excesspaymentsbymethods' => $excesspaymentsbymethods
+                'excesspaymentsbymethods' => $excesspaymentsbymethods,
+                'excesspaymentscash' => $excesspaymentscash,
+                'excesspaymentsgcash' => $excesspaymentsgcash
             ];
     }
 

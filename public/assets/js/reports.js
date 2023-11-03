@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     dailyreportstable.append(createRow(["", unpaidcustomer.name, unpaidcustomer.amount.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })]));
                 });
 
-                console.log('show download');
                 var reportbuttonsdiv = $('#reportbuttonsdiv');
                 reportbuttonsdiv.append($('<button class="btn btn-danger btn-sm">Download</button>')
                     .click(function() {
@@ -74,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             success: function(response){
                                 var cashonhand = $('#cashonhanddenominations');
                                 cashonhand.empty();
+                                var totalOverall = 0;
                                 response.forEach(function(denomination) {
                                     var row = $("<div class='row'></div>");
                                 
@@ -93,11 +93,29 @@ document.addEventListener('DOMContentLoaded', function() {
                                         var pieces = parseInt($(this).val()) || 0;
                                         var denominationValue = parseInt(denomination.amount) || 0;
                                         totalInput.find('input').val((pieces * denominationValue).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}));
+                                        
+                                        var totalValue = pieces * denominationValue;
+                                        totalOverall += totalValue;
+
+                                        // console.log(totalOverall);
+                                        $('#overallTotal').text(totalOverall.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                                     });
+
+                                    
                                 
                                     row.append(denominationInput, piecesInput, totalInput);
                                     cashonhand.append(row);
+
+                                    
                                 });
+                                var overallTotalRow = $("<div class='row'></div>").append(
+                                        "<div class='col-md-3'></div>",
+                                        "<div class='col-md-3'><strong>Overall Total:</strong></div>",
+                                        "<div class='col-md-3'><span id='overallTotal'>" + totalOverall.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "</span></div>"
+                                    );
+                                console.log(totalOverall);    
+                                
+                                cashonhand.append(overallTotalRow);
                             }
                         });
                 }));

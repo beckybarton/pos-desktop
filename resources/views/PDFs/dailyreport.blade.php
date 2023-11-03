@@ -63,13 +63,16 @@
             <tr>
                 <td colspan="3"><strong>Overall Collections</strong></td>
             </tr>
-            @foreach ($dailyreport->allcollections as $allcollection)
-                <tr>
-                    <td></td>
-                    <td>{{ ucwords($allcollection->method) }}</td>
-                    <td class="text-end">{{ number_format($allcollection->total_amount,2) }}</td>
-                </tr>                
-            @endforeach
+            <tr>
+                <td></td>
+                <td>Cash</td>
+                <td class="text-end">{{ number_format($dailyreport->cashcollections_noexcess + $excesspayments->excesspaymentscash,2) }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Gcash</td>
+                <td class="text-end">{{ number_format($dailyreport->Gcashcollections_noexcess + $excesspayments->excesspaymentsgcash,2) }}</td>
+            </tr>
 
         </table>
         <hr>
