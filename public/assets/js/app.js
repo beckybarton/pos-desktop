@@ -241,20 +241,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function updateChange(){
-  var totalDue = (parseFloat($('#dueAmount').val()) || 1);
+  var change = 0;
+  var credit = (parseFloat($('#availablecredits').val()) || 0);
+  var totalDue = (parseFloat($('#dueAmount').val()) || 0);
   var received = (parseFloat($('#received').val()) || 0); // - totalDue;
-  if(received !==0){
-    var change = received - totalDue;
-    $('#change').val(change.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
+
+  if (received == 0){
+    change = 0;
+  }
+  else if(received>0 && credit==0){
+    change = received - totalDue;
+  }
+  else if(received>0 && credit<totalDue){
+    change = (received + credit) - totalDue;
+  }
+  else if(received>0 && credit>totalDue){
+    // change = (credit-totalDue) + received;
+    change = received;
+  }
+  else{
+    change = 0;
   }
   
-  
+  $('#change').val(change.toLocaleString(undefined,{maximumFractionDigits:2, minimumFractionDigits:2}));
 }
 
 function addToCustomerField(id,name){
   getCustomerCredits(id);
-  $('#customer').val(id);
-  $('#customername').val(name);
+  $('#customer').val(id)
+  $('#customernamepos').val(name);
   $('#customerSearchModal').modal('hide');
 }
 

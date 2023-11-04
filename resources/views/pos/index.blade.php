@@ -75,7 +75,7 @@
                     <label for="customer" class="col-sm-5 col-form-label font-weight-bold">Customer:</label>
                     <div class="col-sm-7">
                         <input type="text" hidden readonly class="form-control-plaintext text-danger" id="customer" name="customer" required>
-                        <input type="text" readonly class="form-control-plaintext text-danger" id="customername" name="customername" required>
+                        <input type="text" readonly class="form-control-plaintext text-danger" id="customernamepos" name="customernamepos" required>
                     </div>
                 </div>
 
