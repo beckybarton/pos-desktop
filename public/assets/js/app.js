@@ -340,6 +340,11 @@ function saveOrder() {
         alert("Transaction saved!");
         $('form')[0].reset();
         $('#selectedItemsTable tbody').empty();
+        $('#received').val('');
+        $('#change').val('');
+        $('#dueAmount').val('');
+        var selectElement = document.getElementById("method");
+        selectElement.value = "Unpaid";
       },
       error: function(error) {
           console.error('Error occurred while submitting the form:', error);
